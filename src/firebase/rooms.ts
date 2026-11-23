@@ -74,14 +74,34 @@ export async function roomExists(code: string): Promise<boolean> {
   return (await getDoc(roomRef(code))).exists()
 }
 
-export function subscribeRoom(code: string, cb: (room: Room | null) => void): () => void {
-  return onSnapshot(roomRef(code), (snap) => {
-    cb(snap.exists() ? ({ ...snap.data(), code } as Room) : null)
-  })
+export function subscribeRoom(
+  code: string, cb: (room: Room | null) => void, onError?: (e: Error) => void,
+): () => void {
+  return onSnapshot(
+    roomRef(code),
+    (snap) => {
+      if (!snap.exists()) return cb(null)
+      const d = snap.data()
+      cb({
+        code: snap.id, name: d.name, creatorUid: d.creatorUid, status: d.status,
+        entries: d.entries, criteria: d.criteria, results: d.results ?? null,
+      })
+    },
+    onError,
+  )
 }
 
-export function subscribeParticipants(code: string, cb: (ps: Participant[]) => void): () => void {
-  return onSnapshot(collection(db, 'rooms', code, 'participants'), (snap) => {
-    cb(snap.docs.map((d) => ({ ...d.data(), uid: d.id }) as Participant))
-  })
+export function subscribeParticipants(
+  code: string, cb: (ps: Participant[]) => void, onError?: (e: Error) => void,
+): () => void {
+  return onSnapshot(
+    collection(db, 'rooms', code, 'participants'),
+    (snap) => {
+      cb(snap.docs.map((s) => {
+        const d = s.data()
+        return { uid: s.id, name: d.name, scores: d.scores ?? {}, notes: d.notes ?? {} }
+      }))
+    },
+    onError,
+  )
 }
