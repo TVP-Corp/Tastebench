@@ -30,7 +30,7 @@ import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useRoomContext } from './RoomContext'
 
 const tabClass =
-  'min-h-11 cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium outline-none transition-colors not-data-[selected]:data-[hovered]:bg-neutral-900/5 data-[selected]:bg-black data-[selected]:text-white data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
+  'flex min-h-11 cursor-pointer items-center whitespace-nowrap rounded-t-lg border-b-2 border-transparent px-3 text-sm font-medium text-neutral-700 outline-none transition-colors not-data-[selected]:data-[hovered]:bg-neutral-900/5 data-[selected]:border-violet-600 data-[selected]:text-violet-700 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
 const fail = (err: unknown) => console.error(err)
 
 export default function Results() {

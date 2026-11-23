@@ -123,6 +123,14 @@ describe('Results', () => {
     expect(screen.getByText(/cannot join/)).toBeInTheDocument()
   })
 
+  it('ranking tabs are text tabs with a violet underline', () => {
+    renderResults({ room: preview })
+    const tab = screen.getByRole('tab', { name: 'Overall' })
+    expect(tab).toHaveAttribute('aria-selected', 'true')
+    expect(tab).toHaveClass('min-h-11', 'data-[selected]:text-violet-700', 'data-[selected]:border-violet-600')
+    expect(tab).not.toHaveClass('data-[selected]:bg-black', 'rounded-full')
+  })
+
   it('share actions and Done are text buttons', () => {
     renderResults({ room: preview })
     const share = screen.getByRole('button', { name: 'Share room code' })
