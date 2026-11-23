@@ -1,12 +1,13 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import type { Participant, Room } from '../domain/types'
 import { RoomContext, type RoomContextValue } from '../routes/RoomContext'
 
 vi.mock('../firebase/rooms', () => ({
   removeParticipant: vi.fn(() => Promise.resolve()),
   closeRoom: vi.fn(() => Promise.resolve()),
+  discardRoom: vi.fn(() => Promise.resolve()),
 }))
-import { closeRoom, removeParticipant } from '../firebase/rooms'
+import { closeRoom, discardRoom, removeParticipant } from '../firebase/rooms'
 import { ParticipantList } from './ParticipantList'
 
 const entries = [
@@ -104,6 +105,33 @@ describe('ParticipantList', () => {
     expect(closeRoom).not.toHaveBeenCalled()
     fireEvent.click(screen.getByRole('button', { name: 'Close room' }))
     expect(closeRoom).toHaveBeenCalledWith('ABC234')
+  })
+
+  it('creator discards after confirmation, deleting all participants', () => {
+    const onLeave = renderList({ isCreator: true, status: 'preview' })
+    fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
+    expect(screen.getByRole('alertdialog')).toHaveTextContent('Nothing is saved')
+    expect(discardRoom).not.toHaveBeenCalled()
+    fireEvent.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Discard room' }))
+    expect(onLeave).toHaveBeenCalled()
+    expect(discardRoom).toHaveBeenCalledWith('ABC234', ['a', 'b'])
+  })
+
+  it('cancel keeps the room', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(discardRoom).not.toHaveBeenCalled()
+  })
+
+  it('hides Discard for a participant', () => {
+    renderList({ isCreator: false })
+    expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
+  })
+
+  it('hides Discard after lock', () => {
+    renderList({ isCreator: true, status: 'locked' })
+    expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
   })
 
   it('hides Close when not open', () => {

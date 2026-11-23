@@ -33,6 +33,8 @@ describe('decideView', () => {
   const base = { room: room(), me, wasMember: false, isCreator: false }
   it('undefined room is loading', () => expect(decideView({ ...base, room: undefined })).toBe('loading'))
   it('null room is not-found', () => expect(decideView({ ...base, room: null })).toBe('not-found'))
+  it('null room after a loaded room is discarded', () =>
+    expect(decideView({ ...base, room: null, me: null, wasMember: true, hadRoom: true })).toBe('discarded'))
   it('was member but gone is removed', () => expect(decideView({ ...base, me: null, wasMember: true })).toBe('removed'))
   it('preview is results', () => expect(decideView({ ...base, room: room('preview') })).toBe('results'))
   it('locked without me is results', () =>
@@ -104,6 +106,20 @@ describe('RoomGate', () => {
       </MemoryRouter>,
     )
     expect(screen.getByText('You were removed from this room')).toBeInTheDocument()
+  })
+
+  it('shows discarded message after the room disappears', () => {
+    state.value = val({})
+    const { rerender } = renderGate('/r/ABC234/rate/0')
+    state.value = val({ room: null, me: null })
+    rerender(
+      <MemoryRouter initialEntries={['/r/ABC234/rate/0']}>
+        <Routes>
+          <Route path="/r/:code/*" element={<RoomGate />} />
+        </Routes>
+      </MemoryRouter>,
+    )
+    expect(screen.getByText('The creator discarded this room')).toBeInTheDocument()
   })
 
   it('shows not found', () => {

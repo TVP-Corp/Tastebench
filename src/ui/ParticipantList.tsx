@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from 'react-aria-components'
 import { participantProgress } from '../domain/progress'
 import type { Participant } from '../domain/types'
-import { closeRoom, removeParticipant } from '../firebase/rooms'
+import { closeRoom, discardRoom, removeParticipant } from '../firebase/rooms'
 import { useRoomContext } from '../routes/RoomContext'
 import { ConfirmDialog } from './ConfirmDialog'
 import { PillButton } from './PillButton'
@@ -16,6 +16,7 @@ export function ParticipantList({ onLeave }: { onLeave: () => void }) {
   const [leaving, setLeaving] = useState(false)
   const [removing, setRemoving] = useState<Participant | null>(null)
   const [closing, setClosing] = useState(false)
+  const [discarding, setDiscarding] = useState(false)
   if (!room) return null
 
   const progress = (p: Participant) => participantProgress(p, room.entries, room.criteria)
@@ -60,6 +61,11 @@ export function ParticipantList({ onLeave }: { onLeave: () => void }) {
           Close room and show results
         </PillButton>
       )}
+      {isCreator && room.status !== 'locked' && (
+        <Button onPress={() => setDiscarding(true)} className={link}>
+          Discard room
+        </Button>
+      )}
 
       <ConfirmDialog
         isOpen={leaving}
@@ -97,6 +103,21 @@ export function ParticipantList({ onLeave }: { onLeave: () => void }) {
         confirmLabel="Close room"
         onCancel={() => setClosing(false)}
         onConfirm={close}
+      />
+      <ConfirmDialog
+        isOpen={discarding}
+        title="Discard room?"
+        body="The room, all ratings and all notes will be deleted. Nothing is saved. You cannot undo this."
+        confirmLabel="Discard room"
+        onCancel={() => setDiscarding(false)}
+        onConfirm={() => {
+          setDiscarding(false)
+          onLeave()
+          discardRoom(
+            code,
+            participants.map((p) => p.uid),
+          ).catch(fail)
+        }}
       />
     </div>
   )

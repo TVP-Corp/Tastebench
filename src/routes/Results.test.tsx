@@ -91,6 +91,13 @@ describe('Results', () => {
     expect(screen.queryByRole('button', { name: /Edit title/ })).toBeNull()
   })
 
+  it('preview shares the room code', () => {
+    renderResults({ room: preview })
+    fireEvent.click(screen.getByRole('button', { name: 'Share room code' }))
+    expect(screen.getByText('ABC234')).toBeInTheDocument()
+    expect(screen.getByText(/cannot join/)).toBeInTheDocument()
+  })
+
   it('locked reads the snapshot and hides controls', () => {
     const snap = computeResults(
       [
@@ -106,6 +113,7 @@ describe('Results', () => {
     expect(rows[0]).toHaveTextContent('Snap One')
     expect(rows[0]).toHaveTextContent('10.0')
     expect(screen.queryByRole('button', { name: /Edit title/ })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Share room code' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Edit my ratings' })).toBeNull()
   })

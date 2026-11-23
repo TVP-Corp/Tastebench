@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Dialog, Heading, Label, Modal, ModalOverlay, TextArea, TextField } from 'react-aria-components'
 import { useNavigate, useParams } from 'react-router'
 import { entryState } from '../domain/progress'
@@ -30,6 +30,10 @@ function RateEntry({ index }: { index: number }) {
   const saveNote = useDebounced((text: string) => {
     if (entry) setNote(code, uid, entry.id, text).catch((e) => console.error('Save note failed', e))
   }, 500)
+  // RateEntry remounts per entry (keyed by index), so this runs on every entry change.
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
+  }, [])
   if (!room || !me || !entry) return null
 
   const base = `/r/${code}`
@@ -59,7 +63,16 @@ function RateEntry({ index }: { index: number }) {
           <span aria-hidden>👥</span>
         </Button>
       }
-      footer={<PillButton onPress={next}>{last ? 'Save' : 'Next'}</PillButton>}
+      footer={
+        <div className="flex gap-2">
+          {index > 0 && (
+            <PillButton variant="secondary" onPress={() => go(index - 1)}>
+              Previous
+            </PillButton>
+          )}
+          <PillButton onPress={next}>{last ? 'Save' : 'Next'}</PillButton>
+        </div>
+      }
     >
       <div className="flex flex-col gap-4">
         <ProgressSegments states={states} current={index} onSelect={go} />

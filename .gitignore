@@ -14,3 +14,8 @@ dist-ssr
 .DS_Store
 test-results/
 playwright-report/
+.tokensave/
+.claude/worktrees/
+/.claude/pre-pr-pass
+/.claude/settings.local.json
+/CLAUDE.local.md
