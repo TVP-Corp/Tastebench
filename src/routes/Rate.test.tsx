@@ -115,4 +115,14 @@ describe('Rate', () => {
     expect(screen.getByRole('radiogroup', { name: 'Smell whole number' })).toBeInTheDocument()
     expect(screen.getByText('Smell · 2 of 2')).toBeInTheDocument()
   })
+
+  it('the criterion card slides in from the side of the step', () => {
+    renderRate(0, room2)
+    const card = (name: string) =>
+      screen.getByRole('radiogroup', { name: `${name} whole number` }).closest('.touch-pan-y')
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    expect(card('Smell')).toHaveClass('motion-safe:animate-card-in-left')
+    fireEvent.click(screen.getByRole('button', { name: 'Previous' }))
+    expect(card('Taste')).toHaveClass('motion-safe:animate-card-in-right')
+  })
 })
