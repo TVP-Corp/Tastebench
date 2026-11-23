@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { createRoom } from '../firebase/rooms'
 import { useAuth } from '../firebase/useAuth'
 import { PillButton } from '../ui/PillButton'
+import { Screen } from '../ui/Screen'
 import { useDocumentTitle } from '../ui/useDocumentTitle'
 
 const MAX_ENTRIES = 30
@@ -86,15 +87,8 @@ export default function CreateRoom() {
   }
 
   return (
-    <div className="min-h-dvh bg-gradient-to-b from-rose-50 via-sky-50 to-violet-50">
-      <main className="mx-auto flex max-w-[480px] flex-col gap-6 px-4 py-6 motion-safe:animate-fade-in">
-        <Button
-          aria-label="Back"
-          onPress={() => navigate('/')}
-          className="size-11 self-start rounded-full text-2xl outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
-        >
-          ←
-        </Button>
+    <Screen title="Create a room" onBack={() => navigate('/')}>
+      <div className="flex flex-col gap-6">
         <TextField value={name} onChange={setName} className="flex flex-col gap-1">
           <Label className="text-sm font-medium">Room name</Label>
           <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base" />
@@ -109,7 +103,7 @@ export default function CreateRoom() {
         <PillButton isDisabled={!valid || busy} onPress={() => void submit()}>
           Create room
         </PillButton>
-      </main>
-    </div>
+      </div>
+    </Screen>
   )
 }
