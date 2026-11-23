@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Button, Dialog, Heading, Input, Label, Modal, ModalOverlay, Tab, TabList, TabPanel, Tabs, TextField } from 'react-aria-components'
 import { useNavigate } from 'react-router'
-import { participantProgress } from '../domain/progress'
+import { firstIncompleteIndex, participantProgress } from '../domain/progress'
 import { computeResults } from '../domain/results'
 import { lockRoom, renameEntry } from '../firebase/rooms'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
@@ -82,7 +82,7 @@ export default function Results() {
         <div className="flex flex-col gap-2">
           {!locked && me && (
             <Button
-              onPress={() => navigate(`/r/${code}/rate/0`)}
+              onPress={() => navigate(`/r/${code}/rate/${firstIncompleteIndex(me, room.entries, room.criteria)}`)}
               className="min-h-11 rounded-full text-base font-medium outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
             >
               Edit my ratings

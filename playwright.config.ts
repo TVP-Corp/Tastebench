@@ -16,6 +16,7 @@ export default defineConfig({
     command: `npx vite --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,
     env: { VITE_USE_EMULATOR: 'true' },
+    timeout: 120_000,
     reuseExistingServer: false,
   },
 })
