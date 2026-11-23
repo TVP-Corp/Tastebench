@@ -9,7 +9,7 @@ import { DiscardRoom } from './DiscardRoom'
 import { PillButton } from './PillButton'
 
 const link =
-  'min-h-11 rounded-full px-4 text-sm font-medium text-red-700 outline-none transition-colors data-[hovered]:bg-red-50 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
+  'min-h-11 rounded-full px-4 text-sm font-medium text-danger outline-none transition-colors data-[hovered]:bg-danger-50 data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink'
 const DELETE_NOTE = 'All of this person’s ratings and notes will be deleted.'
 
 export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () => void; showHeading?: boolean }) {
@@ -33,11 +33,11 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
   return (
     <div className="flex flex-col gap-3">
       {showHeading && (
-        <h2 className="flex items-center gap-1 text-sm font-medium text-neutral-600">
+        <h2 className="flex items-center gap-1 text-sm font-medium text-ink-muted">
           <svg
             aria-hidden="true"
             viewBox="0 0 24 24"
-            className="size-4"
+            className="size-4 text-brand-600"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
@@ -54,16 +54,16 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
           return (
             <li
               key={p.uid}
-              className="flex items-center justify-between rounded-2xl bg-white/80 px-4 py-2 shadow-card ring-1 ring-white"
+              className="flex items-center justify-between rounded-2xl bg-surface px-4 py-2 shadow-card ring-1 ring-line"
             >
               <span className="font-medium">{p.name}</span>
               <span className="flex items-center gap-2">
                 {done === total ? (
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-sm font-semibold text-emerald-800">
+                  <span className="rounded-full bg-brand-100 px-2 py-0.5 text-sm font-semibold text-brand-800">
                     Done
                   </span>
                 ) : (
-                  <span className="text-sm text-neutral-600">{`${done} of ${total} rated`}</span>
+                  <span className="text-sm text-ink-muted">{`${done} of ${total} rated`}</span>
                 )}
                 {isCreator && p.uid !== me?.uid && (
                   <Button onPress={() => setRemoving(p)} className={link}>

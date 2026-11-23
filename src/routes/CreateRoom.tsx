@@ -33,13 +33,13 @@ function ListEditor({
             className="flex flex-1 flex-col"
           >
             <Label className="sr-only">{`${label} ${i + 1}`}</Label>
-            <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base" />
+            <Input className="min-h-12 rounded-xl border border-line-strong bg-surface px-4 text-base" />
           </TextField>
           <Button
             aria-label={`Remove ${label} ${i + 1}`}
             isDisabled={values.length <= 1}
             onPress={() => onChange(values.filter((_, j) => j !== i))}
-            className="size-12 rounded-full bg-white text-lg outline-none transition-colors data-[hovered]:bg-neutral-100 data-[disabled]:opacity-40 data-[focus-visible]:ring-2"
+            className="size-12 rounded-full bg-surface text-lg outline-none transition-colors data-[hovered]:bg-line data-[disabled]:opacity-40 data-[focus-visible]:ring-2"
           >
             ✕
           </Button>
@@ -48,7 +48,7 @@ function ListEditor({
       <Button
         isDisabled={max !== undefined && values.length >= max}
         onPress={() => onChange([...values, ''])}
-        className="min-h-11 rounded-full border border-neutral-400 px-4 text-sm font-medium outline-none transition-colors data-[hovered]:bg-white data-[disabled]:opacity-40 data-[focus-visible]:ring-2"
+        className="min-h-11 rounded-full border border-line-strong px-4 text-sm font-medium outline-none transition-colors data-[hovered]:bg-surface data-[disabled]:opacity-40 data-[focus-visible]:ring-2"
       >
         {addLabel}
       </Button>
@@ -91,12 +91,12 @@ export default function CreateRoom() {
       <div className="flex flex-col gap-6">
         <TextField value={name} onChange={setName} className="flex flex-col gap-1">
           <Label className="text-sm font-medium">Room name</Label>
-          <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base" />
+          <Input className="min-h-12 rounded-xl border border-line-strong bg-surface px-4 text-base" />
         </TextField>
         <ListEditor label="Entry" addLabel="Add entry" values={entries} onChange={setEntries} max={MAX_ENTRIES} />
         <ListEditor label="Criterion" addLabel="Add criterion" values={criteria} onChange={setCriteria} />
         {failed && (
-          <p role="alert" className="text-sm text-red-600">
+          <p role="alert" className="text-sm text-danger">
             Could not create the room. Try again.
           </p>
         )}

@@ -32,7 +32,7 @@ export function decideView(args: {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh bg-gradient-to-b from-rose-50 via-sky-50 to-violet-50">
+    <div className="min-h-dvh bg-base">
       <main className="mx-auto flex min-h-dvh max-w-[480px] flex-col justify-center gap-4 px-4 text-center">
         {children}
       </main>

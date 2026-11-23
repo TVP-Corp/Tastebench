@@ -18,12 +18,12 @@ export function ShareCard() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-3xl bg-white/80 p-5 text-center shadow-card ring-1 ring-white">
-      <p className="flex items-center gap-1 text-sm text-neutral-600">
+    <div className="flex flex-col items-center gap-3 rounded-3xl bg-surface p-5 text-center shadow-card ring-1 ring-line">
+      <p className="flex items-center gap-1 text-sm text-ink-muted">
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
-          className="size-4"
+          className="size-4 text-brand-600"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"

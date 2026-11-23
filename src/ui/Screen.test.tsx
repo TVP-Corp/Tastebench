@@ -10,3 +10,15 @@ describe('Screen', () => {
     expect(screen.queryByRole('img')).toBeNull()
   })
 })
+
+it('components use palette tokens, not raw hue utilities', () => {
+  const sources = import.meta.glob(['../**/*.{ts,tsx}', '!../**/*.test.*'], {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  })
+  const raw =
+    /\b(?:bg|text|border|ring|fill|stroke|from|via|to|outline|shadow)-(?:(?!(?:brand|danger|warning)-)[a-z]+-\d{2,3}|white|black)\b|#[0-9a-f]{6}\b/i
+  const offenders = Object.entries(sources).filter(([, src]) => raw.test(src as string))
+  expect(offenders.map(([file]) => file)).toEqual([])
+})

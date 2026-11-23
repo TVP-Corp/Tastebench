@@ -93,7 +93,7 @@ describe('Results', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Lock results' }))
     expect(screen.getByRole('alertdialog')).toHaveTextContent('cannot change')
     const confirm = within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Lock results' })
-    expect(confirm).toHaveClass('bg-emerald-700')
+    expect(confirm).toHaveClass('bg-accent')
     fireEvent.click(confirm)
     expect(rooms.lockRoom).toHaveBeenCalledWith('ABC234', computeResults(entries, criteria, people))
   })
@@ -124,12 +124,11 @@ describe('Results', () => {
     expect(screen.getByText(/cannot join/)).toBeInTheDocument()
   })
 
-  it('ranking tabs are text tabs with a violet underline', () => {
+  it('ranking tabs are text tabs with a brand underline', () => {
     renderResults({ room: preview })
     const tab = screen.getByRole('tab', { name: 'Overall' })
     expect(tab).toHaveAttribute('aria-selected', 'true')
-    expect(tab).toHaveClass('min-h-11', 'data-[selected]:text-violet-700', 'data-[selected]:border-violet-600')
-    expect(tab).not.toHaveClass('data-[selected]:bg-black')
+    expect(tab).toHaveClass('min-h-11', 'data-[selected]:text-brand-700', 'data-[selected]:border-brand-600')
     expect(tab).not.toHaveClass('rounded-full')
   })
 

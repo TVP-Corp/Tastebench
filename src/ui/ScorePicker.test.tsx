@@ -59,20 +59,19 @@ describe('ScorePicker', () => {
     expect(screen.getByTestId('score-value')).toHaveTextContent('Skipped')
     expect(screen.queryAllByRole('radio', { checked: true })).toHaveLength(0)
   })
-  it('selected score chips use the violet accent', () => {
+  it('selected score chips use the brand color', () => {
     render(<ScorePicker label="Taste" value={70} onChange={() => {}} />)
-    expect(btn('7')).toHaveClass('data-[selected]:bg-violet-600', 'data-[selected]:text-white')
-    expect(btn('7')).not.toHaveClass('data-[selected]:bg-neutral-900')
+    expect(btn('7')).toHaveClass('data-[selected]:bg-brand-600', 'data-[selected]:text-surface')
   })
-  it('skip is a white chip that turns light violet when selected', () => {
+  it('skip is a white chip that turns light brand when selected', () => {
     render(<ScorePicker label="Taste" value="skip" onChange={() => {}} />)
     expect(screen.getByRole('button', { name: 'Skip' })).toHaveClass(
-      'bg-white',
-      'border-neutral-300',
-      'text-neutral-600',
-      'data-[selected]:bg-violet-100',
-      'data-[selected]:border-violet-600',
-      'data-[selected]:text-violet-800',
+      'bg-surface',
+      'border-line-strong',
+      'text-ink-muted',
+      'data-[selected]:bg-brand-100',
+      'data-[selected]:border-brand-600',
+      'data-[selected]:text-brand-800',
     )
   })
 })

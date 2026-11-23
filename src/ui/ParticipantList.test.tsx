@@ -139,12 +139,12 @@ describe('ParticipantList', () => {
     expect(discardRoom).toHaveBeenCalledWith('ABC234', ['a', 'b'])
   })
 
-  it('remove confirm uses the red outline button', () => {
+  it('remove confirm uses the danger outline button', () => {
     renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
     expect(screen.getByRole('button', { name: 'Remove participant' })).toHaveClass(
-      'border-red-300',
-      'data-[focus-visible]:ring-black',
+      'border-danger-line',
+      'data-[focus-visible]:ring-ink',
     )
   })
 
@@ -153,26 +153,26 @@ describe('ParticipantList', () => {
     const trigger = screen.getByRole('button', { name: 'Discard room' })
     fireEvent.click(trigger)
     const confirm = within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Discard room' })
-    expect(confirm).toHaveClass('border-red-300')
+    expect(confirm).toHaveClass('border-danger-line')
     expect(confirm.className).toBe(trigger.className)
     expect(confirm.querySelector('svg')).not.toBeNull()
   })
 
-  it('leave trigger and confirm use the same red outline button', () => {
+  it('leave trigger and confirm use the same danger outline button', () => {
     renderList({ isCreator: false })
     const trigger = screen.getByRole('button', { name: 'Leave room' })
     fireEvent.click(trigger)
     const confirm = screen.getByRole('button', { name: 'Leave' })
-    expect(confirm).toHaveClass('border-red-300')
+    expect(confirm).toHaveClass('border-danger-line')
     expect(confirm.className).toBe(trigger.className)
   })
 
-  it('close trigger and confirm use the same amber warning button', () => {
+  it('close trigger and confirm use the same warning button', () => {
     renderList({ isCreator: true })
     const trigger = screen.getByRole('button', { name: 'Close room and show results' })
     fireEvent.click(trigger)
     const confirm = screen.getByRole('button', { name: 'Close room' })
-    expect(confirm).toHaveClass('border-amber-400', 'data-[focus-visible]:ring-black')
+    expect(confirm).toHaveClass('border-warning-line', 'data-[focus-visible]:ring-ink')
     expect(confirm.className).toBe(trigger.className)
   })
 

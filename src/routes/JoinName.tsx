@@ -20,7 +20,7 @@ export default function JoinName({ code, uid }: { code: string; uid: string }) {
     >
       <TextField value={name} onChange={setName} maxLength={30} className="flex flex-col gap-1">
         <Label className="text-sm font-medium">Your name</Label>
-        <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base" />
+        <Input className="min-h-12 rounded-xl border border-line-strong bg-surface px-4 text-base" />
       </TextField>
       <PillButton type="submit" isDisabled={!valid}>
         Continue

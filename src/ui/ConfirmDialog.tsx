@@ -16,12 +16,12 @@ interface Props {
 export function ConfirmDialog({ isOpen, title, body, confirmLabel, onConfirm, onCancel, variant }: Props) {
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={(open) => !open && onCancel()} isDismissable className={overlayClass}>
-      <Modal className={`w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}>
+      <Modal className={`w-full max-w-sm rounded-3xl bg-surface p-6 shadow-xl ${sheetMotion}`}>
         <Dialog role="alertdialog" className="flex flex-col gap-4 outline-none">
           <Heading slot="title" className="text-lg font-semibold">
             {title}
           </Heading>
-          <div className="text-neutral-700">{body}</div>
+          <div className="text-ink-muted">{body}</div>
           <PillButton variant={variant} onPress={onConfirm}>
             {confirmLabel}
           </PillButton>

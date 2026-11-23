@@ -24,7 +24,7 @@ export function EntryDetail({ data, entryId, onClose }: Props) {
       className={overlayClass}
     >
       <Modal
-        className={`max-h-[85dvh] w-full max-w-md overflow-auto rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}
+        className={`max-h-[85dvh] w-full max-w-md overflow-auto rounded-3xl bg-surface p-6 shadow-xl ${sheetMotion}`}
       >
         <Dialog className="flex flex-col gap-4 outline-none">
           <Heading slot="title" className="text-lg font-semibold">
@@ -44,7 +44,7 @@ export function EntryDetail({ data, entryId, onClose }: Props) {
               </thead>
               <tbody>
                 {data.participants.map((p) => (
-                  <tr key={p.uid} className="border-t border-neutral-200">
+                  <tr key={p.uid} className="border-t border-line">
                     <td className="py-1 pr-2 font-medium">{p.name}</td>
                     {data.criteria.map((c) => (
                       <td key={c.id} className="px-2 py-1">
