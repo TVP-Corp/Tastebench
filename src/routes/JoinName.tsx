@@ -20,7 +20,9 @@ export default function JoinName({ code, uid }: { code: string; uid: string }) {
         <Label className="text-sm font-medium">Your name</Label>
         <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base" />
       </TextField>
-      <PillButton type="submit" isDisabled={!valid}>Continue</PillButton>
+      <PillButton type="submit" isDisabled={!valid}>
+        Continue
+      </PillButton>
     </form>
   )
 }

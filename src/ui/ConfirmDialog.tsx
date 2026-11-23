@@ -1,14 +1,14 @@
-import type { ReactNode } from 'react';
-import { Button, Dialog, Heading, Modal, ModalOverlay } from 'react-aria-components';
-import { PillButton } from './PillButton';
+import type { ReactNode } from 'react'
+import { Button, Dialog, Heading, Modal, ModalOverlay } from 'react-aria-components'
+import { PillButton } from './PillButton'
 
 interface Props {
-  isOpen: boolean;
-  title: string;
-  body: ReactNode;
-  confirmLabel: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  isOpen: boolean
+  title: string
+  body: ReactNode
+  confirmLabel: string
+  onConfirm: () => void
+  onCancel: () => void
 }
 
 export function ConfirmDialog({ isOpen, title, body, confirmLabel, onConfirm, onCancel }: Props) {
@@ -35,5 +35,5 @@ export function ConfirmDialog({ isOpen, title, body, confirmLabel, onConfirm, on
         </Dialog>
       </Modal>
     </ModalOverlay>
-  );
+  )
 }

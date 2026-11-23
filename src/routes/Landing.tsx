@@ -39,11 +39,17 @@ export default function Landing() {
         ) : (
           <form
             className="flex flex-col gap-3"
-            onSubmit={(e) => { e.preventDefault(); void join() }}
+            onSubmit={(e) => {
+              e.preventDefault()
+              void join()
+            }}
           >
             <TextField
               value={code}
-              onChange={(v) => { setCode(v); setNotFound(false) }}
+              onChange={(v) => {
+                setCode(v)
+                setNotFound(false)
+              }}
               isInvalid={notFound}
               autoFocus
               className="flex flex-col gap-1"
@@ -52,7 +58,9 @@ export default function Landing() {
               <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base uppercase" />
               <FieldError className="text-sm text-red-600">No room with this code</FieldError>
             </TextField>
-            <PillButton type="submit" isDisabled={busy || uid === null || !normalizeCode(code)}>Join</PillButton>
+            <PillButton type="submit" isDisabled={busy || uid === null || !normalizeCode(code)}>
+              Join
+            </PillButton>
           </form>
         )}
       </main>

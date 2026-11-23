@@ -26,7 +26,9 @@ export function ShareCard() {
       <p className="text-sm text-neutral-600">Room code</p>
       <p className="font-mono text-4xl font-bold tracking-widest">{code}</p>
       <div className="flex flex-wrap justify-center gap-2">
-        <Button onPress={copy} className={btn}>{copied ? 'Copied' : 'Copy link'}</Button>
+        <Button onPress={copy} className={btn}>
+          {copied ? 'Copied' : 'Copy link'}
+        </Button>
         {canShare && (
           <Button
             onPress={() => navigator.share({ title: 'Join my rating room', url: link }).catch(() => {})}

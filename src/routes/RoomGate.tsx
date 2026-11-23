@@ -79,7 +79,12 @@ export default function RoomGate() {
     if (target) navigate(`/r/${code}/${target}`, { replace: true })
   }, [target, navigate, code])
 
-  if (!validCode) return <Shell><p>No room with this code</p></Shell>
+  if (!validCode)
+    return (
+      <Shell>
+        <p>No room with this code</p>
+      </Shell>
+    )
   if (error) {
     return (
       <Shell>
@@ -88,8 +93,18 @@ export default function RoomGate() {
       </Shell>
     )
   }
-  if (view === 'loading' || uid === null) return <Shell><p>Loading...</p></Shell>
-  if (view === 'not-found') return <Shell><p>No room with this code</p></Shell>
+  if (view === 'loading' || uid === null)
+    return (
+      <Shell>
+        <p>Loading...</p>
+      </Shell>
+    )
+  if (view === 'not-found')
+    return (
+      <Shell>
+        <p>No room with this code</p>
+      </Shell>
+    )
   if (view === 'removed') {
     return (
       <Shell>
@@ -99,7 +114,12 @@ export default function RoomGate() {
     )
   }
   if (view === 'join') {
-    return <Shell><h1 className="text-2xl font-bold">{room?.name}</h1><JoinName code={code} uid={uid} /></Shell>
+    return (
+      <Shell>
+        <h1 className="text-2xl font-bold">{room?.name}</h1>
+        <JoinName code={code} uid={uid} />
+      </Shell>
+    )
   }
 
   return (

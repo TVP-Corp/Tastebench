@@ -1,5 +1,18 @@
 import { useMemo, useState } from 'react'
-import { Button, Dialog, Heading, Input, Label, Modal, ModalOverlay, Tab, TabList, TabPanel, Tabs, TextField } from 'react-aria-components'
+import {
+  Button,
+  Dialog,
+  Heading,
+  Input,
+  Label,
+  Modal,
+  ModalOverlay,
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
+  TextField,
+} from 'react-aria-components'
 import { useNavigate } from 'react-router'
 import { firstIncompleteIndex, participantProgress } from '../domain/progress'
 import { computeResults } from '../domain/results'
@@ -98,8 +111,14 @@ export default function Results() {
         </span>
         <Tabs>
           <TabList aria-label="Rankings" className="mb-3 flex gap-1 overflow-x-auto">
-            <Tab id="overall" className={tabClass}>Overall</Tab>
-            {data.criteria.map((c) => <Tab key={c.id} id={c.id} className={tabClass}>{c.title}</Tab>)}
+            <Tab id="overall" className={tabClass}>
+              Overall
+            </Tab>
+            {data.criteria.map((c) => (
+              <Tab key={c.id} id={c.id} className={tabClass}>
+                {c.title}
+              </Tab>
+            ))}
           </TabList>
           <TabPanel id="overall" className="outline-none">
             <RankingList rows={data.overall} onOpen={setOpenId} renderAction={action} />
@@ -122,12 +141,16 @@ export default function Results() {
       >
         <Modal className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl">
           <Dialog className="flex flex-col gap-4 outline-none">
-            <Heading slot="title" className="text-lg font-semibold">Edit title</Heading>
+            <Heading slot="title" className="text-lg font-semibold">
+              Edit title
+            </Heading>
             <TextField value={draft} onChange={setDraft} className="flex flex-col gap-1">
               <Label className="text-sm">Title</Label>
               <Input className="min-h-11 rounded-xl border border-neutral-300 px-3 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black" />
             </TextField>
-            <PillButton isDisabled={draft.trim() === ''} onPress={save}>Save</PillButton>
+            <PillButton isDisabled={draft.trim() === ''} onPress={save}>
+              Save
+            </PillButton>
             <Button
               onPress={() => setEditId(null)}
               className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
@@ -144,9 +167,7 @@ export default function Results() {
         body={
           <>
             <p>Titles and ratings cannot change after lock.</p>
-            {incomplete.length > 0 && (
-              <p className="mt-2">Not complete: {incomplete.map((p) => p.name).join(', ')}.</p>
-            )}
+            {incomplete.length > 0 && <p className="mt-2">Not complete: {incomplete.map((p) => p.name).join(', ')}.</p>}
           </>
         }
         confirmLabel="Lock results"

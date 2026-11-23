@@ -1,5 +1,13 @@
 import {
-  collection, deleteDoc, doc, getDoc, onSnapshot, runTransaction, serverTimestamp, setDoc, updateDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
 } from 'firebase/firestore'
 import { generateCode, newId } from '../domain/code'
 import { isValidScore } from '../domain/score'
@@ -22,8 +30,15 @@ export async function createRoom(
       const ref = roomRef(code)
       if ((await tx.get(ref)).exists()) return false
       tx.set(ref, {
-        name: input.name, creatorUid: uid, status: 'open', entries, criteria, results: null,
-        createdAt: serverTimestamp(), closedAt: null, lockedAt: null,
+        name: input.name,
+        creatorUid: uid,
+        status: 'open',
+        entries,
+        criteria,
+        results: null,
+        createdAt: serverTimestamp(),
+        closedAt: null,
+        lockedAt: null,
       })
       return true
     })
@@ -34,12 +49,20 @@ export async function createRoom(
 
 export async function joinRoom(code: string, uid: string, name: string): Promise<void> {
   await setDoc(partRef(code, uid), {
-    name, scores: {}, notes: {}, joinedAt: serverTimestamp(), updatedAt: serverTimestamp(),
+    name,
+    scores: {},
+    notes: {},
+    joinedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
   })
 }
 
 export async function setScore(
-  code: string, uid: string, entryId: string, criterionId: string, score: Score,
+  code: string,
+  uid: string,
+  entryId: string,
+  criterionId: string,
+  score: Score,
 ): Promise<void> {
   if (!isValidScore(score)) throw new Error(`Invalid score: ${String(score)}`)
   await updateDoc(partRef(code, uid), {
@@ -60,9 +83,7 @@ export async function closeRoom(code: string): Promise<void> {
   await updateDoc(roomRef(code), { status: 'preview', closedAt: serverTimestamp() })
 }
 
-export async function renameEntry(
-  code: string, entries: Item[], entryId: string, title: string,
-): Promise<void> {
+export async function renameEntry(code: string, entries: Item[], entryId: string, title: string): Promise<void> {
   await updateDoc(roomRef(code), {
     entries: entries.map((e) => (e.id === entryId ? { ...e, title } : e)),
   })
@@ -76,17 +97,20 @@ export async function roomExists(code: string): Promise<boolean> {
   return (await getDoc(roomRef(code))).exists()
 }
 
-export function subscribeRoom(
-  code: string, cb: (room: Room | null) => void, onError?: (e: Error) => void,
-): () => void {
+export function subscribeRoom(code: string, cb: (room: Room | null) => void, onError?: (e: Error) => void): () => void {
   return onSnapshot(
     roomRef(code),
     (snap) => {
       if (!snap.exists()) return cb(null)
       const d = snap.data()
       cb({
-        code: snap.id, name: d.name, creatorUid: d.creatorUid, status: d.status,
-        entries: d.entries, criteria: d.criteria, results: d.results ?? null,
+        code: snap.id,
+        name: d.name,
+        creatorUid: d.creatorUid,
+        status: d.status,
+        entries: d.entries,
+        criteria: d.criteria,
+        results: d.results ?? null,
       })
     },
     onError,
@@ -94,15 +118,19 @@ export function subscribeRoom(
 }
 
 export function subscribeParticipants(
-  code: string, cb: (ps: Participant[]) => void, onError?: (e: Error) => void,
+  code: string,
+  cb: (ps: Participant[]) => void,
+  onError?: (e: Error) => void,
 ): () => void {
   return onSnapshot(
     collection(db, 'rooms', code, 'participants'),
     (snap) => {
-      cb(snap.docs.map((s) => {
-        const d = s.data()
-        return { uid: s.id, name: d.name, scores: d.scores ?? {}, notes: d.notes ?? {} }
-      }))
+      cb(
+        snap.docs.map((s) => {
+          const d = s.data()
+          return { uid: s.id, name: d.name, scores: d.scores ?? {}, notes: d.notes ?? {} }
+        }),
+      )
     },
     onError,
   )

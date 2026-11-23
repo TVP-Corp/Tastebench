@@ -10,16 +10,31 @@ import { afterAll, beforeAll, beforeEach, describe, test } from 'vitest'
 
 let env: RulesTestEnvironment
 const ROOM = 'rooms/ROOM01'
-const entries = [{ id: 'e1', title: 'One' }, { id: 'e2', title: 'Two' }]
+const entries = [
+  { id: 'e1', title: 'One' },
+  { id: 'e2', title: 'Two' },
+]
 const criteria = [{ id: 'c1', title: 'Taste' }]
 const now = () => Timestamp.now()
 
 const roomData = (status: string, extra: object = {}) => ({
-  name: 'Room', creatorUid: 'alice', status, entries, criteria,
-  results: null, createdAt: now(), closedAt: null, lockedAt: null, ...extra,
+  name: 'Room',
+  creatorUid: 'alice',
+  status,
+  entries,
+  criteria,
+  results: null,
+  createdAt: now(),
+  closedAt: null,
+  lockedAt: null,
+  ...extra,
 })
 const partData = (name: string) => ({
-  name, scores: {}, notes: {}, joinedAt: now(), updatedAt: now(),
+  name,
+  scores: {},
+  notes: {},
+  joinedAt: now(),
+  updatedAt: now(),
 })
 
 async function seed(status: string) {
@@ -38,8 +53,13 @@ beforeAll(async () => {
     firestore: { rules: readFileSync('firestore.rules', 'utf8'), host: '127.0.0.1', port: 8080 },
   })
 })
-afterAll(async () => { await env.cleanup() })
-beforeEach(async () => { await env.clearFirestore(); await seed('open') })
+afterAll(async () => {
+  await env.cleanup()
+})
+beforeEach(async () => {
+  await env.clearFirestore()
+  await seed('open')
+})
 
 describe('room read/create', () => {
   test('unauthenticated read fails', async () => {
@@ -56,11 +76,15 @@ describe('room read/create', () => {
   })
   test('create with 31 entries fails', async () => {
     const many = Array.from({ length: 31 }, (_, i) => ({ id: `e${i}`, title: 'T' }))
-    await assertFails(setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'carol', entries: many })))
+    await assertFails(
+      setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'carol', entries: many })),
+    )
   })
   test('create with 30 entries succeeds', async () => {
     const many = Array.from({ length: 30 }, (_, i) => ({ id: `e${i}`, title: 'T' }))
-    await assertSucceeds(setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'carol', entries: many })))
+    await assertSucceeds(
+      setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'carol', entries: many })),
+    )
   })
   test('create with empty criteria fails', async () => {
     await assertFails(setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'carol', criteria: [] })))
@@ -88,8 +112,7 @@ describe('participant create', () => {
 })
 
 describe('participant update', () => {
-  const upd = (uid: string, target: string, data: object) =>
-    updateDoc(doc(as(uid), ROOM, 'participants', target), data)
+  const upd = (uid: string, target: string, data: object) => updateDoc(doc(as(uid), ROOM, 'participants', target), data)
   test('own scores in open succeeds', async () => {
     await assertSucceeds(upd('bob', 'bob', { 'scores.e1.c1': 50 }))
   })
@@ -111,10 +134,18 @@ describe('participant update', () => {
 
 describe('participant delete', () => {
   const del = (uid: string, target: string) => deleteDoc(doc(as(uid), ROOM, 'participants', target))
-  test('self delete in open succeeds', async () => { await assertSucceeds(del('bob', 'bob')) })
-  test('creator removes other succeeds', async () => { await assertSucceeds(del('alice', 'bob')) })
-  test("bob deletes alice's fails", async () => { await assertFails(del('bob', 'alice')) })
-  test('creator deletes self fails', async () => { await assertFails(del('alice', 'alice')) })
+  test('self delete in open succeeds', async () => {
+    await assertSucceeds(del('bob', 'bob'))
+  })
+  test('creator removes other succeeds', async () => {
+    await assertSucceeds(del('alice', 'bob'))
+  })
+  test("bob deletes alice's fails", async () => {
+    await assertFails(del('bob', 'alice'))
+  })
+  test('creator deletes self fails', async () => {
+    await assertFails(del('alice', 'alice'))
+  })
   test('any delete in locked fails', async () => {
     await seed('locked')
     await assertFails(del('bob', 'bob'))
@@ -134,9 +165,18 @@ describe('room update', () => {
     await assertFails(upd('alice', { status: 'locked', results: {}, lockedAt: now() }))
   })
   describe('preview', () => {
-    beforeEach(async () => { await seed('preview') })
+    beforeEach(async () => {
+      await seed('preview')
+    })
     test('rename entries same size succeeds', async () => {
-      await assertSucceeds(upd('alice', { entries: [{ id: 'e1', title: 'Uno' }, { id: 'e2', title: 'Dos' }] }))
+      await assertSucceeds(
+        upd('alice', {
+          entries: [
+            { id: 'e1', title: 'Uno' },
+            { id: 'e2', title: 'Dos' },
+          ],
+        }),
+      )
     })
     test('change criteria fails', async () => {
       await assertFails(upd('alice', { criteria: [{ id: 'c1', title: 'Smell' }] }))
@@ -145,16 +185,30 @@ describe('room update', () => {
       await assertFails(upd('alice', { entries: [{ id: 'e1', title: 'One' }] }))
     })
     test('rename that changes an id fails', async () => {
-      await assertFails(upd('alice', { entries: [{ id: 'x1', title: 'One' }, { id: 'e2', title: 'Two' }] }))
+      await assertFails(
+        upd('alice', {
+          entries: [
+            { id: 'x1', title: 'One' },
+            { id: 'e2', title: 'Two' },
+          ],
+        }),
+      )
     })
     test('rename that reorders entries fails', async () => {
       await assertFails(upd('alice', { entries: [entries[1], entries[0]] }))
     })
     test('lock that also changes entries fails', async () => {
-      await assertFails(upd('alice', {
-        status: 'locked', results: { e1: 1 }, lockedAt: now(),
-        entries: [{ id: 'e1', title: 'Hacked' }, { id: 'e2', title: 'Two' }],
-      }))
+      await assertFails(
+        upd('alice', {
+          status: 'locked',
+          results: { e1: 1 },
+          lockedAt: now(),
+          entries: [
+            { id: 'e1', title: 'Hacked' },
+            { id: 'e2', title: 'Two' },
+          ],
+        }),
+      )
     })
     test('lock with only status fails', async () => {
       await assertFails(upd('alice', { status: 'locked' }))
@@ -165,7 +219,14 @@ describe('room update', () => {
   })
   test('any update in locked fails', async () => {
     await seed('locked')
-    await assertFails(upd('alice', { entries: [{ id: 'e1', title: 'Uno' }, { id: 'e2', title: 'Dos' }] }))
+    await assertFails(
+      upd('alice', {
+        entries: [
+          { id: 'e1', title: 'Uno' },
+          { id: 'e2', title: 'Dos' },
+        ],
+      }),
+    )
     await assertFails(upd('alice', { status: 'open' }))
   })
 })

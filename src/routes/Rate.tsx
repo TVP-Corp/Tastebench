@@ -74,7 +74,14 @@ function RateEntry({ index }: { index: number }) {
               }
             />
           ))}
-          <TextField value={note} onChange={(t) => { setNoteText(t); saveNote(t) }} className="flex flex-col gap-1">
+          <TextField
+            value={note}
+            onChange={(t) => {
+              setNoteText(t)
+              saveNote(t)
+            }}
+            className="flex flex-col gap-1"
+          >
             <Label className="text-sm font-medium">Notes</Label>
             <TextArea rows={3} className="rounded-xl border border-neutral-300 bg-white p-3 text-base" />
           </TextField>
@@ -89,7 +96,9 @@ function RateEntry({ index }: { index: number }) {
       >
         <Modal className="w-full max-w-[480px] rounded-t-3xl bg-white p-6 shadow-xl">
           <Dialog className="flex flex-col gap-4 outline-none" aria-label="Participants">
-            <Heading slot="title" className="text-lg font-semibold">Participants</Heading>
+            <Heading slot="title" className="text-lg font-semibold">
+              Participants
+            </Heading>
             <ParticipantList onLeave={() => navigate('/')} />
           </Dialog>
         </Modal>

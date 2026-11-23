@@ -40,7 +40,9 @@ export function ParticipantList({ onLeave }: { onLeave: () => void }) {
               <span className="flex items-center gap-2">
                 <span className="text-sm text-neutral-600">{`${done} / ${total}`}</span>
                 {isCreator && p.uid !== me?.uid && (
-                  <Button onPress={() => setRemoving(p)} className={link}>Remove</Button>
+                  <Button onPress={() => setRemoving(p)} className={link}>
+                    Remove
+                  </Button>
                 )}
               </span>
             </li>
@@ -49,7 +51,9 @@ export function ParticipantList({ onLeave }: { onLeave: () => void }) {
       </ul>
 
       {!isCreator && me && (
-        <Button onPress={() => setLeaving(true)} className={link}>Leave room</Button>
+        <Button onPress={() => setLeaving(true)} className={link}>
+          Leave room
+        </Button>
       )}
       {isCreator && room.status === 'open' && (
         <PillButton onPress={() => (incomplete.length ? setClosing(true) : close())}>

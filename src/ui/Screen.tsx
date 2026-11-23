@@ -1,13 +1,13 @@
-import type { ReactNode } from 'react';
-import { Button } from 'react-aria-components';
+import type { ReactNode } from 'react'
+import { Button } from 'react-aria-components'
 
 interface Props {
-  title?: string;
-  subtitle?: string;
-  onBack?: () => void;
-  actions?: ReactNode;
-  footer?: ReactNode;
-  children: ReactNode;
+  title?: string
+  subtitle?: string
+  onBack?: () => void
+  actions?: ReactNode
+  footer?: ReactNode
+  children: ReactNode
 }
 
 export function Screen({ title, subtitle, onBack, actions, footer, children }: Props) {
@@ -38,5 +38,5 @@ export function Screen({ title, subtitle, onBack, actions, footer, children }: P
         {footer && <footer className="pt-4">{footer}</footer>}
       </div>
     </div>
-  );
+  )
 }

@@ -8,8 +8,18 @@ import { PillButton } from '../ui/PillButton'
 const MAX_ENTRIES = 30
 
 function ListEditor({
-  label, addLabel, values, onChange, max,
-}: { label: string; addLabel: string; values: string[]; onChange: (v: string[]) => void; max?: number }) {
+  label,
+  addLabel,
+  values,
+  onChange,
+  max,
+}: {
+  label: string
+  addLabel: string
+  values: string[]
+  onChange: (v: string[]) => void
+  max?: number
+}) {
   return (
     <section className="flex flex-col gap-2">
       <h2 className="text-lg font-semibold">{label}</h2>
@@ -76,15 +86,23 @@ export default function CreateRoom() {
   return (
     <div className="min-h-dvh bg-gradient-to-b from-rose-50 via-sky-50 to-violet-50">
       <main className="mx-auto flex max-w-[480px] flex-col gap-6 px-4 py-6">
-        <Button aria-label="Back" onPress={() => navigate('/')} className="size-11 self-start text-2xl">←</Button>
+        <Button aria-label="Back" onPress={() => navigate('/')} className="size-11 self-start text-2xl">
+          ←
+        </Button>
         <TextField value={name} onChange={setName} className="flex flex-col gap-1">
           <Label className="text-sm font-medium">Room name</Label>
           <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base" />
         </TextField>
         <ListEditor label="Entry" addLabel="Add entry" values={entries} onChange={setEntries} max={MAX_ENTRIES} />
         <ListEditor label="Criterion" addLabel="Add criterion" values={criteria} onChange={setCriteria} />
-        {failed && <p role="alert" className="text-sm text-red-600">Could not create the room. Try again.</p>}
-        <PillButton isDisabled={!valid || busy} onPress={() => void submit()}>Create room</PillButton>
+        {failed && (
+          <p role="alert" className="text-sm text-red-600">
+            Could not create the room. Try again.
+          </p>
+        )}
+        <PillButton isDisabled={!valid || busy} onPress={() => void submit()}>
+          Create room
+        </PillButton>
       </main>
     </div>
   )

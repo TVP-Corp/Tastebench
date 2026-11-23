@@ -9,8 +9,14 @@ vi.mock('../firebase/rooms', () => ({
 import { closeRoom, removeParticipant } from '../firebase/rooms'
 import { ParticipantList } from './ParticipantList'
 
-const entries = [{ id: 'e1', title: 'E1' }, { id: 'e2', title: 'E2' }]
-const criteria = [{ id: 'c1', title: 'C1' }, { id: 'c2', title: 'C2' }]
+const entries = [
+  { id: 'e1', title: 'E1' },
+  { id: 'e2', title: 'E2' },
+]
+const criteria = [
+  { id: 'c1', title: 'C1' },
+  { id: 'c2', title: 'C2' },
+]
 const full = { e1: { c1: 10, c2: 20 }, e2: { c1: 30, c2: 'skip' as const } }
 const mk = (uid: string, name: string, scores: Participant['scores']): Participant => ({ uid, name, scores, notes: {} })
 const alice = mk('a', 'Alice', full)
@@ -19,7 +25,15 @@ const bob = mk('b', 'Bob', { e1: { c1: 10 } })
 function renderList(opts: { isCreator: boolean; status?: Room['status']; me?: Participant | null }) {
   const me = opts.me === undefined ? (opts.isCreator ? alice : bob) : opts.me
   const value: RoomContextValue = {
-    room: { code: 'ABC234', name: 'R', creatorUid: 'a', status: opts.status ?? 'open', entries, criteria, results: null } as Room,
+    room: {
+      code: 'ABC234',
+      name: 'R',
+      creatorUid: 'a',
+      status: opts.status ?? 'open',
+      entries,
+      criteria,
+      results: null,
+    } as Room,
     participants: [alice, bob],
     me,
     isCreator: opts.isCreator,
