@@ -4,17 +4,18 @@ interface Props {
   states: ('complete' | 'started' | 'empty')[]
   current: number
   onSelect: (i: number) => void
+  label?: string
 }
 
 const fill = { complete: 'bg-neutral-900', started: 'bg-neutral-400', empty: 'bg-neutral-200' }
 
-export function ProgressSegments({ states, current, onSelect }: Props) {
+export function ProgressSegments({ states, current, onSelect, label = 'Entry' }: Props) {
   return (
     <div className="flex gap-1">
       {states.map((s, i) => (
         <Button
           key={i}
-          aria-label={`Entry ${i + 1}, ${s}`}
+          aria-label={`${label} ${i + 1}, ${s}`}
           aria-current={i === current ? 'step' : undefined}
           onPress={() => onSelect(i)}
           className="flex min-h-11 flex-1 items-center rounded-full outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"

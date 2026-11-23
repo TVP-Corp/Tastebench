@@ -29,11 +29,13 @@ const room = {
 } as Room
 const me: Participant = { uid: 'u1', name: 'Me', scores: {}, notes: {} }
 
-function renderRate(index: number) {
+const room2 = { ...room, criteria: [...room.criteria, { id: 'c2', title: 'Smell' }] } as Room
+
+function renderRate(index: number, r: Room = room) {
   render(
     <MemoryRouter initialEntries={[`/r/ABC234/rate/${index}`]}>
       <RoomContext.Provider
-        value={{ room, participants: [me], me, isCreator: false, error: null, uid: 'u1', code: 'ABC234' }}
+        value={{ room: r, participants: [me], me, isCreator: false, error: null, uid: 'u1', code: 'ABC234' }}
       >
         <Routes>
           <Route path="/r/:code/rate/:index" element={<Rate />} />
@@ -81,5 +83,36 @@ describe('Rate', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Entry 3,/ }))
     expect(screen.getByRole('heading', { name: 'Third' })).toBeInTheDocument()
     expect(scrollTo).toHaveBeenCalledTimes(2)
+  })
+
+  it('with one criterion there is no criterion bar', () => {
+    renderRate(0)
+    expect(screen.queryByRole('button', { name: /^Criterion 1,/ })).toBeNull()
+  })
+
+  it('Next steps through criteria, then to the next entry', () => {
+    renderRate(0, room2)
+    expect(screen.getByRole('radiogroup', { name: 'Taste whole number' })).toBeInTheDocument()
+    expect(screen.queryByRole('radiogroup', { name: 'Smell whole number' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    expect(screen.getByRole('heading', { name: 'First' })).toBeInTheDocument()
+    expect(screen.getByRole('radiogroup', { name: 'Smell whole number' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    expect(screen.getByRole('heading', { name: 'Second' })).toBeInTheDocument()
+    expect(screen.getByRole('radiogroup', { name: 'Taste whole number' })).toBeInTheDocument()
+  })
+
+  it('Previous on the first criterion opens the last criterion of the previous entry', () => {
+    renderRate(1, room2)
+    fireEvent.click(screen.getByRole('button', { name: 'Previous' }))
+    expect(screen.getByRole('heading', { name: 'First' })).toBeInTheDocument()
+    expect(screen.getByRole('radiogroup', { name: 'Smell whole number' })).toBeInTheDocument()
+  })
+
+  it('the criterion bar selects a criterion', () => {
+    renderRate(0, room2)
+    fireEvent.click(screen.getByRole('button', { name: /^Criterion 2,/ }))
+    expect(screen.getByRole('radiogroup', { name: 'Smell whole number' })).toBeInTheDocument()
+    expect(screen.getByText('Smell · 2 of 2')).toBeInTheDocument()
   })
 })

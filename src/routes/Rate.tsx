@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Dialog, Heading, Label, Modal, ModalOverlay, TextArea, TextField } from 'react-aria-components'
-import { useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import { entryState } from '../domain/progress'
 import type { Score } from '../domain/types'
 import { setNote, setScore } from '../firebase/rooms'
@@ -13,6 +13,7 @@ import { overlayMotion, sheetMotion } from '../ui/sheet'
 import { TINTS } from '../ui/tints'
 import { useDebounced } from '../ui/useDebounced'
 import { useDocumentTitle } from '../ui/useDocumentTitle'
+import { useSwipe } from '../ui/useSwipe'
 import { useRoomContext } from './RoomContext'
 
 export default function Rate() {
@@ -27,8 +28,15 @@ export default function Rate() {
 function RateEntry({ index }: { index: number }) {
   const { room, me, code, uid, participants } = useRoomContext()
   const navigate = useNavigate()
+  const location = useLocation()
   const [sheet, setSheet] = useState(false)
   const entry = room?.entries[index]
+  const lastCriterion = (room?.criteria.length ?? 1) - 1
+  const [ci, setCi] = useState(() => (location.state?.criterion === 'last' ? lastCriterion : 0))
+  const swipe = useSwipe({
+    onNext: () => setCi((c) => Math.min(c + 1, lastCriterion)),
+    onPrev: () => setCi((c) => Math.max(c - 1, 0)),
+  })
   const [note, setNoteText] = useState(() => (entry ? (me?.notes[entry.id] ?? '') : ''))
   const saveNote = useDebounced((text: string) => {
     if (entry) setNote(code, uid, entry.id, text).catch((e) => console.error('Save note failed', e))
@@ -42,11 +50,14 @@ function RateEntry({ index }: { index: number }) {
   const base = `/r/${code}`
   const last = index === room.entries.length - 1
   const states = room.entries.map((e) => entryState(me, e.id, room.criteria))
-  const go = (i: number) => {
+  const criterion = room.criteria[ci]
+  const go = (i: number, criterion?: 'last') => {
     saveNote.flush()
-    navigate(`${base}/rate/${i}`)
+    navigate(`${base}/rate/${i}`, { state: { criterion } })
   }
+  const prev = () => (ci > 0 ? setCi(ci - 1) : go(index - 1, 'last'))
   const next = () => {
+    if (ci < lastCriterion) return setCi(ci + 1)
     saveNote.flush()
     if (!last) navigate(`${base}/rate/${index + 1}`)
     else navigate(`${base}/${room.status === 'preview' ? 'results' : 'wait'}`)
@@ -68,42 +79,55 @@ function RateEntry({ index }: { index: number }) {
       }
       footer={
         <div className="flex gap-2">
-          {index > 0 && (
-            <PillButton variant="secondary" onPress={() => go(index - 1)}>
+          {(index > 0 || ci > 0) && (
+            <PillButton variant="secondary" onPress={prev}>
               Previous
             </PillButton>
           )}
-          <PillButton onPress={next}>{last ? 'Save' : 'Next'}</PillButton>
+          <PillButton onPress={next}>{last && ci === lastCriterion ? 'Save' : 'Next'}</PillButton>
         </div>
       }
     >
       <div className="flex flex-col gap-4">
         <ProgressSegments states={states} current={index} onSelect={go} />
-        <div
-          className={`flex flex-col gap-6 rounded-3xl p-4 shadow-card ring-1 ring-white ${TINTS[index % TINTS.length]}`}
-        >
-          {room.criteria.map((c) => (
-            <ScorePicker
-              key={c.id}
-              label={c.title}
-              value={me.scores[entry.id]?.[c.id]}
-              onChange={(s: Score) =>
-                setScore(code, uid, entry.id, c.id, s).catch((e) => console.error('Save score failed', e))
-              }
+        {lastCriterion > 0 && (
+          <>
+            <ProgressSegments
+              label="Criterion"
+              states={room.criteria.map((c) => (me.scores[entry.id]?.[c.id] === undefined ? 'empty' : 'complete'))}
+              current={ci}
+              onSelect={setCi}
             />
-          ))}
-          <TextField
-            value={note}
-            onChange={(t) => {
-              setNoteText(t)
-              saveNote(t)
-            }}
-            className="flex flex-col gap-1"
-          >
-            <Label className="text-sm font-medium">Notes</Label>
-            <TextArea rows={3} className="rounded-xl border border-neutral-300 bg-white p-3 text-base" />
-          </TextField>
+            <div className="text-sm text-neutral-600">
+              {criterion.title} · {ci + 1} of {room.criteria.length}
+            </div>
+          </>
+        )}
+        <div
+          {...swipe.handlers}
+          style={{ transform: `translateX(${swipe.offset}px)` }}
+          className={`touch-pan-y rounded-3xl p-4 shadow-card ring-1 ring-white ${swipe.offset ? '' : 'transition-transform'} ${TINTS[index % TINTS.length]}`}
+        >
+          <ScorePicker
+            key={criterion.id}
+            label={criterion.title}
+            value={me.scores[entry.id]?.[criterion.id]}
+            onChange={(s: Score) =>
+              setScore(code, uid, entry.id, criterion.id, s).catch((e) => console.error('Save score failed', e))
+            }
+          />
         </div>
+        <TextField
+          value={note}
+          onChange={(t) => {
+            setNoteText(t)
+            saveNote(t)
+          }}
+          className="flex flex-col gap-1"
+        >
+          <Label className="text-sm font-medium">Notes</Label>
+          <TextArea rows={3} className="rounded-xl border border-neutral-300 bg-white p-3 text-base" />
+        </TextField>
       </div>
 
       <ModalOverlay
