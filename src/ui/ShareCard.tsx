@@ -5,11 +5,10 @@ import { useRoomContext } from '../routes/RoomContext'
 const btn =
   'min-h-11 rounded-full border border-neutral-300 bg-white px-5 text-base font-medium outline-none transition-colors data-[hovered]:bg-neutral-100 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
 
-export function ShareCard({ showShare = true }: { showShare?: boolean }) {
+export function ShareCard() {
   const { code } = useRoomContext()
   const [copied, setCopied] = useState(false)
   const link = `${location.origin}${location.pathname}#/r/${code}`
-  const canShare = showShare && typeof navigator !== 'undefined' && typeof navigator.share === 'function'
 
   const copy = () => {
     navigator.clipboard
@@ -42,14 +41,6 @@ export function ShareCard({ showShare = true }: { showShare?: boolean }) {
         <Button onPress={copy} className={btn}>
           {copied ? 'Copied' : 'Copy link'}
         </Button>
-        {canShare && (
-          <Button
-            onPress={() => navigator.share({ title: 'Join my rating room', url: link }).catch(() => {})}
-            className={btn}
-          >
-            Share
-          </Button>
-        )}
       </div>
     </div>
   )

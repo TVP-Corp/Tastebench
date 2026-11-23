@@ -23,7 +23,12 @@ const mk = (uid: string, name: string, scores: Participant['scores']): Participa
 const alice = mk('a', 'Alice', full)
 const bob = mk('b', 'Bob', { e1: { c1: 10 } })
 
-function renderList(opts: { isCreator: boolean; status?: Room['status']; me?: Participant | null }) {
+function renderList(opts: {
+  isCreator: boolean
+  status?: Room['status']
+  me?: Participant | null
+  participants?: Participant[]
+}) {
   const me = opts.me === undefined ? (opts.isCreator ? alice : bob) : opts.me
   const value: RoomContextValue = {
     room: {
@@ -35,7 +40,7 @@ function renderList(opts: { isCreator: boolean; status?: Room['status']; me?: Pa
       criteria,
       results: null,
     } as Room,
-    participants: [alice, bob],
+    participants: opts.participants ?? [alice, bob],
     me,
     isCreator: opts.isCreator,
     error: null,
@@ -57,8 +62,8 @@ describe('ParticipantList', () => {
   it('shows names with progress', () => {
     renderList({ isCreator: true })
     expect(screen.getByText('Alice')).toBeInTheDocument()
-    expect(screen.getByText('4 / 4')).toBeInTheDocument()
-    expect(screen.getByText('1 / 4')).toBeInTheDocument()
+    expect(screen.getByText('Done')).toBeInTheDocument()
+    expect(screen.getByText('1 of 4 rated')).toBeInTheDocument()
   })
 
   it('shows a Participants heading with the count', () => {
@@ -105,6 +110,7 @@ describe('ParticipantList', () => {
     renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Close room and show results' }))
     const dlg = screen.getByRole('alertdialog')
+    expect(dlg).toHaveTextContent('Close room?')
     expect(dlg).toHaveTextContent('Bob')
     expect(dlg).toHaveTextContent('A missing rating counts as 0. A skip does not count.')
     expect(closeRoom).not.toHaveBeenCalled()
@@ -112,14 +118,62 @@ describe('ParticipantList', () => {
     expect(closeRoom).toHaveBeenCalledWith('ABC234')
   })
 
+  it('close confirms even when everyone is done', () => {
+    renderList({ isCreator: true, participants: [alice] })
+    fireEvent.click(screen.getByRole('button', { name: 'Close room and show results' }))
+    const dlg = screen.getByRole('alertdialog')
+    expect(dlg).toHaveTextContent('can no longer join or rate')
+    expect(dlg).not.toHaveTextContent('A missing rating')
+    expect(closeRoom).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Close room' }))
+    expect(closeRoom).toHaveBeenCalledWith('ABC234')
+  })
+
   it('creator discards after confirmation, deleting all participants', () => {
-    const onLeave = renderList({ isCreator: true, status: 'preview' })
+    const onLeave = renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
     expect(screen.getByRole('alertdialog')).toHaveTextContent('Nothing is saved')
     expect(discardRoom).not.toHaveBeenCalled()
     fireEvent.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Discard room' }))
     expect(onLeave).toHaveBeenCalled()
     expect(discardRoom).toHaveBeenCalledWith('ABC234', ['a', 'b'])
+  })
+
+  it('destructive confirms use the solid red button', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
+    expect(screen.getByRole('button', { name: 'Remove participant' })).toHaveClass(
+      'bg-red-600',
+      'data-[focus-visible]:ring-black',
+    )
+  })
+
+  it('discard confirm uses the solid red button', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
+    const confirm = within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Discard room' })
+    expect(confirm).toHaveClass('bg-red-600')
+  })
+
+  it('leave confirm uses the solid red button', () => {
+    renderList({ isCreator: false })
+    fireEvent.click(screen.getByRole('button', { name: 'Leave room' }))
+    expect(screen.getByRole('button', { name: 'Leave' })).toHaveClass('bg-red-600')
+  })
+
+  it('close confirm uses the primary button', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Close room and show results' }))
+    expect(screen.getByRole('button', { name: 'Close room' })).toHaveClass(
+      'bg-emerald-700',
+      'data-[focus-visible]:ring-black',
+    )
+  })
+
+  it('confirm sheet slides only when motion is allowed', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
+    expect(screen.getByRole('alertdialog').parentElement).toHaveClass('motion-safe:data-[entering]:animate-sheet-in')
   })
 
   it('cancel keeps the room', () => {
@@ -131,6 +185,11 @@ describe('ParticipantList', () => {
 
   it('hides Discard for a participant', () => {
     renderList({ isCreator: false })
+    expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
+  })
+
+  it('hides Discard in preview', () => {
+    renderList({ isCreator: true, status: 'preview' })
     expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
   })
 

@@ -9,6 +9,7 @@ import { PillButton } from '../ui/PillButton'
 import { ProgressSegments } from '../ui/ProgressSegments'
 import { ScorePicker } from '../ui/ScorePicker'
 import { Screen } from '../ui/Screen'
+import { overlayMotion, sheetMotion } from '../ui/sheet'
 import { TINTS } from '../ui/tints'
 import { useDebounced } from '../ui/useDebounced'
 import { useDocumentTitle } from '../ui/useDocumentTitle'
@@ -109,9 +110,9 @@ function RateEntry({ index }: { index: number }) {
         isOpen={sheet}
         onOpenChange={setSheet}
         isDismissable
-        className="fixed inset-0 z-50 flex items-end justify-center bg-black/40"
+        className={`fixed inset-0 z-50 flex items-end justify-center bg-black/40 ${overlayMotion}`}
       >
-        <Modal className="w-full max-w-[480px] rounded-t-3xl bg-white p-6 shadow-xl">
+        <Modal className={`w-full max-w-[480px] rounded-t-3xl bg-white p-6 shadow-xl ${sheetMotion}`}>
           <Dialog className="flex flex-col gap-4 outline-none" aria-label="Participants">
             <Heading slot="title" className="text-lg font-semibold">
               {`Participants · ${participants.length}`}

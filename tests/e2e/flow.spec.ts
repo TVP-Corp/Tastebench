@@ -105,6 +105,7 @@ test('three people rate, close, rename and lock a room', async ({ browser }) => 
 
   // 5. A closes the room. A and B show Preview. C opens the link again and sees it too.
   await a.getByRole('button', { name: 'Close room and show results' }).click()
+  await a.getByRole('button', { name: 'Close room', exact: true }).click()
   await expect(a.getByText('Preview', { exact: true })).toBeVisible()
   await expect(b.getByText('Preview', { exact: true })).toBeVisible()
   await c.reload()
