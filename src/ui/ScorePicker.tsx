@@ -1,7 +1,7 @@
 import { ToggleButton, ToggleButtonGroup } from 'react-aria-components';
 import type { Key } from 'react-aria-components';
 import type { Score } from '../domain/types';
-import { formatTenths, pickDecimal, pickWhole, splitTenths } from '../domain/score';
+import { MAX_WHOLE, formatTenths, pickDecimal, pickWhole, splitTenths } from '../domain/score';
 
 interface Props {
   label: string;
@@ -15,7 +15,11 @@ const cls =
   base +
   'border-neutral-200 bg-white text-neutral-900 data-[selected]:border-neutral-900 data-[selected]:bg-neutral-900 data-[selected]:text-white data-[disabled]:opacity-35';
 
-const WHOLES = Array.from({ length: 12 }, (_, i) => i);
+const skipCls =
+  base +
+  'px-4 border-red-200 bg-red-50 text-red-700 data-[selected]:border-red-300 data-[selected]:bg-red-100 data-[selected]:text-red-800';
+
+const WHOLES = Array.from({ length: MAX_WHOLE + 1 }, (_, i) => i);
 const DECIMALS = Array.from({ length: 10 }, (_, i) => i);
 
 export function ScorePicker({ label, value, onChange }: Props) {
@@ -74,7 +78,7 @@ export function ScorePicker({ label, value, onChange }: Props) {
             key={d}
             id={String(d)}
             aria-label={`.${d}`}
-            isDisabled={!parts || (parts.whole >= 11 && d !== 0)}
+            isDisabled={!parts || (parts.whole >= MAX_WHOLE && d !== 0)}
             className={cls}
           >
             .{d}
@@ -85,7 +89,7 @@ export function ScorePicker({ label, value, onChange }: Props) {
         aria-label="Skip"
         isSelected={value === 'skip'}
         onChange={() => value !== 'skip' && onChange('skip')}
-        className={cls + ' px-4'}
+        className={skipCls}
       >
         Skip
       </ToggleButton>

@@ -2,7 +2,7 @@
 
 A small web app for rating things with friends. It runs on a phone.
 
-One person creates a room with a list of entries and a list of criteria. Friends join with a six-character code or a link. Each person rates every entry on every criterion from 0 to 11, with one decimal. The creator closes the room to see a preview of the ranking. The creator can rename entries. Then the creator locks the results.
+One person creates a room with a list of entries and a list of criteria. Friends join with a six-character code or a link. Each person rates every entry on every criterion from 0 to 10, with one decimal. The creator closes the room to see a preview of the ranking. The creator can rename entries. Then the creator locks the results.
 
 The app is a static site. It uses Firebase (anonymous sign-in and Firestore) as its backend. It is hosted on GitHub Pages.
 

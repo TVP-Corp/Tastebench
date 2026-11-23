@@ -1,6 +1,6 @@
 export type RoomStatus = 'open' | 'preview' | 'locked';
 export interface Item { id: string; title: string }
-export type Score = number | 'skip'; // tenths 0..110
+export type Score = number | 'skip'; // tenths 0..100
 export type Scores = Record<string, Record<string, Score>>; // entryId -> criterionId -> Score
 export interface Room {
   code: string; name: string; creatorUid: string; status: RoomStatus;

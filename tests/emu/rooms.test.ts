@@ -54,7 +54,7 @@ describe('rooms data layer', () => {
     const code = await createRoom(uid, input)
     await joinRoom(code, uid, 'Alice')
     await setScore(code, uid, 'e1', 'c1', 70)
-    await expect(setScore(code, uid, 'e1', 'c1', 111)).rejects.toThrow(/Invalid score/)
+    await expect(setScore(code, uid, 'e1', 'c1', 101)).rejects.toThrow(/Invalid score/)
     const ps = await firstParticipants(code, (p) => p.length === 1 && p[0].scores.e1?.c1 === 70)
     expect(ps[0].scores.e1?.c1).toBe(70)
   })

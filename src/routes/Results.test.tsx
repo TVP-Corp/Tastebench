@@ -90,13 +90,13 @@ describe('Results', () => {
     const snap = computeResults(
       [{ id: 'e1', title: 'Snap One' }, { id: 'e2', title: 'Snap Two' }],
       criteria,
-      [{ uid: 'z', name: 'z', scores: { e1: { c1: 110, c2: 110 } }, notes: {} }],
+      [{ uid: 'z', name: 'z', scores: { e1: { c1: 100, c2: 100 } }, notes: {} }],
     )
     renderResults({ room: { ...base, status: 'locked', results: snap } as Room, creator: true })
     expect(screen.getByText('Final')).toBeInTheDocument()
     const rows = screen.getAllByTestId('ranking-row')
     expect(rows[0]).toHaveTextContent('Snap One')
-    expect(rows[0]).toHaveTextContent('11.0')
+    expect(rows[0]).toHaveTextContent('10.0')
     expect(screen.queryByRole('button', { name: /Edit title/ })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Edit my ratings' })).toBeNull()

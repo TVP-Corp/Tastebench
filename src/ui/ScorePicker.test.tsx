@@ -26,15 +26,16 @@ describe('ScorePicker', () => {
     await userEvent.click(btn('7'));
     expect(onChange).not.toHaveBeenCalled();
   });
-  it('11 keeps only .0', async () => {
+  it('10 keeps only .0', async () => {
     const onChange = vi.fn();
     const { rerender } = render(<ScorePicker label="Taste" value={75} onChange={onChange} />);
-    await userEvent.click(btn('11'));
-    expect(onChange).toHaveBeenLastCalledWith(110);
-    rerender(<ScorePicker label="Taste" value={110} onChange={onChange} />);
+    await userEvent.click(btn('10'));
+    expect(onChange).toHaveBeenLastCalledWith(100);
+    rerender(<ScorePicker label="Taste" value={100} onChange={onChange} />);
     expect(btn('.1')).toBeDisabled();
     expect(btn('.9')).toBeDisabled();
     expect(btn('.0')).toBeEnabled();
+    expect(screen.queryByRole('radio', { name: '11' })).toBeNull();
   });
   it('does not re-emit on same decimal or skip', async () => {
     const onChange = vi.fn();
