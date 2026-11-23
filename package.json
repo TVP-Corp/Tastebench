@@ -10,7 +10,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "emulators": "firebase emulators:start --only auth,firestore --project demo-rating-rooms",
-    "test:emu": "firebase emulators:exec --only auth,firestore --project demo-rating-rooms \"vitest run --config vitest.emu.config.ts\""
+    "test:emu": "firebase emulators:exec --only auth,firestore --project demo-rating-rooms \"vitest run --config vitest.emu.config.ts\"",
+    "test:e2e": "firebase emulators:exec --only auth,firestore --project demo-rating-rooms \"playwright test\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.5",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^6.0.0",
+    "@playwright/test": "^1.65.1",
     "@testing-library/jest-dom": "^8.0.0",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.13",
