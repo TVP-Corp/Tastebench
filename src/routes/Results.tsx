@@ -158,7 +158,7 @@ export default function Results() {
             </Heading>
             <TextField value={draft} onChange={setDraft} className="flex flex-col gap-1">
               <Label className="text-sm">Title</Label>
-              <Input className="min-h-11 rounded-xl border border-neutral-300 px-3 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black" />
+              <Input className="min-h-11 rounded-xl border border-neutral-300 px-3 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black" />
             </TextField>
             <PillButton isDisabled={draft.trim() === ''} onPress={save}>
               Save

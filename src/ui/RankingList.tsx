@@ -20,7 +20,7 @@ export function RankingList({ rows, onOpen, renderAction }: Props) {
         >
           <Button
             onPress={() => onOpen(r.entryId)}
-            className="flex min-h-12 flex-1 items-center gap-3 rounded-2xl px-4 text-left outline-none transition-colors data-[hovered]:bg-white data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+            className="flex min-h-12 flex-1 items-center gap-3 rounded-2xl px-4 text-left outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
           >
             <span className="w-6 text-center font-semibold text-neutral-500">{r.rank ?? '-'}</span>
             <span className="flex-1 font-medium">{r.title}</span>

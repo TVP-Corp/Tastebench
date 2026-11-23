@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import type { Room } from '../domain/types'
-import { ShareCard } from '../ui/ShareCard'
 
 vi.mock('../firebase/app', () => ({ db: {}, auth: {} }))
 vi.mock('../firebase/rooms', () => ({ removeParticipant: vi.fn(), closeRoom: vi.fn(), discardRoom: vi.fn() }))
@@ -27,10 +26,12 @@ const value: RoomContextValue = {
   code: 'ABC234',
 }
 
-function renderIn(ui: React.ReactNode) {
+function renderWaiting() {
   render(
     <MemoryRouter>
-      <RoomContext.Provider value={value}>{ui}</RoomContext.Provider>
+      <RoomContext.Provider value={value}>
+        <Waiting />
+      </RoomContext.Provider>
     </MemoryRouter>,
   )
 }
@@ -38,17 +39,20 @@ function renderIn(ui: React.ReactNode) {
 beforeEach(() => {
   Object.defineProperty(navigator, 'share', { value: vi.fn(() => Promise.resolve()), configurable: true })
 })
+afterEach(() => {
+  delete (navigator as { share?: unknown }).share
+})
 
 describe('Waiting', () => {
   it('shows the code and Copy link but no Share', () => {
-    renderIn(<Waiting />)
+    renderWaiting()
     expect(screen.getByText('ABC234')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Copy link' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Share' })).toBeNull()
   })
 
-  it('ShareCard shows Share by default', () => {
-    renderIn(<ShareCard />)
-    expect(screen.getByRole('button', { name: 'Share' })).toBeInTheDocument()
+  it('sets the page title', () => {
+    renderWaiting()
+    expect(document.title).toBe('Tastebench | Waiting room')
   })
 })

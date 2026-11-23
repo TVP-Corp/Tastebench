@@ -77,7 +77,7 @@ export default function Landing() {
             <PillButton type="submit" isDisabled={busy || uid === null || !normalizeCode(code)}>
               Join
             </PillButton>
-            <PillButton variant="secondary" onPress={cancel}>
+            <PillButton variant="secondary" isDisabled={busy} onPress={cancel}>
               Cancel
             </PillButton>
           </form>

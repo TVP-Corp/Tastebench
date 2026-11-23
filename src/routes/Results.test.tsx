@@ -103,6 +103,17 @@ describe('Results', () => {
     expect(screen.getByText(/cannot join/)).toBeInTheDocument()
   })
 
+  it('share dialog offers the system Share button', () => {
+    Object.defineProperty(navigator, 'share', { value: vi.fn(() => Promise.resolve()), configurable: true })
+    try {
+      renderResults({ room: preview })
+      fireEvent.click(screen.getByRole('button', { name: 'Share room code' }))
+      expect(screen.getByRole('button', { name: 'Share' })).toBeInTheDocument()
+    } finally {
+      delete (navigator as { share?: unknown }).share
+    }
+  })
+
   it('locked reads the snapshot and hides controls', () => {
     const snap = computeResults(
       [

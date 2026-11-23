@@ -24,7 +24,7 @@ export default function Rate() {
 }
 
 function RateEntry({ index }: { index: number }) {
-  const { room, me, code, uid } = useRoomContext()
+  const { room, me, code, uid, participants } = useRoomContext()
   const navigate = useNavigate()
   const [sheet, setSheet] = useState(false)
   const entry = room?.entries[index]
@@ -114,9 +114,9 @@ function RateEntry({ index }: { index: number }) {
         <Modal className="w-full max-w-[480px] rounded-t-3xl bg-white p-6 shadow-xl">
           <Dialog className="flex flex-col gap-4 outline-none" aria-label="Participants">
             <Heading slot="title" className="text-lg font-semibold">
-              Participants
+              {`Participants · ${participants.length}`}
             </Heading>
-            <ParticipantList onLeave={() => navigate('/')} />
+            <ParticipantList showHeading={false} onLeave={() => navigate('/')} />
           </Dialog>
         </Modal>
       </ModalOverlay>
