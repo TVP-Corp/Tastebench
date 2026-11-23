@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Button } from 'react-aria-components';
-import { OfflineBanner } from './OfflineBanner';
 
 interface Props {
   title?: string;
@@ -14,7 +13,6 @@ interface Props {
 export function Screen({ title, subtitle, onBack, actions, footer, children }: Props) {
   return (
     <div className="min-h-dvh bg-gradient-to-b from-rose-50 via-sky-50 to-violet-50 font-sans text-neutral-900">
-      <OfflineBanner />
       <div className="mx-auto flex min-h-dvh max-w-[480px] flex-col px-4 pb-6 pt-4">
         <header className="flex min-h-11 items-center justify-between">
           {onBack ? (

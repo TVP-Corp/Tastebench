@@ -7,7 +7,9 @@ import { useAuth } from '../firebase/useAuth'
 import { useRoom } from '../firebase/useRoom'
 import { PillButton } from '../ui/PillButton'
 import JoinName from './JoinName'
+import Rate from './Rate'
 import { RoomContext } from './RoomContext'
+import Waiting from './Waiting'
 
 export type GateView = 'loading' | 'not-found' | 'removed' | 'join' | 'rate' | 'wait' | 'results'
 
@@ -34,11 +36,6 @@ function Shell({ children }: { children: React.ReactNode }) {
       </main>
     </div>
   )
-}
-
-function RatePlaceholder() {
-  const { index } = useParams()
-  return <h1>{`rate ${index}`}</h1>
 }
 
 export default function RoomGate() {
@@ -100,8 +97,8 @@ export default function RoomGate() {
   return (
     <RoomContext.Provider value={{ ...value, uid, code }}>
       <Routes>
-        <Route path="rate/:index" element={<RatePlaceholder />} />
-        <Route path="wait" element={<h1>wait</h1>} />
+        <Route path="rate/:index" element={<Rate />} />
+        <Route path="wait" element={<Waiting />} />
         <Route path="results" element={<h1>results</h1>} />
         <Route path="*" element={null} />
       </Routes>
