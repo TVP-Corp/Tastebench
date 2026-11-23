@@ -130,7 +130,7 @@ describe('ParticipantList', () => {
   })
 
   it('creator discards after confirmation, deleting all participants', () => {
-    const onLeave = renderList({ isCreator: true, status: 'preview' })
+    const onLeave = renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
     expect(screen.getByRole('alertdialog')).toHaveTextContent('Nothing is saved')
     expect(discardRoom).not.toHaveBeenCalled()
@@ -154,6 +154,11 @@ describe('ParticipantList', () => {
 
   it('hides Discard for a participant', () => {
     renderList({ isCreator: false })
+    expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
+  })
+
+  it('hides Discard in preview', () => {
+    renderList({ isCreator: true, status: 'preview' })
     expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
   })
 

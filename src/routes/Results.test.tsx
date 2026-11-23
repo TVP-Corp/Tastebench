@@ -10,6 +10,7 @@ const rooms = vi.hoisted(() => ({
   lockRoom: vi.fn(() => Promise.resolve()),
   closeRoom: vi.fn(),
   removeParticipant: vi.fn(),
+  discardRoom: vi.fn(() => Promise.resolve()),
 }))
 vi.mock('../firebase/rooms', () => rooms)
 
@@ -89,6 +90,16 @@ describe('Results', () => {
     expect(rooms.lockRoom).toHaveBeenCalledWith('ABC234', computeResults(entries, criteria, people))
   })
 
+  it('creator discards the room in preview after confirmation', () => {
+    renderResults({ room: preview, creator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
+    fireEvent.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Discard room' }))
+    expect(rooms.discardRoom).toHaveBeenCalledWith(
+      'ABC234',
+      people.map((p) => p.uid),
+    )
+  })
+
   it('non-creator and non-participant see no creator controls', () => {
     renderResults({ room: preview, me: null })
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()
@@ -132,5 +143,6 @@ describe('Results', () => {
     expect(screen.queryByRole('button', { name: 'Share room code' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Edit my ratings' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
   })
 })

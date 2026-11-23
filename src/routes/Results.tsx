@@ -18,6 +18,7 @@ import { firstIncompleteIndex, participantProgress } from '../domain/progress'
 import { computeResults } from '../domain/results'
 import { lockRoom, renameEntry } from '../firebase/rooms'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
+import { DiscardRoom } from '../ui/DiscardRoom'
 import { EntryDetail } from '../ui/EntryDetail'
 import { ParticipantList } from '../ui/ParticipantList'
 import { PillButton } from '../ui/PillButton'
@@ -113,7 +114,12 @@ export default function Results() {
               Edit my ratings
             </Button>
           )}
-          {editable && <PillButton onPress={() => setLocking(true)}>Lock results</PillButton>}
+          {editable && (
+            <>
+              <PillButton onPress={() => setLocking(true)}>Lock results</PillButton>
+              <DiscardRoom onLeave={() => navigate('/')} />
+            </>
+          )}
         </div>
       }
     >
