@@ -75,7 +75,15 @@ describe('Rate', () => {
     expect(screen.getByRole('button', { name: 'Previous' })).toHaveClass('bg-transparent')
     fireEvent.click(screen.getByRole('button', { name: 'Previous' }))
     expect(screen.getByRole('heading', { name: 'First' })).toBeInTheDocument()
-    expect(scrollTo).toHaveBeenCalledWith({ top: 0 })
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
+  })
+
+  it('a criterion step scrolls smoothly to top', () => {
+    renderRate(0, room2)
+    scrollTo.mockClear()
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    expect(screen.getByRole('radiogroup', { name: 'Smell whole number' })).toBeInTheDocument()
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
   })
 
   it('Next and the entry bar scroll to top', () => {
