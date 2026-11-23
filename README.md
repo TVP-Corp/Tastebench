@@ -11,26 +11,26 @@ The app is a static site. It uses Firebase (anonymous sign-in and Firestore) as 
 Install the packages:
 
 ```
-npm ci
+pnpm install
 ```
 
 Start the Firebase emulators in one terminal:
 
 ```
-npm run emulators
+pnpm emulators
 ```
 
 Start the app against the emulators in a second terminal:
 
 ```
-VITE_USE_EMULATOR=true npm run dev
+VITE_USE_EMULATOR=true pnpm dev
 ```
 
 ## Tests
 
-- `npm test` runs the unit tests.
-- `npm run test:emu` runs the Firestore rules tests with the emulators.
-- `npm run test:e2e` runs a browser test with three people. It starts the emulators and the app. Run `npx playwright install chromium` once before it.
+- `pnpm test` runs the unit tests.
+- `pnpm test:emu` runs the Firestore rules tests with the emulators.
+- `pnpm test:e2e` runs a browser test with three people. It starts the emulators and the app. Run `pnpm exec playwright install chromium` once before it.
 
 ## Firebase setup
 
