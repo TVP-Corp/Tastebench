@@ -1,0 +1,24 @@
+colors: false
+output: false
+
+pre-commit:
+  parallel: true
+  commands:
+    oxlint:
+      glob: '*.{js,jsx,ts,tsx,mjs,cjs}'
+      run: pnpm exec oxlint --fix --no-error-on-unmatched-pattern {staged_files}
+      stage_fixed: true
+    oxfmt:
+      glob: '*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,yml,yaml}'
+      run: pnpm exec oxfmt --write --no-error-on-unmatched-pattern {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    oxlint:
+      glob: '*.{js,jsx,ts,tsx,mjs,cjs}'
+      run: pnpm exec oxlint --no-error-on-unmatched-pattern {push_files}
+    oxfmt:
+      glob: '*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,yml,yaml}'
+      run: pnpm exec oxfmt --check --no-error-on-unmatched-pattern {push_files}

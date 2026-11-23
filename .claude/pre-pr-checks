@@ -1,10 +1,9 @@
 #!/bin/sh
 # Local CI-equivalent gate. The repo-onboarder pre-pr-checks hook runs it before
 # `gh pr create` / `gh pr edit` and blocks the PR when it exits non-zero.
-# Fast subset only: the format check, unit tests and the type-check. CI also builds the site.
-# `pnpm lint` is left out: it already fails on main (react(refs) warnings in
-# src/routes/RoomGate.tsx). The emulator and e2e suites need Java and take
-# minutes, so run them by hand (`pnpm test:emu`, `pnpm test:e2e`).
+# Fast subset only: lint, the format check, unit tests and the type-check. CI also builds the site.
+# The emulator and e2e suites need Java and take minutes, so run them by hand
+# (`pnpm test:emu`, `pnpm test:e2e`).
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
 if ! command -v pnpm >/dev/null 2>&1; then
@@ -18,6 +17,7 @@ run() {
   "$@" || status=1
 }
 
+run pnpm lint
 run pnpm format:check
 run pnpm test
 run pnpm exec tsc -b
