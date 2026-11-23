@@ -13,6 +13,11 @@ const rooms = vi.hoisted(() => ({
   discardRoom: vi.fn(() => Promise.resolve()),
 }))
 vi.mock('../firebase/rooms', () => rooms)
+const navigate = vi.hoisted(() => vi.fn())
+vi.mock('react-router', async (orig) => ({
+  ...(await orig<typeof import('react-router')>()),
+  useNavigate: () => navigate,
+}))
 
 import Results from './Results'
 import { RoomContext } from './RoomContext'
@@ -86,7 +91,9 @@ describe('Results', () => {
     renderResults({ room: preview, creator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Lock results' }))
     expect(screen.getByRole('alertdialog')).toHaveTextContent('cannot change')
-    fireEvent.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Lock results' }))
+    const confirm = within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Lock results' })
+    expect(confirm).toHaveClass('bg-emerald-700')
+    fireEvent.click(confirm)
     expect(rooms.lockRoom).toHaveBeenCalledWith('ABC234', computeResults(entries, criteria, people))
   })
 
@@ -98,6 +105,7 @@ describe('Results', () => {
       'ABC234',
       people.map((p) => p.uid),
     )
+    expect(navigate).toHaveBeenCalledWith('/')
   })
 
   it('non-creator and non-participant see no creator controls', () => {
@@ -105,6 +113,7 @@ describe('Results', () => {
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Edit my ratings' })).toBeNull()
     expect(screen.queryByRole('button', { name: /Edit title/ })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
   })
 
   it('preview shares the room code', () => {

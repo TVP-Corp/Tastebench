@@ -22,7 +22,7 @@ export function ConfirmDialog({ isOpen, title, body, confirmLabel, onConfirm, on
             {title}
           </Heading>
           <div className="text-neutral-700">{body}</div>
-          <PillButton variant={destructive ? 'destructive' : 'primary'} onPress={onConfirm}>
+          <PillButton variant={destructive ? 'dangerSolid' : 'primary'} onPress={onConfirm}>
             {confirmLabel}
           </PillButton>
           <Button

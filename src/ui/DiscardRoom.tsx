@@ -37,7 +37,7 @@ export function DiscardRoom({ onLeave }: { onLeave: () => void }) {
           discardRoom(
             code,
             participants.map((p) => p.uid),
-          ).catch((err) => console.error(err))
+          ).catch(console.error)
         }}
       />
     </>

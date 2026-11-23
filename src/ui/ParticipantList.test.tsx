@@ -142,7 +142,32 @@ describe('ParticipantList', () => {
   it('destructive confirms use the solid red button', () => {
     renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
-    expect(screen.getByRole('button', { name: 'Remove participant' })).toHaveClass('bg-red-600')
+    expect(screen.getByRole('button', { name: 'Remove participant' })).toHaveClass(
+      'bg-red-600',
+      'data-[focus-visible]:ring-black',
+    )
+  })
+
+  it('discard confirm uses the solid red button', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
+    const confirm = within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Discard room' })
+    expect(confirm).toHaveClass('bg-red-600')
+  })
+
+  it('leave confirm uses the solid red button', () => {
+    renderList({ isCreator: false })
+    fireEvent.click(screen.getByRole('button', { name: 'Leave room' }))
+    expect(screen.getByRole('button', { name: 'Leave' })).toHaveClass('bg-red-600')
+  })
+
+  it('close confirm uses the primary button', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Close room and show results' }))
+    expect(screen.getByRole('button', { name: 'Close room' })).toHaveClass(
+      'bg-emerald-700',
+      'data-[focus-visible]:ring-black',
+    )
   })
 
   it('confirm sheet slides only when motion is allowed', () => {

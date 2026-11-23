@@ -3,9 +3,9 @@
 @theme {
   --shadow-card: 0 4px 16px -4px rgb(76 29 149 / 0.12);
   --animate-fade-in: fade-in 200ms ease-out;
-  --animate-fade-out: fade-in 200ms ease-in reverse forwards;
+  --animate-fade-out: fade-out 200ms ease-in forwards;
   --animate-sheet-in: sheet-in 250ms ease-out;
-  --animate-sheet-out: sheet-in 200ms ease-in reverse forwards;
+  --animate-sheet-out: sheet-out 200ms ease-in forwards;
 
   @keyframes fade-in {
     from {
@@ -16,12 +16,31 @@
     }
   }
 
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* A viewport offset starts the sheet off-screen also when it is centred at sm+. */
   @keyframes sheet-in {
     from {
-      transform: translateY(100%);
+      transform: translateY(100vh);
     }
     to {
       transform: translateY(0);
+    }
+  }
+
+  @keyframes sheet-out {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100vh);
     }
   }
 }
