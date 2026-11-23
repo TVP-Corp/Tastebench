@@ -3,6 +3,7 @@ import { Button, type ButtonProps } from 'react-aria-components'
 const VARIANTS = {
   primary: 'bg-black text-white data-[pressed]:bg-neutral-700',
   secondary: 'border border-neutral-300 bg-white text-neutral-900 data-[pressed]:bg-neutral-100',
+  danger: 'border border-red-300 bg-white text-red-700 data-[pressed]:bg-red-100',
 }
 
 export function PillButton({

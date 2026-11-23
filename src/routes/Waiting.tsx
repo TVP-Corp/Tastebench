@@ -19,7 +19,7 @@ export default function Waiting() {
   return (
     <Screen title={room.name} subtitle="Waiting room">
       <div className="flex flex-col gap-4">
-        <ShareCard />
+        <ShareCard showShare={false} />
         <ParticipantList onLeave={() => navigate('/')} />
         <PillButton onPress={edit}>Edit my ratings</PillButton>
       </div>

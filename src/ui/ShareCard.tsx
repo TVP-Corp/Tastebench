@@ -5,11 +5,11 @@ import { useRoomContext } from '../routes/RoomContext'
 const btn =
   'min-h-11 rounded-full border border-neutral-300 bg-white px-5 text-base font-medium outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
 
-export function ShareCard() {
+export function ShareCard({ showShare = true }: { showShare?: boolean }) {
   const { code } = useRoomContext()
   const [copied, setCopied] = useState(false)
   const link = `${location.origin}${location.pathname}#/r/${code}`
-  const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function'
+  const canShare = showShare && typeof navigator !== 'undefined' && typeof navigator.share === 'function'
 
   const copy = () => {
     navigator.clipboard

@@ -61,6 +61,11 @@ describe('ParticipantList', () => {
     expect(screen.getByText('1 / 4')).toBeInTheDocument()
   })
 
+  it('shows a Participants heading with the count', () => {
+    renderList({ isCreator: true })
+    expect(screen.getByRole('heading', { name: /Participants · 2/ })).toBeInTheDocument()
+  })
+
   it('creator sees Remove for others, no Leave, and Close', () => {
     renderList({ isCreator: true })
     expect(screen.getAllByRole('button', { name: 'Remove' })).toHaveLength(1)

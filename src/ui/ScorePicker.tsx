@@ -48,7 +48,7 @@ export function ScorePicker({ label, value, onChange }: Props) {
           {display}
         </span>
       </div>
-      <div className="text-sm text-neutral-600">1. Whole number</div>
+      <div className="text-sm text-neutral-600">Score</div>
       <ToggleButtonGroup
         aria-label={`${label} whole number`}
         selectionMode="single"
@@ -63,7 +63,7 @@ export function ScorePicker({ label, value, onChange }: Props) {
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
-      <div className="text-sm text-neutral-600">2. Decimal</div>
+      <div className="text-sm text-neutral-600">Fine-tune</div>
       <ToggleButtonGroup
         aria-label={`${label} decimal`}
         selectionMode="single"
