@@ -36,6 +36,11 @@ function Shell({ children }: { children: React.ReactNode }) {
   )
 }
 
+function RatePlaceholder() {
+  const { index } = useParams()
+  return <h1>{`rate ${index}`}</h1>
+}
+
 export default function RoomGate() {
   const params = useParams()
   const code = normalizeCode(params.code ?? '')
@@ -95,7 +100,7 @@ export default function RoomGate() {
   return (
     <RoomContext.Provider value={{ ...value, uid, code }}>
       <Routes>
-        <Route path="rate/:index" element={<h1>rate</h1>} />
+        <Route path="rate/:index" element={<RatePlaceholder />} />
         <Route path="wait" element={<h1>wait</h1>} />
         <Route path="results" element={<h1>results</h1>} />
         <Route path="*" element={null} />

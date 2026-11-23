@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { MemoryRouter, Route, Routes } from 'react-router'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { MemoryRouter, Route, Routes, useNavigate } from 'react-router'
 import type { Participant, Room } from '../domain/types'
 
 const state: { value: unknown } = { value: null }
@@ -28,6 +28,11 @@ describe('decideView', () => {
   it('others rate', () => expect(decideView(base)).toBe('rate'))
 })
 
+function GoTo() {
+  const navigate = useNavigate()
+  return <button onClick={() => navigate('/r/ABC234/rate/0')}>go-rate</button>
+}
+
 function renderGate(path: string) {
   return render(
     <MemoryRouter initialEntries={[path]}>
@@ -40,9 +45,27 @@ describe('RoomGate', () => {
   const val = (over: object) => ({ room: room(), participants: [], me, isCreator: false, error: null, ...over })
 
   it('redirects a rater to the first incomplete entry', () => {
-    state.value = val({})
+    const two = { ...room(), entries: [{ id: 'e1', title: 'E' }, { id: 'e2', title: 'F' }] }
+    state.value = val({ room: two, me: { ...me, scores: { e1: { c1: 70 } } } })
     renderGate('/r/ABC234')
-    expect(screen.getByRole('heading', { name: 'rate' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'rate 1' })).toBeInTheDocument()
+  })
+
+  it('open to preview lands on results once, then rate stays reachable', () => {
+    state.value = val({})
+    const tree = () => (
+      <MemoryRouter initialEntries={['/r/ABC234/rate/0']}>
+        <GoTo />
+        <Routes><Route path="/r/:code/*" element={<RoomGate />} /></Routes>
+      </MemoryRouter>
+    )
+    const { rerender } = render(tree())
+    expect(screen.getByRole('heading', { name: 'rate 0' })).toBeInTheDocument()
+    state.value = val({ room: room('preview') })
+    rerender(tree())
+    expect(screen.getByRole('heading', { name: 'results' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'go-rate' }))
+    expect(screen.getByRole('heading', { name: 'rate 0' })).toBeInTheDocument()
   })
 
   it('shows removed message after the participant disappears', () => {
@@ -78,7 +101,7 @@ describe('RoomGate', () => {
   it('preview allows rate path for a participant', () => {
     state.value = val({ room: room('preview') })
     renderGate('/r/ABC234/rate/0')
-    expect(screen.getByRole('heading', { name: 'rate' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'rate 0' })).toBeInTheDocument()
   })
 
   it('shows join name for a non-member', () => {
