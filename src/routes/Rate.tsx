@@ -5,12 +5,12 @@ import { entryState } from '../domain/progress'
 import type { Score } from '../domain/types'
 import { setNote, setScore } from '../firebase/rooms'
 import { ParticipantList } from '../ui/ParticipantList'
+import { PeopleIcon } from '../ui/PeopleIcon'
 import { PillButton } from '../ui/PillButton'
 import { ProgressSegments } from '../ui/ProgressSegments'
 import { ScorePicker } from '../ui/ScorePicker'
 import { Screen } from '../ui/Screen'
 import { overlayMotion, sheetMotion } from '../ui/sheet'
-import { TINTS } from '../ui/tints'
 import { useDebounced } from '../ui/useDebounced'
 import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useSwipe } from '../ui/useSwipe'
@@ -79,15 +79,15 @@ function RateEntry({ index }: { index: number }) {
         <Button
           aria-label="Participants"
           onPress={() => setSheet(true)}
-          className="flex size-11 items-center justify-center rounded-full text-2xl outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+          className="flex size-11 items-center justify-center rounded-full text-2xl outline-none transition-colors data-[hovered]:bg-ink/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink"
         >
-          <span aria-hidden>👥</span>
+          <PeopleIcon className="size-6" />
         </Button>
       }
       footer={
         <div className="flex gap-2">
           {(index > 0 || ci > 0) && (
-            <PillButton variant="secondary" onPress={prev}>
+            <PillButton variant="tertiary" onPress={prev}>
               Previous
             </PillButton>
           )}
@@ -105,7 +105,7 @@ function RateEntry({ index }: { index: number }) {
               current={ci}
               onSelect={step}
             />
-            <div className="text-sm text-neutral-600">
+            <div className="text-sm text-ink-muted">
               {criterion.title} · {ci + 1} of {room.criteria.length}
             </div>
           </>
@@ -114,7 +114,7 @@ function RateEntry({ index }: { index: number }) {
           key={criterion.id}
           {...swipe.handlers}
           style={swipe.style}
-          className={`touch-pan-y rounded-3xl p-4 shadow-card ring-1 ring-white ${swipe.offset ? '' : 'transition-transform'} ${enter} ${TINTS[index % TINTS.length]}`}
+          className={`touch-pan-y rounded-3xl bg-surface p-4 shadow-card ring-1 ring-line-strong ${swipe.offset ? '' : 'transition-transform'} ${enter}`}
         >
           <ScorePicker
             label={criterion.title}
@@ -133,7 +133,10 @@ function RateEntry({ index }: { index: number }) {
           className="flex flex-col gap-1"
         >
           <Label className="text-sm font-medium">Notes</Label>
-          <TextArea rows={3} className="rounded-xl border border-neutral-300 bg-white p-3 text-base" />
+          <TextArea
+            rows={3}
+            className="rounded-xl border border-line-strong bg-surface p-3 text-base outline-none data-[focused]:ring-2 data-[focused]:ring-ink"
+          />
         </TextField>
       </div>
 
@@ -141,9 +144,9 @@ function RateEntry({ index }: { index: number }) {
         isOpen={sheet}
         onOpenChange={setSheet}
         isDismissable
-        className={`fixed inset-0 z-50 flex items-end justify-center bg-black/40 ${overlayMotion}`}
+        className={`fixed inset-0 z-50 flex items-end justify-center bg-ink/40 ${overlayMotion}`}
       >
-        <Modal className={`w-full max-w-[480px] rounded-t-3xl bg-white p-6 shadow-xl ${sheetMotion}`}>
+        <Modal className={`w-full max-w-[480px] rounded-t-3xl bg-surface p-6 shadow-xl ${sheetMotion}`}>
           <Dialog className="flex flex-col gap-4 outline-none" aria-label="Participants">
             <Heading slot="title" className="text-lg font-semibold">
               {`Participants · ${participants.length}`}

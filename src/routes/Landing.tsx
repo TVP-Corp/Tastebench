@@ -38,12 +38,12 @@ export default function Landing() {
   }
 
   return (
-    <div className="min-h-dvh bg-gradient-to-b from-rose-50 via-sky-50 to-violet-50">
+    <div className="min-h-dvh bg-page">
       <main className="mx-auto flex min-h-dvh max-w-[480px] flex-col justify-center gap-4 px-4 motion-safe:animate-fade-in">
         <div className="mb-4 flex flex-col items-center gap-2 text-center">
           <Logo size={56} wordmark={false} />
           <h1 className="text-3xl font-bold">Tastebench</h1>
-          <p className="text-neutral-600">Rate anything with friends</p>
+          <p className="text-ink-muted">Rate anything with friends</p>
         </div>
         {!joining ? (
           <>
@@ -71,13 +71,13 @@ export default function Landing() {
               className="flex flex-col gap-1"
             >
               <Label className="text-sm font-medium">Room code</Label>
-              <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base uppercase" />
-              <FieldError className="text-sm text-red-600">No room with this code</FieldError>
+              <Input className="min-h-12 rounded-xl border border-line-strong bg-surface px-4 text-base uppercase outline-none data-[focused]:ring-2 data-[focused]:ring-ink" />
+              <FieldError className="text-sm text-danger">No room with this code</FieldError>
             </TextField>
             <PillButton type="submit" isDisabled={busy || uid === null || !normalizeCode(code)}>
               Join
             </PillButton>
-            <PillButton variant="secondary" isDisabled={busy} onPress={cancel}>
+            <PillButton variant="tertiary" isDisabled={busy} onPress={cancel}>
               Cancel
             </PillButton>
           </form>

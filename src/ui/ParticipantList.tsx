@@ -6,10 +6,11 @@ import { closeRoom, removeParticipant } from '../firebase/rooms'
 import { useRoomContext } from '../routes/RoomContext'
 import { ConfirmDialog } from './ConfirmDialog'
 import { DiscardRoom } from './DiscardRoom'
+import { PeopleIcon } from './PeopleIcon'
 import { PillButton } from './PillButton'
 
 const link =
-  'min-h-11 rounded-full px-4 text-sm font-medium text-red-700 outline-none transition-colors data-[hovered]:bg-red-50 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
+  'min-h-11 rounded-full px-4 text-sm font-medium text-danger outline-none transition-colors data-[hovered]:bg-danger-50 data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink'
 const DELETE_NOTE = 'All of this person’s ratings and notes will be deleted.'
 
 export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () => void; showHeading?: boolean }) {
@@ -33,18 +34,8 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
   return (
     <div className="flex flex-col gap-3">
       {showHeading && (
-        <h2 className="flex items-center gap-1 text-sm font-medium text-neutral-600">
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            className="size-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="9" cy="8" r="3" />
-            <path d="M3 20a6 6 0 0 1 12 0M16 5a3 3 0 0 1 0 6M18 20a6 6 0 0 0-3-5" />
-          </svg>
+        <h2 className="flex items-center gap-1 text-sm font-medium text-ink-muted">
+          <PeopleIcon />
           {`Participants · ${participants.length}`}
         </h2>
       )}
@@ -54,16 +45,16 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
           return (
             <li
               key={p.uid}
-              className="flex items-center justify-between rounded-2xl bg-white/80 px-4 py-2 shadow-card ring-1 ring-white"
+              className="flex items-center justify-between rounded-2xl bg-surface px-4 py-2 shadow-card ring-1 ring-line-strong"
             >
               <span className="font-medium">{p.name}</span>
               <span className="flex items-center gap-2">
                 {done === total ? (
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-sm font-semibold text-emerald-800">
+                  <span className="rounded-full bg-brand-100 px-2 py-0.5 text-sm font-semibold text-brand-800">
                     Done
                   </span>
                 ) : (
-                  <span className="text-sm text-neutral-600">{`${done} of ${total} rated`}</span>
+                  <span className="text-sm text-ink-muted tabular-nums">{`${done} of ${total} rated`}</span>
                 )}
                 {isCreator && p.uid !== me?.uid && (
                   <Button onPress={() => setRemoving(p)} className={link}>
@@ -77,13 +68,15 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
       </ul>
 
       {!isCreator && me && (
-        <Button onPress={() => setLeaving(true)} className={link}>
+        <PillButton variant="danger" onPress={() => setLeaving(true)}>
           Leave room
-        </Button>
+        </PillButton>
       )}
       {isCreator && room.status === 'open' && (
         <>
-          <PillButton onPress={() => setClosing(true)}>Close room and show results</PillButton>
+          <PillButton variant="warning" onPress={() => setClosing(true)}>
+            Close room and show results
+          </PillButton>
           <DiscardRoom onLeave={onLeave} />
         </>
       )}
@@ -93,7 +86,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
         title="Leave room?"
         body={DELETE_NOTE}
         confirmLabel="Leave"
-        destructive
+        variant="danger"
         onCancel={() => setLeaving(false)}
         onConfirm={() => {
           setLeaving(false)
@@ -106,7 +99,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
         title={`Remove ${removing?.name ?? ''}?`}
         body={DELETE_NOTE}
         confirmLabel="Remove participant"
-        destructive
+        variant="danger"
         onCancel={() => setRemoving(null)}
         onConfirm={() => {
           const target = removing
@@ -131,6 +124,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
           </>
         }
         confirmLabel="Close room"
+        variant="warning"
         onCancel={() => setClosing(false)}
         onConfirm={close}
       />

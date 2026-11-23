@@ -74,6 +74,7 @@ describe('Results', () => {
     const d = within(screen.getByRole('dialog'))
     expect(d.getByText('d').closest('tr')).toHaveTextContent('skipped')
     expect(d.getByText('e').closest('tr')).toHaveTextContent('-')
+    expect(d.getByRole('button', { name: 'Close' })).toHaveClass('bg-transparent')
   })
 
   it('creator renames; empty disables save', () => {
@@ -92,7 +93,7 @@ describe('Results', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Lock results' }))
     expect(screen.getByRole('alertdialog')).toHaveTextContent('cannot change')
     const confirm = within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Lock results' })
-    expect(confirm).toHaveClass('bg-emerald-700')
+    expect(confirm).toHaveClass('bg-accent')
     fireEvent.click(confirm)
     expect(rooms.lockRoom).toHaveBeenCalledWith('ABC234', computeResults(entries, criteria, people))
   })
@@ -108,6 +109,13 @@ describe('Results', () => {
     expect(navigate).toHaveBeenCalledWith('/')
   })
 
+  it('the Participants button shows the people icon', () => {
+    renderResults({ room: preview })
+    const button = screen.getByRole('button', { name: 'Participants' })
+    expect(button.textContent).toBe('')
+    expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+  })
+
   it('non-creator and non-participant see no creator controls', () => {
     renderResults({ room: preview, me: null })
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()
@@ -121,6 +129,22 @@ describe('Results', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Share room code' }))
     expect(screen.getByText('ABC234')).toBeInTheDocument()
     expect(screen.getByText(/cannot join/)).toBeInTheDocument()
+  })
+
+  it('ranking tabs are text tabs with a brand underline', () => {
+    renderResults({ room: preview })
+    const tab = screen.getByRole('tab', { name: 'Overall' })
+    expect(tab).toHaveAttribute('aria-selected', 'true')
+    expect(tab).toHaveClass('min-h-11', 'data-[selected]:text-brand-700', 'data-[selected]:border-brand-600')
+    expect(tab).not.toHaveClass('rounded-full')
+  })
+
+  it('share actions and Done are text buttons', () => {
+    renderResults({ room: preview })
+    const share = screen.getByRole('button', { name: 'Share room code' })
+    expect(share).toHaveClass('bg-transparent')
+    fireEvent.click(share)
+    expect(screen.getByRole('button', { name: 'Done' })).toHaveClass('bg-transparent')
   })
 
   it('share dialog has no system Share button', () => {

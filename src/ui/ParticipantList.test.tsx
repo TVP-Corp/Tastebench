@@ -139,35 +139,41 @@ describe('ParticipantList', () => {
     expect(discardRoom).toHaveBeenCalledWith('ABC234', ['a', 'b'])
   })
 
-  it('destructive confirms use the solid red button', () => {
+  it('remove confirm uses the danger outline button', () => {
     renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
     expect(screen.getByRole('button', { name: 'Remove participant' })).toHaveClass(
-      'bg-red-600',
-      'data-[focus-visible]:ring-black',
+      'border-danger-line',
+      'data-[focus-visible]:ring-ink',
     )
   })
 
-  it('discard confirm uses the solid red button', () => {
+  it('discard confirm matches its trigger, icon included', () => {
     renderList({ isCreator: true })
-    fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
+    const trigger = screen.getByRole('button', { name: 'Discard room' })
+    fireEvent.click(trigger)
     const confirm = within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Discard room' })
-    expect(confirm).toHaveClass('bg-red-600')
+    expect(confirm).toHaveClass('border-danger-line')
+    expect(confirm.className).toBe(trigger.className)
+    expect(confirm.querySelector('svg')).not.toBeNull()
   })
 
-  it('leave confirm uses the solid red button', () => {
+  it('leave trigger and confirm use the same danger outline button', () => {
     renderList({ isCreator: false })
-    fireEvent.click(screen.getByRole('button', { name: 'Leave room' }))
-    expect(screen.getByRole('button', { name: 'Leave' })).toHaveClass('bg-red-600')
+    const trigger = screen.getByRole('button', { name: 'Leave room' })
+    fireEvent.click(trigger)
+    const confirm = screen.getByRole('button', { name: 'Leave' })
+    expect(confirm).toHaveClass('border-danger-line')
+    expect(confirm.className).toBe(trigger.className)
   })
 
-  it('close confirm uses the primary button', () => {
+  it('close trigger and confirm use the same warning button', () => {
     renderList({ isCreator: true })
-    fireEvent.click(screen.getByRole('button', { name: 'Close room and show results' }))
-    expect(screen.getByRole('button', { name: 'Close room' })).toHaveClass(
-      'bg-emerald-700',
-      'data-[focus-visible]:ring-black',
-    )
+    const trigger = screen.getByRole('button', { name: 'Close room and show results' })
+    fireEvent.click(trigger)
+    const confirm = screen.getByRole('button', { name: 'Close room' })
+    expect(confirm).toHaveClass('border-warning-line', 'data-[focus-visible]:ring-ink')
+    expect(confirm.className).toBe(trigger.className)
   })
 
   it('confirm sheet slides only when motion is allowed', () => {

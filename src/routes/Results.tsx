@@ -21,6 +21,7 @@ import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { DiscardRoom } from '../ui/DiscardRoom'
 import { EntryDetail } from '../ui/EntryDetail'
 import { ParticipantList } from '../ui/ParticipantList'
+import { PeopleIcon } from '../ui/PeopleIcon'
 import { PillButton } from '../ui/PillButton'
 import { RankingList } from '../ui/RankingList'
 import { Screen } from '../ui/Screen'
@@ -30,7 +31,7 @@ import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useRoomContext } from './RoomContext'
 
 const tabClass =
-  'min-h-11 cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium outline-none transition-colors not-data-[selected]:data-[hovered]:bg-neutral-900/5 data-[selected]:bg-black data-[selected]:text-white data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
+  'flex min-h-11 cursor-pointer items-center whitespace-nowrap rounded-t-lg border-b-2 border-transparent px-3 text-sm font-medium text-ink-muted outline-none transition-colors not-data-[selected]:data-[hovered]:bg-ink/5 data-[selected]:border-brand-600 data-[selected]:text-brand-700 data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink'
 const fail = (err: unknown) => console.error(err)
 
 export default function Results() {
@@ -76,7 +77,7 @@ export default function Results() {
         <Button
           aria-label={`Edit title of ${r.title}`}
           onPress={() => startEdit(r.entryId)}
-          className="mr-1 flex size-11 items-center justify-center rounded-full outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+          className="mr-1 flex size-11 items-center justify-center rounded-full outline-none transition-colors data-[hovered]:bg-ink/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink"
         >
           ✎
         </Button>
@@ -91,29 +92,26 @@ export default function Results() {
           <Button
             aria-label="Participants"
             onPress={() => setPeople(true)}
-            className="flex size-11 items-center justify-center rounded-full text-xl outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+            className="flex size-11 items-center justify-center rounded-full text-xl outline-none transition-colors data-[hovered]:bg-ink/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink"
           >
-            👥
+            <PeopleIcon className="size-6" />
           </Button>
         )
       }
       footer={
         <div className="flex flex-col gap-2">
           {!locked && (
-            <Button
-              onPress={() => setSharing(true)}
-              className="min-h-11 rounded-full text-base font-medium outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
-            >
+            <PillButton variant="tertiary" onPress={() => setSharing(true)}>
               Share room code
-            </Button>
+            </PillButton>
           )}
           {!locked && me && (
-            <Button
+            <PillButton
+              variant="tertiary"
               onPress={() => navigate(`/r/${code}/rate/${firstIncompleteIndex(me, room.entries, room.criteria)}`)}
-              className="min-h-11 rounded-full text-base font-medium outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
             >
               Edit my ratings
-            </Button>
+            </PillButton>
           )}
           {editable && (
             <>
@@ -125,7 +123,7 @@ export default function Results() {
       }
     >
       <div className="flex flex-col gap-4">
-        <span className="self-center rounded-full bg-white px-3 py-1 text-sm font-semibold">
+        <span className="self-center rounded-full bg-surface px-3 py-1 ring-1 ring-line-strong text-sm font-semibold">
           {locked ? 'Final' : 'Preview'}
         </span>
         <Tabs>
@@ -158,24 +156,21 @@ export default function Results() {
         isDismissable
         className={overlayClass}
       >
-        <Modal className={`w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}>
+        <Modal className={`w-full max-w-sm rounded-3xl bg-surface p-6 shadow-xl ${sheetMotion}`}>
           <Dialog className="flex flex-col gap-4 outline-none">
             <Heading slot="title" className="text-lg font-semibold">
               Edit title
             </Heading>
             <TextField value={draft} onChange={setDraft} className="flex flex-col gap-1">
               <Label className="text-sm">Title</Label>
-              <Input className="min-h-11 rounded-xl border border-neutral-300 px-3 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black" />
+              <Input className="min-h-11 rounded-xl border border-line-strong px-3 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink" />
             </TextField>
             <PillButton isDisabled={draft.trim() === ''} onPress={save}>
               Save
             </PillButton>
-            <Button
-              onPress={() => setEditId(null)}
-              className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
-            >
+            <PillButton variant="tertiary" onPress={() => setEditId(null)}>
               Cancel
-            </Button>
+            </PillButton>
           </Dialog>
         </Modal>
       </ModalOverlay>
@@ -195,20 +190,22 @@ export default function Results() {
       />
 
       <ModalOverlay isOpen={sharing} onOpenChange={setSharing} isDismissable className={overlayClass}>
-        <Modal className={`w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}>
+        <Modal className={`w-full max-w-sm rounded-3xl bg-surface p-6 shadow-xl ${sheetMotion}`}>
           <Dialog aria-label="Share room code" className="flex flex-col gap-4 outline-none">
             <ShareCard />
-            <p className="text-center text-sm text-neutral-600">
+            <p className="text-center text-sm text-ink-muted">
               The room is closed, so new people can see the results but cannot join.
             </p>
-            <PillButton onPress={() => setSharing(false)}>Done</PillButton>
+            <PillButton variant="tertiary" onPress={() => setSharing(false)}>
+              Done
+            </PillButton>
           </Dialog>
         </Modal>
       </ModalOverlay>
 
       <ModalOverlay isOpen={people} onOpenChange={setPeople} isDismissable className={overlayClass}>
         <Modal
-          className={`max-h-[85dvh] w-full max-w-sm overflow-auto rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}
+          className={`max-h-[85dvh] w-full max-w-sm overflow-auto rounded-3xl bg-surface p-6 shadow-xl ${sheetMotion}`}
         >
           <Dialog aria-label="Participants" className="outline-none">
             <ParticipantList onLeave={() => navigate('/')} />
