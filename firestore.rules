@@ -79,6 +79,7 @@ service cloud.firestore {
         // lock: preview -> locked
         || (resource.data.status == 'preview'
           && request.resource.data.status == 'locked'
+          && changed().hasOnly(['status', 'results', 'lockedAt'])
           && changed().hasAll(['status', 'results', 'lockedAt'])
           && request.resource.data.results != null)
       );

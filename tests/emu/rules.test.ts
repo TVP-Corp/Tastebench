@@ -150,6 +150,12 @@ describe('room update', () => {
     test('rename that reorders entries fails', async () => {
       await assertFails(upd('alice', { entries: [entries[1], entries[0]] }))
     })
+    test('lock that also changes entries fails', async () => {
+      await assertFails(upd('alice', {
+        status: 'locked', results: { e1: 1 }, lockedAt: now(),
+        entries: [{ id: 'e1', title: 'Hacked' }, { id: 'e2', title: 'Two' }],
+      }))
+    })
     test('lock with only status fails', async () => {
       await assertFails(upd('alice', { status: 'locked' }))
     })
