@@ -3,10 +3,12 @@ import { FieldError, Input, Label, TextField } from 'react-aria-components'
 import { useNavigate } from 'react-router'
 import { normalizeCode } from '../domain/code'
 import { roomExists } from '../firebase/rooms'
+import { useAuth } from '../firebase/useAuth'
 import { PillButton } from '../ui/PillButton'
 
 export default function Landing() {
   const navigate = useNavigate()
+  const uid = useAuth()
   const [joining, setJoining] = useState(false)
   const [code, setCode] = useState('')
   const [notFound, setNotFound] = useState(false)
@@ -50,7 +52,7 @@ export default function Landing() {
               <Input className="min-h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base uppercase" />
               <FieldError className="text-sm text-red-600">No room with this code</FieldError>
             </TextField>
-            <PillButton type="submit" isDisabled={busy || !normalizeCode(code)}>Join</PillButton>
+            <PillButton type="submit" isDisabled={busy || uid === null || !normalizeCode(code)}>Join</PillButton>
           </form>
         )}
       </main>
