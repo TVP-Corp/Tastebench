@@ -59,4 +59,14 @@ describe('ScorePicker', () => {
     expect(screen.getByTestId('score-value')).toHaveTextContent('Skipped')
     expect(screen.queryAllByRole('radio', { checked: true })).toHaveLength(0)
   })
+  it('skip is a white chip that fills dark when selected', () => {
+    render(<ScorePicker label="Taste" value="skip" onChange={() => {}} />)
+    expect(screen.getByRole('button', { name: 'Skip' })).toHaveClass(
+      'bg-white',
+      'border-neutral-300',
+      'text-neutral-600',
+      'data-[selected]:bg-neutral-700',
+      'data-[selected]:text-white',
+    )
+  })
 })
