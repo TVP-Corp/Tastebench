@@ -51,6 +51,11 @@ describe('Waiting', () => {
     expect(screen.queryByRole('button', { name: 'Share' })).toBeNull()
   })
 
+  it('Edit my ratings is a text button', () => {
+    renderWaiting()
+    expect(screen.getByRole('button', { name: 'Edit my ratings' })).toHaveClass('bg-transparent')
+  })
+
   it('sets the page title', () => {
     renderWaiting()
     expect(document.title).toBe('Tastebench | Waiting room')

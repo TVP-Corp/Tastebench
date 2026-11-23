@@ -100,20 +100,17 @@ export default function Results() {
       footer={
         <div className="flex flex-col gap-2">
           {!locked && (
-            <Button
-              onPress={() => setSharing(true)}
-              className="min-h-11 rounded-full text-base font-medium outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
-            >
+            <PillButton variant="tertiary" onPress={() => setSharing(true)}>
               Share room code
-            </Button>
+            </PillButton>
           )}
           {!locked && me && (
-            <Button
+            <PillButton
+              variant="tertiary"
               onPress={() => navigate(`/r/${code}/rate/${firstIncompleteIndex(me, room.entries, room.criteria)}`)}
-              className="min-h-11 rounded-full text-base font-medium outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
             >
               Edit my ratings
-            </Button>
+            </PillButton>
           )}
           {editable && (
             <>
@@ -170,12 +167,9 @@ export default function Results() {
             <PillButton isDisabled={draft.trim() === ''} onPress={save}>
               Save
             </PillButton>
-            <Button
-              onPress={() => setEditId(null)}
-              className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
-            >
+            <PillButton variant="tertiary" onPress={() => setEditId(null)}>
               Cancel
-            </Button>
+            </PillButton>
           </Dialog>
         </Modal>
       </ModalOverlay>
@@ -201,7 +195,9 @@ export default function Results() {
             <p className="text-center text-sm text-neutral-600">
               The room is closed, so new people can see the results but cannot join.
             </p>
-            <PillButton onPress={() => setSharing(false)}>Done</PillButton>
+            <PillButton variant="tertiary" onPress={() => setSharing(false)}>
+              Done
+            </PillButton>
           </Dialog>
         </Modal>
       </ModalOverlay>

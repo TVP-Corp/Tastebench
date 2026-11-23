@@ -21,7 +21,9 @@ export default function Waiting() {
       <div className="flex flex-col gap-4">
         <ShareCard />
         <ParticipantList onLeave={() => navigate('/')} />
-        <PillButton onPress={edit}>Edit my ratings</PillButton>
+        <PillButton variant="tertiary" onPress={edit}>
+          Edit my ratings
+        </PillButton>
       </div>
     </Screen>
   )

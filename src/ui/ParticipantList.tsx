@@ -83,7 +83,9 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
       )}
       {isCreator && room.status === 'open' && (
         <>
-          <PillButton onPress={() => setClosing(true)}>Close room and show results</PillButton>
+          <PillButton variant="warning" onPress={() => setClosing(true)}>
+            Close room and show results
+          </PillButton>
           <DiscardRoom onLeave={onLeave} />
         </>
       )}
@@ -93,7 +95,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
         title="Leave room?"
         body={DELETE_NOTE}
         confirmLabel="Leave"
-        destructive
+        variant="danger"
         onCancel={() => setLeaving(false)}
         onConfirm={() => {
           setLeaving(false)
@@ -106,7 +108,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
         title={`Remove ${removing?.name ?? ''}?`}
         body={DELETE_NOTE}
         confirmLabel="Remove participant"
-        destructive
+        variant="danger"
         onCancel={() => setRemoving(null)}
         onConfirm={() => {
           const target = removing
@@ -131,6 +133,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
           </>
         }
         confirmLabel="Close room"
+        variant="warning"
         onCancel={() => setClosing(false)}
         onConfirm={close}
       />

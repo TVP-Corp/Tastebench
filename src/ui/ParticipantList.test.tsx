@@ -139,33 +139,38 @@ describe('ParticipantList', () => {
     expect(discardRoom).toHaveBeenCalledWith('ABC234', ['a', 'b'])
   })
 
-  it('destructive confirms use the solid red button', () => {
+  it('remove confirm uses the red outline button', () => {
     renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
     expect(screen.getByRole('button', { name: 'Remove participant' })).toHaveClass(
-      'bg-red-600',
+      'border-red-300',
       'data-[focus-visible]:ring-black',
     )
   })
 
-  it('discard confirm uses the solid red button', () => {
+  it('discard confirm matches its trigger, icon included', () => {
     renderList({ isCreator: true })
-    fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
+    const trigger = screen.getByRole('button', { name: 'Discard room' })
+    fireEvent.click(trigger)
     const confirm = within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Discard room' })
-    expect(confirm).toHaveClass('bg-red-600')
+    expect(confirm).toHaveClass('border-red-300')
+    expect(confirm.className).toBe(trigger.className)
+    expect(confirm.querySelector('svg')).not.toBeNull()
   })
 
-  it('leave confirm uses the solid red button', () => {
+  it('leave confirm uses the red outline button', () => {
     renderList({ isCreator: false })
     fireEvent.click(screen.getByRole('button', { name: 'Leave room' }))
-    expect(screen.getByRole('button', { name: 'Leave' })).toHaveClass('bg-red-600')
+    expect(screen.getByRole('button', { name: 'Leave' })).toHaveClass('border-red-300')
   })
 
-  it('close confirm uses the primary button', () => {
+  it('close trigger and confirm use the amber warning button', () => {
     renderList({ isCreator: true })
-    fireEvent.click(screen.getByRole('button', { name: 'Close room and show results' }))
+    const trigger = screen.getByRole('button', { name: 'Close room and show results' })
+    expect(trigger).toHaveClass('border-amber-400')
+    fireEvent.click(trigger)
     expect(screen.getByRole('button', { name: 'Close room' })).toHaveClass(
-      'bg-emerald-700',
+      'border-amber-400',
       'data-[focus-visible]:ring-black',
     )
   })

@@ -123,6 +123,14 @@ describe('Results', () => {
     expect(screen.getByText(/cannot join/)).toBeInTheDocument()
   })
 
+  it('share actions and Done are text buttons', () => {
+    renderResults({ room: preview })
+    const share = screen.getByRole('button', { name: 'Share room code' })
+    expect(share).toHaveClass('bg-transparent')
+    fireEvent.click(share)
+    expect(screen.getByRole('button', { name: 'Done' })).toHaveClass('bg-transparent')
+  })
+
   it('share dialog has no system Share button', () => {
     Object.defineProperty(navigator, 'share', { value: vi.fn(() => Promise.resolve()), configurable: true })
     try {
