@@ -3,6 +3,9 @@
 @theme {
   --shadow-card: 0 4px 16px -4px rgb(76 29 149 / 0.12);
   --animate-fade-in: fade-in 200ms ease-out;
+  --animate-fade-out: fade-in 200ms ease-in reverse forwards;
+  --animate-sheet-in: sheet-in 250ms ease-out;
+  --animate-sheet-out: sheet-in 200ms ease-in reverse forwards;
 
   @keyframes fade-in {
     from {
@@ -10,6 +13,15 @@
     }
     to {
       opacity: 1;
+    }
+  }
+
+  @keyframes sheet-in {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
     }
   }
 }

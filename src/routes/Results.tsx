@@ -25,6 +25,7 @@ import { PillButton } from '../ui/PillButton'
 import { RankingList } from '../ui/RankingList'
 import { Screen } from '../ui/Screen'
 import { ShareCard } from '../ui/ShareCard'
+import { overlayClass, sheetMotion } from '../ui/sheet'
 import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useRoomContext } from './RoomContext'
 
@@ -155,9 +156,9 @@ export default function Results() {
         isOpen={editId !== null}
         onOpenChange={(o) => !o && setEditId(null)}
         isDismissable
-        className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
+        className={overlayClass}
       >
-        <Modal className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl">
+        <Modal className={`w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}>
           <Dialog className="flex flex-col gap-4 outline-none">
             <Heading slot="title" className="text-lg font-semibold">
               Edit title
@@ -193,13 +194,8 @@ export default function Results() {
         onConfirm={confirmLock}
       />
 
-      <ModalOverlay
-        isOpen={sharing}
-        onOpenChange={setSharing}
-        isDismissable
-        className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
-      >
-        <Modal className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl">
+      <ModalOverlay isOpen={sharing} onOpenChange={setSharing} isDismissable className={overlayClass}>
+        <Modal className={`w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}>
           <Dialog aria-label="Share room code" className="flex flex-col gap-4 outline-none">
             <ShareCard />
             <p className="text-center text-sm text-neutral-600">
@@ -210,13 +206,10 @@ export default function Results() {
         </Modal>
       </ModalOverlay>
 
-      <ModalOverlay
-        isOpen={people}
-        onOpenChange={setPeople}
-        isDismissable
-        className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
-      >
-        <Modal className="max-h-[85dvh] w-full max-w-sm overflow-auto rounded-3xl bg-white p-6 shadow-xl">
+      <ModalOverlay isOpen={people} onOpenChange={setPeople} isDismissable className={overlayClass}>
+        <Modal
+          className={`max-h-[85dvh] w-full max-w-sm overflow-auto rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}
+        >
           <Dialog aria-label="Participants" className="outline-none">
             <ParticipantList onLeave={() => navigate('/')} />
           </Dialog>

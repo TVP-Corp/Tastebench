@@ -1,6 +1,7 @@
 import { Button, Dialog, Heading, Modal, ModalOverlay } from 'react-aria-components'
 import { formatTenths } from '../domain/score'
 import type { ResultsSnapshot } from '../domain/types'
+import { overlayClass, sheetMotion } from './sheet'
 
 interface Props {
   data: ResultsSnapshot
@@ -19,9 +20,11 @@ export function EntryDetail({ data, entryId, onClose }: Props) {
       isOpen={entry !== undefined}
       onOpenChange={(o) => !o && onClose()}
       isDismissable
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
+      className={overlayClass}
     >
-      <Modal className="max-h-[85dvh] w-full max-w-md overflow-auto rounded-3xl bg-white p-6 shadow-xl">
+      <Modal
+        className={`max-h-[85dvh] w-full max-w-md overflow-auto rounded-3xl bg-white p-6 shadow-xl ${sheetMotion}`}
+      >
         <Dialog className="flex flex-col gap-4 outline-none">
           <Heading slot="title" className="text-lg font-semibold">
             {entry?.title}

@@ -145,6 +145,12 @@ describe('ParticipantList', () => {
     expect(screen.getByRole('button', { name: 'Remove participant' })).toHaveClass('bg-red-600')
   })
 
+  it('confirm sheet slides only when motion is allowed', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
+    expect(screen.getByRole('alertdialog').parentElement).toHaveClass('motion-safe:data-[entering]:animate-sheet-in')
+  })
+
   it('cancel keeps the room', () => {
     renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))
