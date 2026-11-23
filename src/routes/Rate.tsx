@@ -33,9 +33,16 @@ function RateEntry({ index }: { index: number }) {
   const entry = room?.entries[index]
   const lastCriterion = (room?.criteria.length ?? 1) - 1
   const [ci, setCi] = useState(() => (location.state?.criterion === 'last' ? lastCriterion : 0))
+  const [enter, setEnter] = useState('')
+  const step = (to: number) => {
+    if (to !== ci) setEnter(to > ci ? 'motion-safe:animate-card-in-left' : 'motion-safe:animate-card-in-right')
+    setCi(to)
+  }
   const swipe = useSwipe({
-    onNext: () => setCi((c) => Math.min(c + 1, lastCriterion)),
-    onPrev: () => setCi((c) => Math.max(c - 1, 0)),
+    onNext: () => step(ci + 1),
+    onPrev: () => step(ci - 1),
+    canNext: ci < lastCriterion,
+    canPrev: ci > 0,
   })
   const [note, setNoteText] = useState(() => (entry ? (me?.notes[entry.id] ?? '') : ''))
   const saveNote = useDebounced((text: string) => {
@@ -55,9 +62,9 @@ function RateEntry({ index }: { index: number }) {
     saveNote.flush()
     navigate(`${base}/rate/${i}`, { state: { criterion } })
   }
-  const prev = () => (ci > 0 ? setCi(ci - 1) : go(index - 1, 'last'))
+  const prev = () => (ci > 0 ? step(ci - 1) : go(index - 1, 'last'))
   const next = () => {
-    if (ci < lastCriterion) return setCi(ci + 1)
+    if (ci < lastCriterion) return step(ci + 1)
     saveNote.flush()
     if (!last) navigate(`${base}/rate/${index + 1}`)
     else navigate(`${base}/${room.status === 'preview' ? 'results' : 'wait'}`)
@@ -96,7 +103,7 @@ function RateEntry({ index }: { index: number }) {
               label="Criterion"
               states={room.criteria.map((c) => (me.scores[entry.id]?.[c.id] === undefined ? 'empty' : 'complete'))}
               current={ci}
-              onSelect={setCi}
+              onSelect={step}
             />
             <div className="text-sm text-neutral-600">
               {criterion.title} · {ci + 1} of {room.criteria.length}
@@ -104,12 +111,12 @@ function RateEntry({ index }: { index: number }) {
           </>
         )}
         <div
+          key={criterion.id}
           {...swipe.handlers}
-          style={{ transform: `translateX(${swipe.offset}px)` }}
-          className={`touch-pan-y rounded-3xl p-4 shadow-card ring-1 ring-white ${swipe.offset ? '' : 'transition-transform'} ${TINTS[index % TINTS.length]}`}
+          style={swipe.style}
+          className={`touch-pan-y rounded-3xl p-4 shadow-card ring-1 ring-white ${swipe.offset ? '' : 'transition-transform'} ${enter} ${TINTS[index % TINTS.length]}`}
         >
           <ScorePicker
-            key={criterion.id}
             label={criterion.title}
             value={me.scores[entry.id]?.[criterion.id]}
             onChange={(s: Score) =>

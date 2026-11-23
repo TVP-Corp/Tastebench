@@ -6,6 +6,8 @@
   --animate-fade-out: fade-out 200ms ease-in forwards;
   --animate-sheet-in: sheet-in 250ms ease-out;
   --animate-sheet-out: sheet-out 200ms ease-in forwards;
+  --animate-card-in-left: card-in-left 200ms ease-out;
+  --animate-card-in-right: card-in-right 200ms ease-out;
 
   @keyframes fade-in {
     from {
@@ -32,6 +34,20 @@
     }
     to {
       transform: translateY(0);
+    }
+  }
+
+  @keyframes card-in-left {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes card-in-right {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
     }
   }
 
