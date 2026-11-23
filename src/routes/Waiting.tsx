@@ -4,11 +4,13 @@ import { ParticipantList } from '../ui/ParticipantList'
 import { PillButton } from '../ui/PillButton'
 import { Screen } from '../ui/Screen'
 import { ShareCard } from '../ui/ShareCard'
+import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useRoomContext } from './RoomContext'
 
 export default function Waiting() {
   const { room, me, code } = useRoomContext()
   const navigate = useNavigate()
+  useDocumentTitle('Waiting room')
   if (!room) return null
   const edit = () => {
     const i = me ? firstIncompleteIndex(me, room.entries, room.criteria) : 0
@@ -17,7 +19,7 @@ export default function Waiting() {
   return (
     <Screen title={room.name} subtitle="Waiting room">
       <div className="flex flex-col gap-4">
-        <ShareCard />
+        <ShareCard showShare={false} />
         <ParticipantList onLeave={() => navigate('/')} />
         <PillButton onPress={edit}>Edit my ratings</PillButton>
       </div>

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import type { Participant, Room } from '../domain/types'
 
@@ -51,6 +51,12 @@ beforeEach(() => {
 })
 
 describe('Rate', () => {
+  it('participants sheet has one Participants heading', () => {
+    renderRate(0)
+    fireEvent.click(screen.getByRole('button', { name: 'Participants' }))
+    expect(within(screen.getByRole('dialog')).getAllByRole('heading', { name: /participants/i })).toHaveLength(1)
+  })
+
   it('first entry has no Previous', () => {
     renderRate(0)
     expect(screen.queryByRole('button', { name: 'Previous' })).toBeNull()

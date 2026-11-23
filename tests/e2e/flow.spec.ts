@@ -51,7 +51,7 @@ test('three people rate, close, rename and lock a room', async ({ browser }) => 
   await joinByLink(c, code, 'Cat')
   await expect(b.getByText('Entry 1 of 3')).toBeVisible()
   await expect(c.getByText('Entry 1 of 3')).toBeVisible()
-  await expect(a.getByText('Ben')).toBeVisible()
+  await expect(a.getByText('Ben', { exact: true })).toBeVisible()
   await expect(a.getByText('Cat')).toBeVisible()
 
   // 3. B rates everything. C rates entry 1 and skips Smell on entry 2.

@@ -63,7 +63,7 @@ export function EntryDetail({ data, entryId, onClose }: Props) {
           </div>
           <Button
             onPress={onClose}
-            className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+            className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
           >
             Close
           </Button>

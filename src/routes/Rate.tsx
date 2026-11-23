@@ -11,18 +11,20 @@ import { ScorePicker } from '../ui/ScorePicker'
 import { Screen } from '../ui/Screen'
 import { TINTS } from '../ui/tints'
 import { useDebounced } from '../ui/useDebounced'
+import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useRoomContext } from './RoomContext'
 
 export default function Rate() {
   const { index } = useParams()
   const { room } = useRoomContext()
+  useDocumentTitle('Rate')
   if (!room) return null
   const i = Math.min(Math.max(Number.parseInt(index ?? '0', 10) || 0, 0), room.entries.length - 1)
   return <RateEntry key={i} index={i} />
 }
 
 function RateEntry({ index }: { index: number }) {
-  const { room, me, code, uid } = useRoomContext()
+  const { room, me, code, uid, participants } = useRoomContext()
   const navigate = useNavigate()
   const [sheet, setSheet] = useState(false)
   const entry = room?.entries[index]
@@ -58,7 +60,7 @@ function RateEntry({ index }: { index: number }) {
         <Button
           aria-label="Participants"
           onPress={() => setSheet(true)}
-          className="flex size-11 items-center justify-center rounded-full text-2xl outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+          className="flex size-11 items-center justify-center rounded-full text-2xl outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
         >
           <span aria-hidden>👥</span>
         </Button>
@@ -76,7 +78,9 @@ function RateEntry({ index }: { index: number }) {
     >
       <div className="flex flex-col gap-4">
         <ProgressSegments states={states} current={index} onSelect={go} />
-        <div className={`flex flex-col gap-6 rounded-3xl p-4 ${TINTS[index % TINTS.length]}`}>
+        <div
+          className={`flex flex-col gap-6 rounded-3xl p-4 shadow-card ring-1 ring-white ${TINTS[index % TINTS.length]}`}
+        >
           {room.criteria.map((c) => (
             <ScorePicker
               key={c.id}
@@ -110,9 +114,9 @@ function RateEntry({ index }: { index: number }) {
         <Modal className="w-full max-w-[480px] rounded-t-3xl bg-white p-6 shadow-xl">
           <Dialog className="flex flex-col gap-4 outline-none" aria-label="Participants">
             <Heading slot="title" className="text-lg font-semibold">
-              Participants
+              {`Participants · ${participants.length}`}
             </Heading>
-            <ParticipantList onLeave={() => navigate('/')} />
+            <ParticipantList showHeading={false} onLeave={() => navigate('/')} />
           </Dialog>
         </Modal>
       </ModalOverlay>

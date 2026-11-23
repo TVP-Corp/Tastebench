@@ -6,6 +6,11 @@ import { ScorePicker } from './ScorePicker'
 const btn = (n: string) => screen.getByRole('radio', { name: n })
 
 describe('ScorePicker', () => {
+  it('labels the rows Score and Fine-tune', () => {
+    render(<ScorePicker label="Taste" value={undefined} onChange={() => {}} />)
+    expect(screen.getByText('Score')).toBeInTheDocument()
+    expect(screen.getByText('Fine-tune')).toBeInTheDocument()
+  })
   it('shows - and disables decimals when empty', () => {
     render(<ScorePicker label="Taste" value={undefined} onChange={() => {}} />)
     expect(screen.getByTestId('score-value')).toHaveTextContent('-')

@@ -28,7 +28,7 @@ export function ConfirmDialog({ isOpen, title, body, confirmLabel, onConfirm, on
           <PillButton onPress={onConfirm}>{confirmLabel}</PillButton>
           <Button
             onPress={onCancel}
-            className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+            className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
           >
             Cancel
           </Button>

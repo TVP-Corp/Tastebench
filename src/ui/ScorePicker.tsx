@@ -10,14 +10,14 @@ interface Props {
 }
 
 const base =
-  'flex min-h-11 min-w-11 items-center justify-center rounded-xl border text-base font-medium outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black '
+  'flex min-h-11 min-w-11 items-center justify-center rounded-xl border text-base font-medium outline-none transition-colors data-[focus-visible]:ring-2 data-[focus-visible]:ring-black '
 const cls =
   base +
-  'border-neutral-200 bg-white text-neutral-900 data-[selected]:border-neutral-900 data-[selected]:bg-neutral-900 data-[selected]:text-white data-[disabled]:opacity-35'
+  'border-neutral-200 bg-white text-neutral-900 not-data-[selected]:data-[hovered]:bg-neutral-100 data-[selected]:border-neutral-900 data-[selected]:bg-neutral-900 data-[selected]:text-white data-[disabled]:opacity-35'
 
 const skipCls =
   base +
-  'px-4 border-red-200 bg-red-50 text-red-700 data-[selected]:border-red-300 data-[selected]:bg-red-100 data-[selected]:text-red-800'
+  'px-4 border-red-200 bg-red-50 text-red-700 not-data-[selected]:data-[hovered]:border-red-300 data-[selected]:border-red-300 data-[selected]:bg-red-100 data-[selected]:text-red-800'
 
 const WHOLES = Array.from({ length: MAX_WHOLE + 1 }, (_, i) => i)
 const DECIMALS = Array.from({ length: 10 }, (_, i) => i)
@@ -48,7 +48,7 @@ export function ScorePicker({ label, value, onChange }: Props) {
           {display}
         </span>
       </div>
-      <div className="text-sm text-neutral-600">1. Whole number</div>
+      <div className="text-sm text-neutral-600">Score</div>
       <ToggleButtonGroup
         aria-label={`${label} whole number`}
         selectionMode="single"
@@ -63,7 +63,7 @@ export function ScorePicker({ label, value, onChange }: Props) {
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
-      <div className="text-sm text-neutral-600">2. Decimal</div>
+      <div className="text-sm text-neutral-600">Fine-tune</div>
       <ToggleButtonGroup
         aria-label={`${label} decimal`}
         selectionMode="single"

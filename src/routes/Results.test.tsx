@@ -51,6 +51,11 @@ describe('Results', () => {
     expect(rows[1]).toHaveTextContent('3.3')
   })
 
+  it('sets the page title', () => {
+    renderResults({ room: preview })
+    expect(document.title).toBe('Tastebench | Results')
+  })
+
   it('Smell tab shows 6.0 first', () => {
     renderResults({ room: preview })
     fireEvent.click(screen.getByRole('tab', { name: 'Smell' }))
@@ -96,6 +101,17 @@ describe('Results', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Share room code' }))
     expect(screen.getByText('ABC234')).toBeInTheDocument()
     expect(screen.getByText(/cannot join/)).toBeInTheDocument()
+  })
+
+  it('share dialog offers the system Share button', () => {
+    Object.defineProperty(navigator, 'share', { value: vi.fn(() => Promise.resolve()), configurable: true })
+    try {
+      renderResults({ room: preview })
+      fireEvent.click(screen.getByRole('button', { name: 'Share room code' }))
+      expect(screen.getByRole('button', { name: 'Share' })).toBeInTheDocument()
+    } finally {
+      delete (navigator as { share?: unknown }).share
+    }
   })
 
   it('locked reads the snapshot and hides controls', () => {
