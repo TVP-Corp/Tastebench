@@ -24,7 +24,7 @@ describe('ScorePicker', () => {
     const onChange = vi.fn();
     render(<ScorePicker label="Taste" value={70} onChange={onChange} />);
     await userEvent.click(btn('7'));
-    expect(onChange).not.toHaveBeenCalledWith(undefined);
+    expect(onChange).not.toHaveBeenCalled();
   });
   it('11 keeps only .0', async () => {
     const onChange = vi.fn();
