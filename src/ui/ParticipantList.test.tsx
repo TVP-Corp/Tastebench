@@ -23,7 +23,12 @@ const mk = (uid: string, name: string, scores: Participant['scores']): Participa
 const alice = mk('a', 'Alice', full)
 const bob = mk('b', 'Bob', { e1: { c1: 10 } })
 
-function renderList(opts: { isCreator: boolean; status?: Room['status']; me?: Participant | null }) {
+function renderList(opts: {
+  isCreator: boolean
+  status?: Room['status']
+  me?: Participant | null
+  participants?: Participant[]
+}) {
   const me = opts.me === undefined ? (opts.isCreator ? alice : bob) : opts.me
   const value: RoomContextValue = {
     room: {
@@ -35,7 +40,7 @@ function renderList(opts: { isCreator: boolean; status?: Room['status']; me?: Pa
       criteria,
       results: null,
     } as Room,
-    participants: [alice, bob],
+    participants: opts.participants ?? [alice, bob],
     me,
     isCreator: opts.isCreator,
     error: null,
@@ -105,8 +110,20 @@ describe('ParticipantList', () => {
     renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Close room and show results' }))
     const dlg = screen.getByRole('alertdialog')
+    expect(dlg).toHaveTextContent('Close room?')
     expect(dlg).toHaveTextContent('Bob')
     expect(dlg).toHaveTextContent('A missing rating counts as 0. A skip does not count.')
+    expect(closeRoom).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Close room' }))
+    expect(closeRoom).toHaveBeenCalledWith('ABC234')
+  })
+
+  it('close confirms even when everyone is done', () => {
+    renderList({ isCreator: true, participants: [alice] })
+    fireEvent.click(screen.getByRole('button', { name: 'Close room and show results' }))
+    const dlg = screen.getByRole('alertdialog')
+    expect(dlg).toHaveTextContent('can no longer join or rate')
+    expect(dlg).not.toHaveTextContent('A missing rating')
     expect(closeRoom).not.toHaveBeenCalled()
     fireEvent.click(screen.getByRole('button', { name: 'Close room' }))
     expect(closeRoom).toHaveBeenCalledWith('ABC234')

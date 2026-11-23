@@ -76,9 +76,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
         </Button>
       )}
       {isCreator && room.status === 'open' && (
-        <PillButton onPress={() => (incomplete.length ? setClosing(true) : close())}>
-          Close room and show results
-        </PillButton>
+        <PillButton onPress={() => setClosing(true)}>Close room and show results</PillButton>
       )}
       {isCreator && room.status !== 'locked' && (
         <PillButton variant="danger" onPress={() => setDiscarding(true)}>
@@ -126,11 +124,18 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
       />
       <ConfirmDialog
         isOpen={closing}
-        title="Some people are not done"
+        title="Close room?"
         body={
           <>
-            <p>These participants have not finished: {incomplete.map((p) => p.name).join(', ')}.</p>
-            <p className="mt-2">A missing rating counts as 0. A skip does not count.</p>
+            <p>People can no longer join or rate, but everyone can still see the results.</p>
+            {incomplete.length > 0 && (
+              <>
+                <p className="mt-2">
+                  These participants have not finished: {incomplete.map((p) => p.name).join(', ')}.
+                </p>
+                <p className="mt-2">A missing rating counts as 0. A skip does not count.</p>
+              </>
+            )}
           </>
         }
         confirmLabel="Close room"
