@@ -109,6 +109,13 @@ describe('Results', () => {
     expect(navigate).toHaveBeenCalledWith('/')
   })
 
+  it('the Participants button shows the people icon', () => {
+    renderResults({ room: preview })
+    const button = screen.getByRole('button', { name: 'Participants' })
+    expect(button.textContent).toBe('')
+    expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+  })
+
   it('non-creator and non-participant see no creator controls', () => {
     renderResults({ room: preview, me: null })
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()

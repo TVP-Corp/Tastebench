@@ -1,9 +1,10 @@
 import { Button, type ButtonProps } from 'react-aria-components'
 
 const VARIANTS = {
-  primary: 'bg-accent text-surface not-data-[pressed]:data-[hovered]:bg-accent-hover data-[pressed]:bg-accent-pressed',
+  primary:
+    'bg-accent text-on-accent not-data-[pressed]:data-[hovered]:bg-accent-hover data-[pressed]:bg-accent-pressed',
   secondary:
-    'border border-line-strong bg-surface text-ink not-data-[pressed]:data-[hovered]:bg-base data-[pressed]:bg-line',
+    'border border-line-strong bg-surface text-ink not-data-[pressed]:data-[hovered]:bg-ink/5 data-[pressed]:bg-ink/10',
   tertiary: 'bg-transparent text-ink-muted not-data-[pressed]:data-[hovered]:bg-ink/5 data-[pressed]:bg-ink/10',
   warning:
     'border border-warning-line bg-surface text-warning not-data-[pressed]:data-[hovered]:bg-warning-50 data-[pressed]:bg-warning-100',

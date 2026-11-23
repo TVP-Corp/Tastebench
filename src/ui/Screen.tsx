@@ -13,7 +13,7 @@ interface Props {
 
 export function Screen({ title, subtitle, onBack, actions, footer, children }: Props) {
   return (
-    <div className="min-h-dvh bg-base font-sans text-ink">
+    <div className="min-h-dvh bg-page font-sans text-ink">
       <div className="mx-auto flex min-h-dvh max-w-[480px] flex-col px-4 pb-6 pt-4">
         <header className="flex min-h-11 items-center justify-between">
           {onBack ? (

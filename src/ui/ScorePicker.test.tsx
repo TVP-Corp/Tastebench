@@ -61,7 +61,7 @@ describe('ScorePicker', () => {
   })
   it('selected score chips use the brand color', () => {
     render(<ScorePicker label="Taste" value={70} onChange={() => {}} />)
-    expect(btn('7')).toHaveClass('data-[selected]:bg-brand-600', 'data-[selected]:text-surface')
+    expect(btn('7')).toHaveClass('data-[selected]:bg-brand-600', 'data-[selected]:text-on-brand')
   })
   it('skip is a white chip that turns light brand when selected', () => {
     render(<ScorePicker label="Taste" value="skip" onChange={() => {}} />)

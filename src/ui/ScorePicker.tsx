@@ -13,7 +13,7 @@ const base =
   'flex min-h-11 min-w-11 items-center justify-center rounded-xl border text-base font-medium outline-none transition-colors data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink '
 const cls =
   base +
-  'border-line bg-surface text-ink not-data-[selected]:data-[hovered]:bg-ink/5 data-[selected]:border-brand-600 data-[selected]:bg-brand-600 data-[selected]:text-surface data-[disabled]:opacity-35'
+  'border-line bg-surface text-ink not-data-[selected]:data-[hovered]:bg-ink/5 data-[selected]:border-brand-600 data-[selected]:bg-brand-600 data-[selected]:text-on-brand data-[disabled]:opacity-35'
 
 const skipCls =
   base +

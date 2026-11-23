@@ -16,7 +16,7 @@ export function RankingList({ rows, onOpen, renderAction }: Props) {
         <li
           key={r.entryId}
           data-testid="ranking-row"
-          className="flex items-center rounded-2xl bg-surface shadow-card ring-1 ring-line"
+          className="flex items-center rounded-2xl bg-surface shadow-card ring-1 ring-line-strong"
         >
           <Button
             onPress={() => onOpen(r.entryId)}

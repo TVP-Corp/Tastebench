@@ -55,7 +55,10 @@ beforeEach(() => {
 describe('Rate', () => {
   it('participants sheet has one Participants heading', () => {
     renderRate(0)
-    fireEvent.click(screen.getByRole('button', { name: 'Participants' }))
+    const button = screen.getByRole('button', { name: 'Participants' })
+    expect(button.textContent).toBe('')
+    expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+    fireEvent.click(button)
     expect(within(screen.getByRole('dialog')).getAllByRole('heading', { name: /participants/i })).toHaveLength(1)
   })
 

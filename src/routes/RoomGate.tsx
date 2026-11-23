@@ -32,7 +32,7 @@ export function decideView(args: {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh bg-base">
+    <div className="min-h-dvh bg-page">
       <main className="mx-auto flex min-h-dvh max-w-[480px] flex-col justify-center gap-4 px-4 text-center">
         {children}
       </main>

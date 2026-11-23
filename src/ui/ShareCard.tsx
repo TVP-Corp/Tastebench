@@ -18,7 +18,7 @@ export function ShareCard() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-3xl bg-surface p-5 text-center shadow-card ring-1 ring-line">
+    <div className="flex flex-col items-center gap-3 rounded-3xl bg-surface p-5 text-center shadow-card ring-1 ring-line-strong">
       <p className="flex items-center gap-1 text-sm text-ink-muted">
         <svg
           aria-hidden="true"

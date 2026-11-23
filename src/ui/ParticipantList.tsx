@@ -6,6 +6,7 @@ import { closeRoom, removeParticipant } from '../firebase/rooms'
 import { useRoomContext } from '../routes/RoomContext'
 import { ConfirmDialog } from './ConfirmDialog'
 import { DiscardRoom } from './DiscardRoom'
+import { PeopleIcon } from './PeopleIcon'
 import { PillButton } from './PillButton'
 
 const link =
@@ -34,17 +35,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
     <div className="flex flex-col gap-3">
       {showHeading && (
         <h2 className="flex items-center gap-1 text-sm font-medium text-ink-muted">
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            className="size-4 text-brand-600"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="9" cy="8" r="3" />
-            <path d="M3 20a6 6 0 0 1 12 0M16 5a3 3 0 0 1 0 6M18 20a6 6 0 0 0-3-5" />
-          </svg>
+          <PeopleIcon />
           {`Participants · ${participants.length}`}
         </h2>
       )}
@@ -54,7 +45,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
           return (
             <li
               key={p.uid}
-              className="flex items-center justify-between rounded-2xl bg-surface px-4 py-2 shadow-card ring-1 ring-line"
+              className="flex items-center justify-between rounded-2xl bg-surface px-4 py-2 shadow-card ring-1 ring-line-strong"
             >
               <span className="font-medium">{p.name}</span>
               <span className="flex items-center gap-2">

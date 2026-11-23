@@ -38,7 +38,7 @@ export default function Landing() {
   }
 
   return (
-    <div className="min-h-dvh bg-base">
+    <div className="min-h-dvh bg-page">
       <main className="mx-auto flex min-h-dvh max-w-[480px] flex-col justify-center gap-4 px-4 motion-safe:animate-fade-in">
         <div className="mb-4 flex flex-col items-center gap-2 text-center">
           <Logo size={56} wordmark={false} />
@@ -71,7 +71,7 @@ export default function Landing() {
               className="flex flex-col gap-1"
             >
               <Label className="text-sm font-medium">Room code</Label>
-              <Input className="min-h-12 rounded-xl border border-line-strong bg-surface px-4 text-base uppercase" />
+              <Input className="min-h-12 rounded-xl border border-line-strong bg-surface px-4 text-base uppercase outline-none data-[focused]:ring-2 data-[focused]:ring-ink" />
               <FieldError className="text-sm text-danger">No room with this code</FieldError>
             </TextField>
             <PillButton type="submit" isDisabled={busy || uid === null || !normalizeCode(code)}>

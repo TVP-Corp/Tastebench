@@ -8,19 +8,21 @@ description: "WHEN you style a component or screen with Tailwind CSS v4 in Taste
 - Tailwind v4 runs through the `@tailwindcss/vite` plugin in `vite.config.ts`. There is no `tailwind.config.js`. `src/index.css` imports Tailwind.
 - Write utility classes inline in `className`. Shared class strings live as constants next to the component (`base`, `cls`, `skipCls` in `src/ui/ScorePicker.tsx`; `btn` in `src/ui/ShareCard.tsx`).
 - Style react-aria-components states with data attributes: `data-[selected]:`, `data-[pressed]:`, `data-[disabled]:`, `data-[focus-visible]:ring-2`. Do not use `:hover`-only states; the app is touch-first.
-- Mobile first: screens are centered with `max-w-[480px]` in `src/ui/Screen.tsx`, height `min-h-dvh`, background `bg-base`.
+- Mobile first: screens are centered with `max-w-[480px]` in `src/ui/Screen.tsx`, height `min-h-dvh`, background `bg-page`.
 - Touch targets: interactive elements use `min-h-11` or `min-h-12` and `min-w-11`.
 
 ## Palette
 
-The `@theme` block in `src/index.css` defines color tokens by role. Use the tokens, never raw hue utilities (`bg-violet-600`, `text-neutral-600`, `bg-white`). Raw colors live only in the `@theme` block. A test in `src/ui/Screen.test.tsx` fails on a raw hue utility in `src/`.
+The `@theme` block in `src/index.css` defines color tokens by role. Use the tokens, never raw hue utilities (`bg-violet-600`, `text-neutral-600`, `bg-white`). Raw colors live only in the `@theme` block.
 
-- 60% base (stone): `base` page background, `surface` cards, sheets and inputs (white), `ink` text, `ink-muted` secondary text, `line` and `line-strong` borders. Hover on neutral controls is `bg-ink/5`, pressed `bg-ink/10`.
-- 30% brand (violet): `brand-50` to `brand-800`. Selection (score chips, selected Skip), progress, active tab, logo, section icons, Done badge.
-- 10% accent (teal): `accent`, `accent-hover`, `accent-pressed`. Primary CTAs only, with `text-surface`. Nothing else uses the accent.
+`src/palette.test.ts` guards this. It fails when a color token has the name of a Tailwind text size or shadow (a `--color-base` token turns `text-base` into a color). It also fails when a non-test file in `src/` outside the `@theme` block contains a Tailwind hue with a step (`violet-600`; the hue names come from `tailwindcss/theme.css`), a `-white` or `-black` utility, a hex color of 3, 4, 6 or 8 digits, or `rgb(`, `rgba(`, `hsl(`, `hsla(` or `oklch(`. The failure names the file and the match.
+
+- 60% base (stone): `page` background, `surface` cards, sheets and inputs (white), `ink` text, `ink-muted` secondary text, `line` and `line-strong` borders. Hover on neutral controls is `bg-ink/5`, pressed `bg-ink/10`. Do not use `line` as a fill.
+- 30% brand (violet): `brand-100` to `brand-800`, `on-brand` text on `brand-600`. Selection (score chips, selected Skip), progress, active tab, logo, section icons (`PeopleIcon`), Done badge.
+- 10% accent (teal): `accent`, `accent-hover`, `accent-pressed`, `on-accent` text. Primary CTAs only. Nothing else uses the accent.
 - Semantic only: `danger` and `warning` text, `*-line` borders, `*-50` hover, `*-100` pressed. Error text is `text-danger`.
-- Focus rings are `ring-ink`.
-- Cards are white (`bg-surface ring-1 ring-line`). Do not tint entry cards.
+- Focus rings are `ring-ink`. Inputs and text areas use `outline-none data-[focused]:ring-2 data-[focused]:ring-ink`.
+- Cards and badges are white with `ring-1 ring-line-strong`. Do not tint entry cards.
 
 ## Add a style variant
 

@@ -21,6 +21,7 @@ import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { DiscardRoom } from '../ui/DiscardRoom'
 import { EntryDetail } from '../ui/EntryDetail'
 import { ParticipantList } from '../ui/ParticipantList'
+import { PeopleIcon } from '../ui/PeopleIcon'
 import { PillButton } from '../ui/PillButton'
 import { RankingList } from '../ui/RankingList'
 import { Screen } from '../ui/Screen'
@@ -93,7 +94,7 @@ export default function Results() {
             onPress={() => setPeople(true)}
             className="flex size-11 items-center justify-center rounded-full text-xl outline-none transition-colors data-[hovered]:bg-ink/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink"
           >
-            👥
+            <PeopleIcon className="size-6" />
           </Button>
         )
       }
@@ -122,7 +123,7 @@ export default function Results() {
       }
     >
       <div className="flex flex-col gap-4">
-        <span className="self-center rounded-full bg-surface px-3 py-1 text-sm font-semibold">
+        <span className="self-center rounded-full bg-surface px-3 py-1 ring-1 ring-line-strong text-sm font-semibold">
           {locked ? 'Final' : 'Preview'}
         </span>
         <Tabs>
