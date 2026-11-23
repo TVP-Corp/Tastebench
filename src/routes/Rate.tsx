@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { Button, Dialog, Heading, Label, Modal, ModalOverlay, TextArea, TextField } from 'react-aria-components'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { entryState } from '../domain/progress'
@@ -10,6 +10,7 @@ import { PillButton } from '../ui/PillButton'
 import { ProgressSegments } from '../ui/ProgressSegments'
 import { ScorePicker } from '../ui/ScorePicker'
 import { Screen } from '../ui/Screen'
+import { scrollToTop } from '../ui/scrollToTop'
 import { overlayMotion, sheetMotion } from '../ui/sheet'
 import { useDebounced } from '../ui/useDebounced'
 import { useDocumentTitle } from '../ui/useDocumentTitle'
@@ -35,8 +36,10 @@ function RateEntry({ index }: { index: number }) {
   const [ci, setCi] = useState(() => (location.state?.criterion === 'last' ? lastCriterion : 0))
   const [enter, setEnter] = useState('')
   const step = (to: number) => {
-    if (to !== ci) setEnter(to > ci ? 'motion-safe:animate-card-in-left' : 'motion-safe:animate-card-in-right')
+    if (to === ci) return
+    setEnter(to > ci ? 'motion-safe:animate-card-in-left' : 'motion-safe:animate-card-in-right')
     setCi(to)
+    scrollToTop()
   }
   const swipe = useSwipe({
     onNext: () => step(ci + 1),
@@ -49,8 +52,8 @@ function RateEntry({ index }: { index: number }) {
     if (entry) setNote(code, uid, entry.id, text).catch((e) => console.error('Save note failed', e))
   }, 500)
   // RateEntry remounts per entry (keyed by index), so this runs on every entry change.
-  useEffect(() => {
-    window.scrollTo({ top: 0 })
+  useLayoutEffect(() => {
+    scrollToTop()
   }, [])
   if (!room || !me || !entry) return null
 
