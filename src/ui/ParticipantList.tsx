@@ -58,7 +58,13 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
             >
               <span className="font-medium">{p.name}</span>
               <span className="flex items-center gap-2">
-                <span className="text-sm text-neutral-600">{`${done} / ${total}`}</span>
+                {done === total ? (
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-sm font-semibold text-emerald-800">
+                    Done
+                  </span>
+                ) : (
+                  <span className="text-sm text-neutral-600">{`${done} of ${total} rated`}</span>
+                )}
                 {isCreator && p.uid !== me?.uid && (
                   <Button onPress={() => setRemoving(p)} className={link}>
                     Remove

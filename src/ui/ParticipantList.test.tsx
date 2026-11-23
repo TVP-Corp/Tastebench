@@ -62,8 +62,8 @@ describe('ParticipantList', () => {
   it('shows names with progress', () => {
     renderList({ isCreator: true })
     expect(screen.getByText('Alice')).toBeInTheDocument()
-    expect(screen.getByText('4 / 4')).toBeInTheDocument()
-    expect(screen.getByText('1 / 4')).toBeInTheDocument()
+    expect(screen.getByText('Done')).toBeInTheDocument()
+    expect(screen.getByText('1 of 4 rated')).toBeInTheDocument()
   })
 
   it('shows a Participants heading with the count', () => {
