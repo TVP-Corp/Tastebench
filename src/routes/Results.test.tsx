@@ -74,6 +74,7 @@ describe('Results', () => {
     const d = within(screen.getByRole('dialog'))
     expect(d.getByText('d').closest('tr')).toHaveTextContent('skipped')
     expect(d.getByText('e').closest('tr')).toHaveTextContent('-')
+    expect(d.getByRole('button', { name: 'Close' })).toHaveClass('bg-transparent')
   })
 
   it('creator renames; empty disables save', () => {
@@ -128,7 +129,8 @@ describe('Results', () => {
     const tab = screen.getByRole('tab', { name: 'Overall' })
     expect(tab).toHaveAttribute('aria-selected', 'true')
     expect(tab).toHaveClass('min-h-11', 'data-[selected]:text-violet-700', 'data-[selected]:border-violet-600')
-    expect(tab).not.toHaveClass('data-[selected]:bg-black', 'rounded-full')
+    expect(tab).not.toHaveClass('data-[selected]:bg-black')
+    expect(tab).not.toHaveClass('rounded-full')
   })
 
   it('share actions and Done are text buttons', () => {

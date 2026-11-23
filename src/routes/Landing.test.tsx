@@ -34,6 +34,12 @@ describe('Landing', () => {
     expect(screen.queryByRole('button', { name: 'Create a room' })).toBeNull()
   })
 
+  it('join Cancel is a text button', () => {
+    renderLanding()
+    fireEvent.click(screen.getByRole('button', { name: 'Join a room' }))
+    expect(screen.getByRole('button', { name: 'Cancel' })).toHaveClass('bg-transparent')
+  })
+
   it('Cancel restores both buttons and clears the code and the error', async () => {
     vi.mocked(roomExists).mockResolvedValue(false)
     renderLanding()

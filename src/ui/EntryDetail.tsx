@@ -1,6 +1,7 @@
-import { Button, Dialog, Heading, Modal, ModalOverlay } from 'react-aria-components'
+import { Dialog, Heading, Modal, ModalOverlay } from 'react-aria-components'
 import { formatTenths } from '../domain/score'
 import type { ResultsSnapshot } from '../domain/types'
+import { PillButton } from './PillButton'
 import { overlayClass, sheetMotion } from './sheet'
 
 interface Props {
@@ -64,12 +65,9 @@ export function EntryDetail({ data, entryId, onClose }: Props) {
                 </p>
               ))}
           </div>
-          <Button
-            onPress={onClose}
-            className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
-          >
+          <PillButton variant="tertiary" onPress={onClose}>
             Close
-          </Button>
+          </PillButton>
         </Dialog>
       </Modal>
     </ModalOverlay>

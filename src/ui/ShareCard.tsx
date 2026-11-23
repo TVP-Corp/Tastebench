@@ -1,9 +1,6 @@
 import { useState } from 'react'
-import { Button } from 'react-aria-components'
 import { useRoomContext } from '../routes/RoomContext'
-
-const btn =
-  'min-h-11 rounded-full border border-neutral-300 bg-white px-5 text-base font-medium outline-none transition-colors data-[hovered]:bg-neutral-100 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
+import { PillButton } from './PillButton'
 
 export function ShareCard() {
   const { code } = useRoomContext()
@@ -38,9 +35,9 @@ export function ShareCard() {
       </p>
       <p className="font-mono text-4xl font-bold tracking-widest">{code}</p>
       <div className="flex flex-wrap justify-center gap-2">
-        <Button onPress={copy} className={btn}>
+        <PillButton variant="secondary" onPress={copy}>
           {copied ? 'Copied' : 'Copy link'}
-        </Button>
+        </PillButton>
       </div>
     </div>
   )

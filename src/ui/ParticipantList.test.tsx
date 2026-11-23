@@ -158,21 +158,22 @@ describe('ParticipantList', () => {
     expect(confirm.querySelector('svg')).not.toBeNull()
   })
 
-  it('leave confirm uses the red outline button', () => {
+  it('leave trigger and confirm use the same red outline button', () => {
     renderList({ isCreator: false })
-    fireEvent.click(screen.getByRole('button', { name: 'Leave room' }))
-    expect(screen.getByRole('button', { name: 'Leave' })).toHaveClass('border-red-300')
+    const trigger = screen.getByRole('button', { name: 'Leave room' })
+    fireEvent.click(trigger)
+    const confirm = screen.getByRole('button', { name: 'Leave' })
+    expect(confirm).toHaveClass('border-red-300')
+    expect(confirm.className).toBe(trigger.className)
   })
 
-  it('close trigger and confirm use the amber warning button', () => {
+  it('close trigger and confirm use the same amber warning button', () => {
     renderList({ isCreator: true })
     const trigger = screen.getByRole('button', { name: 'Close room and show results' })
-    expect(trigger).toHaveClass('border-amber-400')
     fireEvent.click(trigger)
-    expect(screen.getByRole('button', { name: 'Close room' })).toHaveClass(
-      'border-amber-400',
-      'data-[focus-visible]:ring-black',
-    )
+    const confirm = screen.getByRole('button', { name: 'Close room' })
+    expect(confirm).toHaveClass('border-amber-400', 'data-[focus-visible]:ring-black')
+    expect(confirm.className).toBe(trigger.className)
   })
 
   it('confirm sheet slides only when motion is allowed', () => {

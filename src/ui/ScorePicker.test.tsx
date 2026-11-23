@@ -64,14 +64,15 @@ describe('ScorePicker', () => {
     expect(btn('7')).toHaveClass('data-[selected]:bg-violet-600', 'data-[selected]:text-white')
     expect(btn('7')).not.toHaveClass('data-[selected]:bg-neutral-900')
   })
-  it('skip is a white chip that fills dark when selected', () => {
+  it('skip is a white chip that turns light violet when selected', () => {
     render(<ScorePicker label="Taste" value="skip" onChange={() => {}} />)
     expect(screen.getByRole('button', { name: 'Skip' })).toHaveClass(
       'bg-white',
       'border-neutral-300',
       'text-neutral-600',
-      'data-[selected]:bg-neutral-700',
-      'data-[selected]:text-white',
+      'data-[selected]:bg-violet-100',
+      'data-[selected]:border-violet-600',
+      'data-[selected]:text-violet-800',
     )
   })
 })

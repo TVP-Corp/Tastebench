@@ -77,9 +77,9 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
       </ul>
 
       {!isCreator && me && (
-        <Button onPress={() => setLeaving(true)} className={link}>
+        <PillButton variant="danger" onPress={() => setLeaving(true)}>
           Leave room
-        </Button>
+        </PillButton>
       )}
       {isCreator && room.status === 'open' && (
         <>

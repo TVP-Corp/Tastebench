@@ -87,7 +87,7 @@ function RateEntry({ index }: { index: number }) {
       footer={
         <div className="flex gap-2">
           {(index > 0 || ci > 0) && (
-            <PillButton variant="secondary" onPress={prev}>
+            <PillButton variant="tertiary" onPress={prev}>
               Previous
             </PillButton>
           )}

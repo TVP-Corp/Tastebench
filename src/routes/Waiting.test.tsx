@@ -47,7 +47,7 @@ describe('Waiting', () => {
   it('shows the code and Copy link but no Share', () => {
     renderWaiting()
     expect(screen.getByText('ABC234')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Copy link' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Copy link' })).toHaveClass('border-neutral-300', 'min-h-12')
     expect(screen.queryByRole('button', { name: 'Share' })).toBeNull()
   })
 

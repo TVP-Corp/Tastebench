@@ -17,7 +17,7 @@ const cls =
 
 const skipCls =
   base +
-  'px-4 border-neutral-300 bg-white text-neutral-600 not-data-[selected]:data-[hovered]:bg-neutral-100 data-[selected]:border-neutral-700 data-[selected]:bg-neutral-700 data-[selected]:text-white'
+  'px-4 border-neutral-300 bg-white text-neutral-600 not-data-[selected]:data-[hovered]:bg-neutral-100 data-[selected]:border-violet-600 data-[selected]:bg-violet-100 data-[selected]:text-violet-800'
 
 const WHOLES = Array.from({ length: MAX_WHOLE + 1 }, (_, i) => i)
 const DECIMALS = Array.from({ length: 10 }, (_, i) => i)
