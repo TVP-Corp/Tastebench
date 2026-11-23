@@ -38,7 +38,7 @@ function ListEditor({
             aria-label={`Remove ${label} ${i + 1}`}
             isDisabled={values.length <= 1}
             onPress={() => onChange(values.filter((_, j) => j !== i))}
-            className="size-12 rounded-full bg-white text-lg outline-none data-[disabled]:opacity-40 data-[focus-visible]:ring-2"
+            className="size-12 rounded-full bg-white text-lg outline-none transition-colors data-[hovered]:bg-neutral-100 data-[disabled]:opacity-40 data-[focus-visible]:ring-2"
           >
             ✕
           </Button>
@@ -47,7 +47,7 @@ function ListEditor({
       <Button
         isDisabled={max !== undefined && values.length >= max}
         onPress={() => onChange([...values, ''])}
-        className="min-h-11 rounded-full border border-neutral-400 px-4 text-sm font-medium outline-none data-[disabled]:opacity-40 data-[focus-visible]:ring-2"
+        className="min-h-11 rounded-full border border-neutral-400 px-4 text-sm font-medium outline-none transition-colors data-[hovered]:bg-white data-[disabled]:opacity-40 data-[focus-visible]:ring-2"
       >
         {addLabel}
       </Button>
@@ -87,8 +87,12 @@ export default function CreateRoom() {
 
   return (
     <div className="min-h-dvh bg-gradient-to-b from-rose-50 via-sky-50 to-violet-50">
-      <main className="mx-auto flex max-w-[480px] flex-col gap-6 px-4 py-6">
-        <Button aria-label="Back" onPress={() => navigate('/')} className="size-11 self-start text-2xl">
+      <main className="mx-auto flex max-w-[480px] flex-col gap-6 px-4 py-6 motion-safe:animate-fade-in">
+        <Button
+          aria-label="Back"
+          onPress={() => navigate('/')}
+          className="size-11 self-start rounded-full text-2xl outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+        >
           ←
         </Button>
         <TextField value={name} onChange={setName} className="flex flex-col gap-1">

@@ -60,7 +60,7 @@ function RateEntry({ index }: { index: number }) {
         <Button
           aria-label="Participants"
           onPress={() => setSheet(true)}
-          className="flex size-11 items-center justify-center rounded-full text-2xl outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+          className="flex size-11 items-center justify-center rounded-full text-2xl outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
         >
           <span aria-hidden>👥</span>
         </Button>
@@ -78,7 +78,9 @@ function RateEntry({ index }: { index: number }) {
     >
       <div className="flex flex-col gap-4">
         <ProgressSegments states={states} current={index} onSelect={go} />
-        <div className={`flex flex-col gap-6 rounded-3xl p-4 ${TINTS[index % TINTS.length]}`}>
+        <div
+          className={`flex flex-col gap-6 rounded-3xl p-4 shadow-card ring-1 ring-white ${TINTS[index % TINTS.length]}`}
+        >
           {room.criteria.map((c) => (
             <ScorePicker
               key={c.id}

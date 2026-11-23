@@ -28,7 +28,7 @@ import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useRoomContext } from './RoomContext'
 
 const tabClass =
-  'min-h-11 cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium outline-none data-[selected]:bg-black data-[selected]:text-white data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
+  'min-h-11 cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium outline-none transition-colors not-data-[selected]:data-[hovered]:bg-neutral-900/5 data-[selected]:bg-black data-[selected]:text-white data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
 const fail = (err: unknown) => console.error(err)
 
 export default function Results() {
@@ -74,7 +74,7 @@ export default function Results() {
         <Button
           aria-label={`Edit title of ${r.title}`}
           onPress={() => startEdit(r.entryId)}
-          className="mr-1 flex size-11 items-center justify-center rounded-full outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+          className="mr-1 flex size-11 items-center justify-center rounded-full outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
         >
           ✎
         </Button>
@@ -89,7 +89,7 @@ export default function Results() {
           <Button
             aria-label="Participants"
             onPress={() => setPeople(true)}
-            className="flex size-11 items-center justify-center rounded-full text-xl outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+            className="flex size-11 items-center justify-center rounded-full text-xl outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
           >
             👥
           </Button>
@@ -100,7 +100,7 @@ export default function Results() {
           {!locked && (
             <Button
               onPress={() => setSharing(true)}
-              className="min-h-11 rounded-full text-base font-medium outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+              className="min-h-11 rounded-full text-base font-medium outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
             >
               Share room code
             </Button>
@@ -108,7 +108,7 @@ export default function Results() {
           {!locked && me && (
             <Button
               onPress={() => navigate(`/r/${code}/rate/${firstIncompleteIndex(me, room.entries, room.criteria)}`)}
-              className="min-h-11 rounded-full text-base font-medium outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+              className="min-h-11 rounded-full text-base font-medium outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
             >
               Edit my ratings
             </Button>
@@ -158,14 +158,14 @@ export default function Results() {
             </Heading>
             <TextField value={draft} onChange={setDraft} className="flex flex-col gap-1">
               <Label className="text-sm">Title</Label>
-              <Input className="min-h-11 rounded-xl border border-neutral-300 px-3 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black" />
+              <Input className="min-h-11 rounded-xl border border-neutral-300 px-3 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black" />
             </TextField>
             <PillButton isDisabled={draft.trim() === ''} onPress={save}>
               Save
             </PillButton>
             <Button
               onPress={() => setEditId(null)}
-              className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+              className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
             >
               Cancel
             </Button>

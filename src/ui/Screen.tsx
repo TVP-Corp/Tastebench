@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Button } from 'react-aria-components'
+import { Logo } from './Logo'
 
 interface Props {
   title?: string
@@ -19,14 +20,15 @@ export function Screen({ title, subtitle, onBack, actions, footer, children }: P
             <Button
               aria-label="Back"
               onPress={onBack}
-              className="flex size-11 items-center justify-center rounded-full text-2xl outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+              className="flex size-11 items-center justify-center rounded-full text-2xl outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
             >
               ←
             </Button>
           ) : (
             <span className="size-11" />
           )}
-          <div className="flex items-center gap-1">{actions}</div>
+          <Logo size={24} />
+          <div className="flex min-w-11 items-center justify-end gap-1">{actions}</div>
         </header>
         {(title || subtitle) && (
           <div className="mb-4 text-center">
@@ -34,7 +36,7 @@ export function Screen({ title, subtitle, onBack, actions, footer, children }: P
             {subtitle && <p className="text-sm text-neutral-600">{subtitle}</p>}
           </div>
         )}
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 motion-safe:animate-fade-in">{children}</main>
         {footer && <footer className="pt-4">{footer}</footer>}
       </div>
     </div>

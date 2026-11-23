@@ -8,7 +8,7 @@ import { ConfirmDialog } from './ConfirmDialog'
 import { PillButton } from './PillButton'
 
 const link =
-  'min-h-11 rounded-full px-4 text-sm font-medium text-red-700 outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
+  'min-h-11 rounded-full px-4 text-sm font-medium text-red-700 outline-none transition-colors data-[hovered]:bg-red-50 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black'
 const DELETE_NOTE = 'All of this person’s ratings and notes will be deleted.'
 
 export function ParticipantList({ onLeave }: { onLeave: () => void }) {
@@ -32,12 +32,28 @@ export function ParticipantList({ onLeave }: { onLeave: () => void }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-sm font-medium text-neutral-600">{`Participants · ${participants.length}`}</h2>
+      <h2 className="flex items-center gap-1 text-sm font-medium text-neutral-600">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="size-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <circle cx="9" cy="8" r="3" />
+          <path d="M3 20a6 6 0 0 1 12 0M16 5a3 3 0 0 1 0 6M18 20a6 6 0 0 0-3-5" />
+        </svg>
+        {`Participants · ${participants.length}`}
+      </h2>
       <ul className="flex flex-col gap-2">
         {participants.map((p) => {
           const { done, total } = progress(p)
           return (
-            <li key={p.uid} className="flex items-center justify-between rounded-2xl bg-white/80 px-4 py-2">
+            <li
+              key={p.uid}
+              className="flex items-center justify-between rounded-2xl bg-white/80 px-4 py-2 shadow-card ring-1 ring-white"
+            >
               <span className="font-medium">{p.name}</span>
               <span className="flex items-center gap-2">
                 <span className="text-sm text-neutral-600">{`${done} / ${total}`}</span>
