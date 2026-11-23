@@ -24,6 +24,7 @@ import { PillButton } from '../ui/PillButton'
 import { RankingList } from '../ui/RankingList'
 import { Screen } from '../ui/Screen'
 import { ShareCard } from '../ui/ShareCard'
+import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useRoomContext } from './RoomContext'
 
 const tabClass =
@@ -33,6 +34,7 @@ const fail = (err: unknown) => console.error(err)
 export default function Results() {
   const { room, participants, me, isCreator, code } = useRoomContext()
   const navigate = useNavigate()
+  useDocumentTitle('Results')
   const [openId, setOpenId] = useState<string | null>(null)
   const [editId, setEditId] = useState<string | null>(null)
   const [draft, setDraft] = useState('')

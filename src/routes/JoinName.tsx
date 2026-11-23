@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { Input, Label, TextField } from 'react-aria-components'
 import { joinRoom } from '../firebase/rooms'
 import { PillButton } from '../ui/PillButton'
+import { useDocumentTitle } from '../ui/useDocumentTitle'
 
 export default function JoinName({ code, uid }: { code: string; uid: string }) {
+  useDocumentTitle('Join room')
   const [name, setName] = useState('')
   const trimmed = name.trim()
   const valid = trimmed.length >= 1 && trimmed.length <= 30

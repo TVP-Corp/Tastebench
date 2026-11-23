@@ -51,6 +51,11 @@ describe('Results', () => {
     expect(rows[1]).toHaveTextContent('3.3')
   })
 
+  it('sets the page title', () => {
+    renderResults({ room: preview })
+    expect(document.title).toBe('Tastebench | Results')
+  })
+
   it('Smell tab shows 6.0 first', () => {
     renderResults({ room: preview })
     fireEvent.click(screen.getByRole('tab', { name: 'Smell' }))

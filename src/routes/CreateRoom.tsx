@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { createRoom } from '../firebase/rooms'
 import { useAuth } from '../firebase/useAuth'
 import { PillButton } from '../ui/PillButton'
+import { useDocumentTitle } from '../ui/useDocumentTitle'
 
 const MAX_ENTRIES = 30
 
@@ -57,6 +58,7 @@ function ListEditor({
 export default function CreateRoom() {
   const navigate = useNavigate()
   const uid = useAuth()
+  useDocumentTitle('Create a room')
   const [name, setName] = useState('')
   const [entries, setEntries] = useState<string[]>([''])
   const [criteria, setCriteria] = useState<string[]>([''])

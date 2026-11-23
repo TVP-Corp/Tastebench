@@ -11,11 +11,13 @@ import { ScorePicker } from '../ui/ScorePicker'
 import { Screen } from '../ui/Screen'
 import { TINTS } from '../ui/tints'
 import { useDebounced } from '../ui/useDebounced'
+import { useDocumentTitle } from '../ui/useDocumentTitle'
 import { useRoomContext } from './RoomContext'
 
 export default function Rate() {
   const { index } = useParams()
   const { room } = useRoomContext()
+  useDocumentTitle('Rate')
   if (!room) return null
   const i = Math.min(Math.max(Number.parseInt(index ?? '0', 10) || 0, 0), room.entries.length - 1)
   return <RateEntry key={i} index={i} />
