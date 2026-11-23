@@ -2,6 +2,7 @@ import {
   collection, deleteDoc, doc, getDoc, onSnapshot, runTransaction, serverTimestamp, setDoc, updateDoc,
 } from 'firebase/firestore'
 import { generateCode, newId } from '../domain/code'
+import { isValidScore } from '../domain/score'
 import type { Item, Participant, ResultsSnapshot, Room, Score } from '../domain/types'
 import { db } from './app'
 
@@ -40,6 +41,7 @@ export async function joinRoom(code: string, uid: string, name: string): Promise
 export async function setScore(
   code: string, uid: string, entryId: string, criterionId: string, score: Score,
 ): Promise<void> {
+  if (!isValidScore(score)) throw new Error(`Invalid score: ${String(score)}`)
   await updateDoc(partRef(code, uid), {
     [`scores.${entryId}.${criterionId}`]: score,
     updatedAt: serverTimestamp(),

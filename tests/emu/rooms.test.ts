@@ -50,6 +50,15 @@ describe('rooms data layer', () => {
     expect(ps[0].scores.e1).toEqual({ c1: 70, c2: 'skip' })
   })
 
+  test('setScore rejects an invalid value and leaves the score', async () => {
+    const code = await createRoom(uid, input)
+    await joinRoom(code, uid, 'Alice')
+    await setScore(code, uid, 'e1', 'c1', 70)
+    await expect(setScore(code, uid, 'e1', 'c1', 111)).rejects.toThrow(/Invalid score/)
+    const ps = await firstParticipants(code, (p) => p.length === 1 && p[0].scores.e1?.c1 === 70)
+    expect(ps[0].scores.e1?.c1).toBe(70)
+  })
+
   test('renameEntry changes only the title', async () => {
     const code = await createRoom(uid, input)
     const room = await firstRoom(code)
