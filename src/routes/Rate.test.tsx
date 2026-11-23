@@ -15,8 +15,16 @@ import Rate from './Rate'
 import { RoomContext } from './RoomContext'
 
 const room = {
-  code: 'ABC234', name: 'R', creatorUid: 'c', status: 'open', results: null,
-  entries: [{ id: 'e1', title: 'First' }, { id: 'e2', title: 'Second' }, { id: 'e3', title: 'Third' }],
+  code: 'ABC234',
+  name: 'R',
+  creatorUid: 'c',
+  status: 'open',
+  results: null,
+  entries: [
+    { id: 'e1', title: 'First' },
+    { id: 'e2', title: 'Second' },
+    { id: 'e3', title: 'Third' },
+  ],
   criteria: [{ id: 'c1', title: 'Taste' }],
 } as Room
 const me: Participant = { uid: 'u1', name: 'Me', scores: {}, notes: {} }
@@ -27,7 +35,9 @@ function renderRate(index: number) {
       <RoomContext.Provider
         value={{ room, participants: [me], me, isCreator: false, error: null, uid: 'u1', code: 'ABC234' }}
       >
-        <Routes><Route path="/r/:code/rate/:index" element={<Rate />} /></Routes>
+        <Routes>
+          <Route path="/r/:code/rate/:index" element={<Rate />} />
+        </Routes>
       </RoomContext.Provider>
     </MemoryRouter>,
   )

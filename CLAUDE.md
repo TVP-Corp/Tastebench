@@ -4,14 +4,14 @@
 
 A mobile-first web app for rating rooms. A creator makes a room with entries and criteria. Friends join with a 6-character code or a link and rate each entry from 0.0 to 10.0 per criterion, with notes. The creator closes the room (preview), can rename entries, then locks the results into a Firestore snapshot. It is a static Vite + React site on GitHub Pages, with Firebase anonymous auth and Firestore as the backend (Spark plan, no server code).
 
-| Module | Responsibility |
-|---|---|
-| `src/domain/` | Pure logic and types: `score.ts` (tenths 0..100, picker math), `results.ts` (averages, ranks), `progress.ts`, `code.ts` (room codes, ids), `types.ts`. No React, no Firebase. |
-| `src/firebase/` | Data layer: `app.ts` (init, emulator switch), `rooms.ts` (every read and write), `useAuth.ts`, `useRoom.ts`. |
-| `src/routes/` | Screens: `Landing`, `CreateRoom`, `RoomGate` (view routing per room status), `JoinName`, `Rate`, `Waiting`, `Results`, `RoomContext`. |
-| `src/ui/` | Shared components: `Screen`, `PillButton`, `ScorePicker`, `ProgressSegments`, `ParticipantList`, `ConfirmDialog`, `ShareCard`, `RankingList`, `EntryDetail`. |
-| `firestore.rules` | All authorization. The client is untrusted. |
-| `tests/emu/` | Rules and data-layer tests against the emulators. `tests/e2e/` holds the Playwright flow. |
+| Module            | Responsibility                                                                                                                                                                |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/domain/`     | Pure logic and types: `score.ts` (tenths 0..100, picker math), `results.ts` (averages, ranks), `progress.ts`, `code.ts` (room codes, ids), `types.ts`. No React, no Firebase. |
+| `src/firebase/`   | Data layer: `app.ts` (init, emulator switch), `rooms.ts` (every read and write), `useAuth.ts`, `useRoom.ts`.                                                                  |
+| `src/routes/`     | Screens: `Landing`, `CreateRoom`, `RoomGate` (view routing per room status), `JoinName`, `Rate`, `Waiting`, `Results`, `RoomContext`.                                         |
+| `src/ui/`         | Shared components: `Screen`, `PillButton`, `ScorePicker`, `ProgressSegments`, `ParticipantList`, `ConfirmDialog`, `ShareCard`, `RankingList`, `EntryDetail`.                  |
+| `firestore.rules` | All authorization. The client is untrusted.                                                                                                                                   |
+| `tests/emu/`      | Rules and data-layer tests against the emulators. `tests/e2e/` holds the Playwright flow.                                                                                     |
 
 ## Local setup
 
@@ -28,7 +28,9 @@ A mobile-first web app for rating rooms. A creator makes a room with entries and
 - Rules and data layer: `pnpm test:emu` (starts the emulators, runs `tests/emu`).
 - End to end: `pnpm test:e2e` (Playwright, 3 browser contexts at 390x844). Run `pnpm exec playwright install chromium` once.
 - Build: `pnpm build` (`tsc -b && vite build`, output `dist/`).
-- Lint: `pnpm lint` (oxlint). It exits 1 on `main` because of `react(refs)` warnings in `src/routes/RoomGate.tsx`.
+- Lint: `pnpm lint` (oxlint). It exits 1 only on errors; warnings do not fail it.
+- Git hooks (lefthook, `lefthook.yml`): `pnpm install` installs them. Pre-commit runs oxlint `--fix` and oxfmt on the staged files and re-stages the fixes. Pre-push checks the pushed files.
+- Unused files, exports and dependencies: `pnpm knip`.
 - Format: `pnpm format` (oxfmt, writes) and `pnpm format:check`; config in `.oxfmtrc.json`.
 - Run `pnpm format:check`, `pnpm test` and `pnpm exec tsc -b` before you push. Run `pnpm test:emu` after any change to `firestore.rules` or `src/firebase/rooms.ts`.
 
@@ -65,7 +67,8 @@ There are no migrations. Firestore is schemaless, and the shape lives in code:
 ## CI/CD
 
 - `.github/workflows/deploy.yml` runs on push to `main`: `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm test`, a check for `VITE_FIREBASE_API_KEY` and `VITE_FIREBASE_PROJECT_ID`, `pnpm build`, then deploys `dist/` to GitHub Pages.
-- Reproduce locally with `pnpm test && pnpm build`. `.claude/pre-pr-checks` runs `pnpm format:check`, `pnpm test` and `pnpm exec tsc -b` before a PR.
+- `.github/workflows/build.yml` runs on pull requests and push to `main`: `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm format:check`, `pnpm test`.
+- Reproduce locally with `pnpm test && pnpm build`. `.claude/pre-pr-checks` runs `pnpm lint`, `pnpm format:check`, `pnpm test` and `pnpm exec tsc -b` before a PR.
 - Pin third-party actions to a commit SHA (see `pnpm/action-setup`).
 - Firestore rules do not deploy with the site. Deploy them after any merge that changes `firestore.rules`.
 

@@ -1,12 +1,12 @@
-import { Button } from 'react-aria-components';
+import { Button } from 'react-aria-components'
 
 interface Props {
-  states: ('complete' | 'started' | 'empty')[];
-  current: number;
-  onSelect: (i: number) => void;
+  states: ('complete' | 'started' | 'empty')[]
+  current: number
+  onSelect: (i: number) => void
 }
 
-const fill = { complete: 'bg-neutral-900', started: 'bg-neutral-400', empty: 'bg-neutral-200' };
+const fill = { complete: 'bg-neutral-900', started: 'bg-neutral-400', empty: 'bg-neutral-200' }
 
 export function ProgressSegments({ states, current, onSelect }: Props) {
   return (
@@ -23,5 +23,5 @@ export function ProgressSegments({ states, current, onSelect }: Props) {
         </Button>
       ))}
     </div>
-  );
+  )
 }

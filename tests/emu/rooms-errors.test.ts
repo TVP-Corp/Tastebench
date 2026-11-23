@@ -10,7 +10,12 @@ describe('subscription errors and mapping', () => {
     const code = await createRoom(uid, { name: 'R', entries: ['a'], criteria: ['c'] })
     await setDoc(doc(db, 'rooms', code, 'participants', uid), { name: 'Bare' })
     const ps = await new Promise<{ uid: string; name: string; scores: object; notes: object }[]>((res) => {
-      const off = subscribeParticipants(code, (p) => { if (p.length) { off(); res(p) } })
+      const off = subscribeParticipants(code, (p) => {
+        if (p.length) {
+          off()
+          res(p)
+        }
+      })
     })
     expect(ps[0]).toEqual({ uid, name: 'Bare', scores: {}, notes: {} })
   })

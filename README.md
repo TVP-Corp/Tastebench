@@ -51,12 +51,12 @@ You need a Google account. Do these steps once.
 
 ## GitHub Actions
 
-| Workflow | File | Trigger | What it does |
-|---|---|---|---|
-| build | `build.yml` | pull request to `main`, push to `main` | Runs the unit tests. |
-| Emulator tests | `emulator-tests.yml` | manual | Runs `pnpm test:emu` with the Firebase emulators. |
-| Deploy Firestore rules | `deploy-rules.yml` | push to `main` that changes the rules, manual | Deploys `firestore.rules` to the project in `VITE_FIREBASE_PROJECT_ID`. |
-| Deploy to GitHub Pages | `deploy.yml` | push to `main` | Runs the unit tests, builds the site and deploys it. |
+| Workflow               | File                 | Trigger                                       | What it does                                                            |
+| ---------------------- | -------------------- | --------------------------------------------- | ----------------------------------------------------------------------- |
+| build                  | `build.yml`          | pull request to `main`, push to `main`        | Runs the unit tests.                                                    |
+| Emulator tests         | `emulator-tests.yml` | manual                                        | Runs `pnpm test:emu` with the Firebase emulators.                       |
+| Deploy Firestore rules | `deploy-rules.yml`   | push to `main` that changes the rules, manual | Deploys `firestore.rules` to the project in `VITE_FIREBASE_PROJECT_ID`. |
+| Deploy to GitHub Pages | `deploy.yml`         | push to `main`                                | Runs the unit tests, builds the site and deploys it.                    |
 
 To start a manual workflow, open the Actions tab, select the workflow and click "Run workflow". You can also run `gh workflow run deploy-rules.yml`.
 

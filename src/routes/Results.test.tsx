@@ -23,8 +23,13 @@ function renderResults(opts: { room: Room; participants?: Participant[]; creator
     <MemoryRouter>
       <RoomContext.Provider
         value={{
-          room: opts.room, participants, me: opts.me === undefined ? participants[0] : opts.me,
-          isCreator: !!opts.creator, error: null, uid: 'a', code: 'ABC234',
+          room: opts.room,
+          participants,
+          me: opts.me === undefined ? participants[0] : opts.me,
+          isCreator: !!opts.creator,
+          error: null,
+          uid: 'a',
+          code: 'ABC234',
         }}
       >
         <Results />
@@ -95,7 +100,10 @@ describe('Results', () => {
 
   it('locked reads the snapshot and hides controls', () => {
     const snap = computeResults(
-      [{ id: 'e1', title: 'Snap One' }, { id: 'e2', title: 'Snap Two' }],
+      [
+        { id: 'e1', title: 'Snap One' },
+        { id: 'e2', title: 'Snap Two' },
+      ],
       criteria,
       [{ uid: 'z', name: 'z', scores: { e1: { c1: 100, c2: 100 } }, notes: {} }],
     )

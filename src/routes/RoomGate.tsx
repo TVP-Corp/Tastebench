@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useNavigate, useParams } from 'react-router'
 import { isValidCode, normalizeCode } from '../domain/code'
 import { firstIncompleteIndex } from '../domain/progress'
@@ -49,20 +49,25 @@ export default function RoomGate() {
   const { room, me, isCreator, error } = value
   const navigate = useNavigate()
   const location = useLocation()
-  const wasMember = useRef(false)
-  const hadRoom = useRef(false)
-  const prevStatus = useRef<string | undefined>(undefined)
-  if (me) wasMember.current = true
-  if (room) hadRoom.current = true
+  const [wasMember, setWasMember] = useState(false)
+  const [hadRoom, setHadRoom] = useState(false)
+  if (me && !wasMember) setWasMember(true)
+  if (room && !hadRoom) setHadRoom(true)
 
-  const view = decideView({ room, me, wasMember: wasMember.current, isCreator, hadRoom: hadRoom.current })
+  const view = decideView({ room, me, wasMember, isCreator, hadRoom })
   const sub = location.pathname.split('/').slice(3).join('/')
   const status = room?.status
+  const [prevStatus, setPrevStatus] = useState(status)
+  const [justClosed, setJustClosed] = useState(false)
+  if (status !== prevStatus) {
+    setPrevStatus(status)
+    setJustClosed(prevStatus === 'open' && status === 'preview')
+  }
+  if (justClosed && sub === 'results') setJustClosed(false)
 
   let target: string | null = null
   if (room && me) {
     const onRate = sub.startsWith('rate/')
-    const justClosed = prevStatus.current === 'open' && status === 'preview'
     if (status === 'locked') target = sub === 'results' ? null : 'results'
     else if (status === 'preview') {
       target = justClosed || !(onRate || sub === 'results') ? 'results' : null
@@ -76,13 +81,15 @@ export default function RoomGate() {
   }
 
   useEffect(() => {
-    prevStatus.current = status
-  })
-  useEffect(() => {
     if (target) navigate(`/r/${code}/${target}`, { replace: true })
   }, [target, navigate, code])
 
-  if (!validCode) return <Shell><p>No room with this code</p></Shell>
+  if (!validCode)
+    return (
+      <Shell>
+        <p>No room with this code</p>
+      </Shell>
+    )
   if (error) {
     return (
       <Shell>
@@ -91,8 +98,18 @@ export default function RoomGate() {
       </Shell>
     )
   }
-  if (view === 'loading' || uid === null) return <Shell><p>Loading...</p></Shell>
-  if (view === 'not-found') return <Shell><p>No room with this code</p></Shell>
+  if (view === 'loading' || uid === null)
+    return (
+      <Shell>
+        <p>Loading...</p>
+      </Shell>
+    )
+  if (view === 'not-found')
+    return (
+      <Shell>
+        <p>No room with this code</p>
+      </Shell>
+    )
   if (view === 'discarded') {
     return (
       <Shell>
@@ -110,7 +127,12 @@ export default function RoomGate() {
     )
   }
   if (view === 'join') {
-    return <Shell><h1 className="text-2xl font-bold">{room?.name}</h1><JoinName code={code} uid={uid} /></Shell>
+    return (
+      <Shell>
+        <h1 className="text-2xl font-bold">{room?.name}</h1>
+        <JoinName code={code} uid={uid} />
+      </Shell>
+    )
   }
 
   return (

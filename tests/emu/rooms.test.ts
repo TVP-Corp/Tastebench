@@ -2,7 +2,14 @@ import { signInAnonymously } from 'firebase/auth'
 import { beforeAll, describe, expect, test } from 'vitest'
 import { auth } from '../../src/firebase/app'
 import {
-  closeRoom, createRoom, joinRoom, lockRoom, renameEntry, setScore, subscribeParticipants, subscribeRoom,
+  closeRoom,
+  createRoom,
+  joinRoom,
+  lockRoom,
+  renameEntry,
+  setScore,
+  subscribeParticipants,
+  subscribeRoom,
 } from '../../src/firebase/rooms'
 import { isValidCode } from '../../src/domain/code'
 import type { Participant, ResultsSnapshot, Room } from '../../src/domain/types'
@@ -16,11 +23,21 @@ const input = { name: 'Pizza night', entries: ['Margherita', 'Diavola', 'Funghi'
 
 const firstRoom = (code: string, pred: (r: Room) => boolean = () => true) =>
   new Promise<Room>((resolve) => {
-    const off = subscribeRoom(code, (r) => { if (r && pred(r)) { off(); resolve(r) } })
+    const off = subscribeRoom(code, (r) => {
+      if (r && pred(r)) {
+        off()
+        resolve(r)
+      }
+    })
   })
 const firstParticipants = (code: string, pred: (ps: Participant[]) => boolean) =>
   new Promise<Participant[]>((resolve) => {
-    const off = subscribeParticipants(code, (ps) => { if (pred(ps)) { off(); resolve(ps) } })
+    const off = subscribeParticipants(code, (ps) => {
+      if (pred(ps)) {
+        off()
+        resolve(ps)
+      }
+    })
   })
 
 describe('rooms data layer', () => {
@@ -74,7 +91,11 @@ describe('rooms data layer', () => {
     const room = await firstRoom(code)
     await closeRoom(code)
     const results: ResultsSnapshot = {
-      entries: room.entries, criteria: room.criteria, overall: [], byCriterion: {}, participants: [],
+      entries: room.entries,
+      criteria: room.criteria,
+      overall: [],
+      byCriterion: {},
+      participants: [],
     }
     await lockRoom(code, results)
     const locked = await firstRoom(code, (r) => r.status === 'locked')

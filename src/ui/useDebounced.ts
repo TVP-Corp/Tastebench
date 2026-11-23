@@ -15,14 +15,16 @@ export function useDebounced<A extends unknown[]>(fn: (...args: A) => void, ms: 
     pending.current = null
     if (args) fnRef.current(...args)
   })
-  const call = useRef(Object.assign(
-    (...args: A) => {
-      pending.current = args
-      if (timer.current) clearTimeout(timer.current)
-      timer.current = setTimeout(flush.current, ms)
-    },
-    { flush: () => flush.current() },
-  ))
+  const call = useRef(
+    Object.assign(
+      (...args: A) => {
+        pending.current = args
+        if (timer.current) clearTimeout(timer.current)
+        timer.current = setTimeout(flush.current, ms)
+      },
+      { flush: () => flush.current() },
+    ),
+  )
   useEffect(() => {
     const f = flush.current
     return () => f()

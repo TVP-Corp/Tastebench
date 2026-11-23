@@ -23,29 +23,43 @@ export function EntryDetail({ data, entryId, onClose }: Props) {
     >
       <Modal className="max-h-[85dvh] w-full max-w-md overflow-auto rounded-3xl bg-white p-6 shadow-xl">
         <Dialog className="flex flex-col gap-4 outline-none">
-          <Heading slot="title" className="text-lg font-semibold">{entry?.title}</Heading>
+          <Heading slot="title" className="text-lg font-semibold">
+            {entry?.title}
+          </Heading>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr>
                   <th className="py-1 pr-2">Person</th>
-                  {data.criteria.map((c) => <th key={c.id} className="px-2 py-1">{c.title}</th>)}
+                  {data.criteria.map((c) => (
+                    <th key={c.id} className="px-2 py-1">
+                      {c.title}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {data.participants.map((p) => (
                   <tr key={p.uid} className="border-t border-neutral-200">
                     <td className="py-1 pr-2 font-medium">{p.name}</td>
-                    {data.criteria.map((c) => <td key={c.id} className="px-2 py-1">{cell(p.uid, c.id)}</td>)}
+                    {data.criteria.map((c) => (
+                      <td key={c.id} className="px-2 py-1">
+                        {cell(p.uid, c.id)}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <div className="flex flex-col gap-2">
-            {data.participants.filter((p) => p.notes[entryId ?? '']).map((p) => (
-              <p key={p.uid} className="text-sm"><span className="font-medium">{p.name}:</span> {p.notes[entryId ?? '']}</p>
-            ))}
+            {data.participants
+              .filter((p) => p.notes[entryId ?? ''])
+              .map((p) => (
+                <p key={p.uid} className="text-sm">
+                  <span className="font-medium">{p.name}:</span> {p.notes[entryId ?? '']}
+                </p>
+              ))}
           </div>
           <Button
             onPress={onClose}

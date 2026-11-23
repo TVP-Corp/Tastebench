@@ -27,6 +27,7 @@ jobs:
           node-version-file: .tool-versions
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
       - run: pnpm test
       - name: Check Firebase config
         run: |

@@ -10,7 +10,11 @@ vi.mock('../firebase/useRoom', () => ({ useRoom: () => state.value }))
 
 vi.mock('./Rate', async () => {
   const { useParams } = await import('react-router')
-  return { default: () => <h1>{`rate ${useParams().index}`}</h1> }
+  return {
+    default: function Rate() {
+      return <h1>{`rate ${useParams().index}`}</h1>
+    },
+  }
 })
 vi.mock('./Results', () => ({ default: () => <h1>results</h1> }))
 vi.mock('./Waiting', () => ({ default: () => <h1>wait</h1> }))
@@ -18,7 +22,15 @@ vi.mock('./Waiting', () => ({ default: () => <h1>wait</h1> }))
 import RoomGate, { decideView } from './RoomGate'
 
 const room = (status: Room['status'] = 'open'): Room =>
-  ({ code: 'ABC234', name: 'R', creatorUid: 'c', status, entries: [{ id: 'e1', title: 'E' }], criteria: [{ id: 'c1', title: 'C' }], results: null }) as Room
+  ({
+    code: 'ABC234',
+    name: 'R',
+    creatorUid: 'c',
+    status,
+    entries: [{ id: 'e1', title: 'E' }],
+    criteria: [{ id: 'c1', title: 'C' }],
+    results: null,
+  }) as Room
 const me: Participant = { uid: 'u1', name: 'Me', scores: {}, notes: {} }
 
 describe('decideView', () => {
@@ -27,8 +39,7 @@ describe('decideView', () => {
   it('null room is not-found', () => expect(decideView({ ...base, room: null })).toBe('not-found'))
   it('null room after a loaded room is discarded', () =>
     expect(decideView({ ...base, room: null, me: null, wasMember: true, hadRoom: true })).toBe('discarded'))
-  it('was member but gone is removed', () =>
-    expect(decideView({ ...base, me: null, wasMember: true })).toBe('removed'))
+  it('was member but gone is removed', () => expect(decideView({ ...base, me: null, wasMember: true })).toBe('removed'))
   it('preview is results', () => expect(decideView({ ...base, room: room('preview') })).toBe('results'))
   it('locked without me is results', () =>
     expect(decideView({ ...base, room: room('locked'), me: null })).toBe('results'))
@@ -45,7 +56,9 @@ function GoTo() {
 function renderGate(path: string) {
   return render(
     <MemoryRouter initialEntries={[path]}>
-      <Routes><Route path="/r/:code/*" element={<RoomGate />} /></Routes>
+      <Routes>
+        <Route path="/r/:code/*" element={<RoomGate />} />
+      </Routes>
     </MemoryRouter>,
   )
 }
@@ -54,7 +67,13 @@ describe('RoomGate', () => {
   const val = (over: object) => ({ room: room(), participants: [], me, isCreator: false, error: null, ...over })
 
   it('redirects a rater to the first incomplete entry', () => {
-    const two = { ...room(), entries: [{ id: 'e1', title: 'E' }, { id: 'e2', title: 'F' }] }
+    const two = {
+      ...room(),
+      entries: [
+        { id: 'e1', title: 'E' },
+        { id: 'e2', title: 'F' },
+      ],
+    }
     state.value = val({ room: two, me: { ...me, scores: { e1: { c1: 70 } } } })
     renderGate('/r/ABC234')
     expect(screen.getByRole('heading', { name: 'rate 1' })).toBeInTheDocument()
@@ -65,7 +84,9 @@ describe('RoomGate', () => {
     const tree = () => (
       <MemoryRouter initialEntries={['/r/ABC234/rate/0']}>
         <GoTo />
-        <Routes><Route path="/r/:code/*" element={<RoomGate />} /></Routes>
+        <Routes>
+          <Route path="/r/:code/*" element={<RoomGate />} />
+        </Routes>
       </MemoryRouter>
     )
     const { rerender } = render(tree())
@@ -83,7 +104,9 @@ describe('RoomGate', () => {
     state.value = val({ me: null })
     rerender(
       <MemoryRouter initialEntries={['/r/ABC234/rate/0']}>
-        <Routes><Route path="/r/:code/*" element={<RoomGate />} /></Routes>
+        <Routes>
+          <Route path="/r/:code/*" element={<RoomGate />} />
+        </Routes>
       </MemoryRouter>,
     )
     expect(screen.getByText('You were removed from this room')).toBeInTheDocument()
@@ -95,7 +118,9 @@ describe('RoomGate', () => {
     state.value = val({ room: null, me: null })
     rerender(
       <MemoryRouter initialEntries={['/r/ABC234/rate/0']}>
-        <Routes><Route path="/r/:code/*" element={<RoomGate />} /></Routes>
+        <Routes>
+          <Route path="/r/:code/*" element={<RoomGate />} />
+        </Routes>
       </MemoryRouter>,
     )
     expect(screen.getByText('The creator discarded this room')).toBeInTheDocument()

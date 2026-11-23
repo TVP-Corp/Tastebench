@@ -1,44 +1,44 @@
-import { ToggleButton, ToggleButtonGroup } from 'react-aria-components';
-import type { Key } from 'react-aria-components';
-import type { Score } from '../domain/types';
-import { MAX_WHOLE, formatTenths, pickDecimal, pickWhole, splitTenths } from '../domain/score';
+import { ToggleButton, ToggleButtonGroup } from 'react-aria-components'
+import type { Key } from 'react-aria-components'
+import type { Score } from '../domain/types'
+import { MAX_WHOLE, formatTenths, pickDecimal, pickWhole, splitTenths } from '../domain/score'
 
 interface Props {
-  label: string;
-  value: Score | undefined;
-  onChange: (s: Score) => void;
+  label: string
+  value: Score | undefined
+  onChange: (s: Score) => void
 }
 
 const base =
-  'flex min-h-11 min-w-11 items-center justify-center rounded-xl border text-base font-medium outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black ';
+  'flex min-h-11 min-w-11 items-center justify-center rounded-xl border text-base font-medium outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black '
 const cls =
   base +
-  'border-neutral-200 bg-white text-neutral-900 data-[selected]:border-neutral-900 data-[selected]:bg-neutral-900 data-[selected]:text-white data-[disabled]:opacity-35';
+  'border-neutral-200 bg-white text-neutral-900 data-[selected]:border-neutral-900 data-[selected]:bg-neutral-900 data-[selected]:text-white data-[disabled]:opacity-35'
 
 const skipCls =
   base +
-  'px-4 border-red-200 bg-red-50 text-red-700 data-[selected]:border-red-300 data-[selected]:bg-red-100 data-[selected]:text-red-800';
+  'px-4 border-red-200 bg-red-50 text-red-700 data-[selected]:border-red-300 data-[selected]:bg-red-100 data-[selected]:text-red-800'
 
-const WHOLES = Array.from({ length: MAX_WHOLE + 1 }, (_, i) => i);
-const DECIMALS = Array.from({ length: 10 }, (_, i) => i);
+const WHOLES = Array.from({ length: MAX_WHOLE + 1 }, (_, i) => i)
+const DECIMALS = Array.from({ length: 10 }, (_, i) => i)
 
 export function ScorePicker({ label, value, onChange }: Props) {
-  const num = typeof value === 'number' ? value : undefined;
-  const parts = num === undefined ? undefined : splitTenths(num);
-  const display = value === 'skip' ? 'Skipped' : num === undefined ? '-' : formatTenths(num);
+  const num = typeof value === 'number' ? value : undefined
+  const parts = num === undefined ? undefined : splitTenths(num)
+  const display = value === 'skip' ? 'Skipped' : num === undefined ? '-' : formatTenths(num)
 
   const onWhole = (keys: Set<Key>) => {
-    const [k] = [...keys];
-    if (k === undefined) return; // ignore deselect
-    const next = pickWhole(value, Number(k));
-    if (next !== value) onChange(next);
-  };
+    const [k] = [...keys]
+    if (k === undefined) return // ignore deselect
+    const next = pickWhole(value, Number(k))
+    if (next !== value) onChange(next)
+  }
   const onDecimal = (keys: Set<Key>) => {
-    const [k] = [...keys];
-    if (k === undefined) return;
-    const next = pickDecimal(value, Number(k));
-    if (next !== null && next !== value) onChange(next);
-  };
+    const [k] = [...keys]
+    if (k === undefined) return
+    const next = pickDecimal(value, Number(k))
+    if (next !== null && next !== value) onChange(next)
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -94,5 +94,5 @@ export function ScorePicker({ label, value, onChange }: Props) {
         Skip
       </ToggleButton>
     </div>
-  );
+  )
 }

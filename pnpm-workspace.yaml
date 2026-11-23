@@ -1,4 +1,6 @@
 allowBuilds:
   '@firebase/util': false
+  lefthook: false
   protobufjs: false
   re2: false
+saveExact: true

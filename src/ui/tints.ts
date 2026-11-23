@@ -5,4 +5,4 @@ export const TINTS: string[] = [
   'bg-emerald-100',
   'bg-violet-100',
   'bg-orange-100',
-];
+]
