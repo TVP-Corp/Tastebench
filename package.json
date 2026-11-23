@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "test": "vitest run",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "emulators": "firebase emulators:start --only auth,firestore --project demo-rating-rooms",
+    "test:emu": "firebase emulators:exec --only auth,firestore --project demo-rating-rooms \"vitest run --config vitest.emu.config.ts\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.5",
@@ -20,6 +22,7 @@
     "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
     "@testing-library/jest-dom": "^8.0.0",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.13",
@@ -27,6 +30,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "firebase-tools": "^15.37.0",
     "jsdom": "^31.0.1",
     "oxlint": "^1.90.0",
     "typescript": "~7.0.2",

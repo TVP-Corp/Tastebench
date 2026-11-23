@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function room(code) {
+      return get(/databases/$(database)/documents/rooms/$(code)).data;
+    }
+
+    match /rooms/{code} {
+      function changed() {
+        return request.resource.data.diff(resource.data).affectedKeys();
+      }
+      function isCreator() {
+        return signedIn() && resource.data.creatorUid == request.auth.uid;
+      }
+
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.creatorUid == request.auth.uid
+        && request.resource.data.status == 'open'
+        && request.resource.data.results == null;
+
+      allow update: if isCreator() && (
+        // close: open -> preview
+        (resource.data.status == 'open'
+          && request.resource.data.status == 'preview'
+          && changed().hasOnly(['status', 'closedAt']))
+        // rename entries, same size
+        || (resource.data.status == 'preview'
+          && changed().hasOnly(['entries'])
+          && request.resource.data.entries.size() == resource.data.entries.size())
+        // lock: preview -> locked
+        || (resource.data.status == 'preview'
+          && request.resource.data.status == 'locked'
+          && changed().hasOnly(['status', 'results', 'lockedAt']))
+      );
+
+      match /participants/{uid} {
+        allow read: if signedIn();
+
+        allow create: if signedIn()
+          && request.auth.uid == uid
+          && room(code).status == 'open'
+          && request.resource.data.name is string
+          && request.resource.data.name.size() >= 1
+          && request.resource.data.name.size() <= 30;
+
+        allow update: if signedIn()
+          && request.auth.uid == uid
+          && room(code).status in ['open', 'preview']
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['scores', 'notes', 'updatedAt']);
+
+        allow delete: if signedIn()
+          && room(code).status != 'locked'
+          && ((request.auth.uid == uid && uid != room(code).creatorUid)
+              || request.auth.uid == room(code).creatorUid && uid != room(code).creatorUid);
+      }
+    }
+  }
+}
