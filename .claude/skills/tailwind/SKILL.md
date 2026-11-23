@@ -10,6 +10,7 @@ description: "WHEN you style a component or screen with Tailwind CSS v4 in Taste
 - Style react-aria-components states with data attributes: `data-[selected]:`, `data-[pressed]:`, `data-[disabled]:`, `data-[focus-visible]:ring-2`. Do not use `:hover`-only states; the app is touch-first.
 - Mobile first: screens are centered with `max-w-[480px]` in `src/ui/Screen.tsx`, height `min-h-dvh`, background `bg-page`.
 - Touch targets: interactive elements use `min-h-11` or `min-h-12` and `min-w-11`.
+- The font is Plus Jakarta Sans (a Google Fonts link in `index.html`, `--font-sans` in `src/index.css`); give scores, ranks and counts `tabular-nums` so the digits line up.
 
 ## Palette
 

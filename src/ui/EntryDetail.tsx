@@ -31,7 +31,7 @@ export function EntryDetail({ data, entryId, onClose }: Props) {
             {entry?.title}
           </Heading>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-left text-sm tabular-nums">
               <thead>
                 <tr>
                   <th className="py-1 pr-2">Person</th>

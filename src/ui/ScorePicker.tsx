@@ -44,7 +44,7 @@ export function ScorePicker({ label, value, onChange }: Props) {
     <div className="flex flex-col gap-3">
       <div className="flex items-baseline justify-between gap-3">
         <span className="text-base font-medium">{label}</span>
-        <span data-testid="score-value" className="text-4xl font-bold">
+        <span data-testid="score-value" className="text-4xl font-bold tabular-nums">
           {display}
         </span>
       </div>

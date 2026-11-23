@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 
 @theme {
+  --font-sans:
+    'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
   --color-page: var(--color-stone-50);
   --color-surface: var(--color-white);
   --color-ink: var(--color-stone-900);

@@ -54,7 +54,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
                     Done
                   </span>
                 ) : (
-                  <span className="text-sm text-ink-muted">{`${done} of ${total} rated`}</span>
+                  <span className="text-sm text-ink-muted tabular-nums">{`${done} of ${total} rated`}</span>
                 )}
                 {isCreator && p.uid !== me?.uid && (
                   <Button onPress={() => setRemoving(p)} className={link}>
