@@ -1,5 +1,5 @@
 import {
-  collection, deleteDoc, doc, getDoc, onSnapshot, runTransaction, serverTimestamp, setDoc, updateDoc,
+  collection, deleteDoc, doc, getDoc, onSnapshot, runTransaction, serverTimestamp, setDoc, updateDoc, writeBatch,
 } from 'firebase/firestore'
 import { generateCode, newId } from '../domain/code'
 import { isValidScore } from '../domain/score'
@@ -70,6 +70,14 @@ export async function renameEntry(
 
 export async function lockRoom(code: string, results: ResultsSnapshot): Promise<void> {
   await updateDoc(roomRef(code), { status: 'locked', results, lockedAt: serverTimestamp() })
+}
+
+// One batch, so the rules see the room gone when the creator's own doc is deleted.
+export async function discardRoom(code: string, participantUids: string[]): Promise<void> {
+  const batch = writeBatch(db)
+  for (const uid of participantUids) batch.delete(partRef(code, uid))
+  batch.delete(roomRef(code))
+  await batch.commit()
 }
 
 export async function roomExists(code: string): Promise<boolean> {

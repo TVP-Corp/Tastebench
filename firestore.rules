@@ -66,6 +66,9 @@ service cloud.firestore {
         && request.resource.data.criteria is list
         && request.resource.data.criteria.size() >= 1;
 
+      // discard: the creator deletes an unlocked room
+      allow delete: if isCreator() && resource.data.status != 'locked';
+
       allow update: if isCreator() && (
         // close: open -> preview
         (resource.data.status == 'open'
@@ -103,7 +106,10 @@ service cloud.firestore {
         allow delete: if signedIn()
           && room(code).status != 'locked'
           && ((request.auth.uid == uid && uid != room(code).creatorUid)
-              || request.auth.uid == room(code).creatorUid && uid != room(code).creatorUid);
+              || request.auth.uid == room(code).creatorUid && uid != room(code).creatorUid
+              // discard: the creator's own doc goes in the same batch that deletes the room
+              || request.auth.uid == room(code).creatorUid
+                && !existsAfter(/databases/$(database)/documents/rooms/$(code)));
       }
     }
   }

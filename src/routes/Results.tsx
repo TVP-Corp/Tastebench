@@ -10,6 +10,7 @@ import { ParticipantList } from '../ui/ParticipantList'
 import { PillButton } from '../ui/PillButton'
 import { RankingList } from '../ui/RankingList'
 import { Screen } from '../ui/Screen'
+import { ShareCard } from '../ui/ShareCard'
 import { useRoomContext } from './RoomContext'
 
 const tabClass =
@@ -24,6 +25,7 @@ export default function Results() {
   const [draft, setDraft] = useState('')
   const [locking, setLocking] = useState(false)
   const [people, setPeople] = useState(false)
+  const [sharing, setSharing] = useState(false)
 
   const locked = room?.status === 'locked'
   const data = useMemo(() => {
@@ -80,6 +82,14 @@ export default function Results() {
       }
       footer={
         <div className="flex flex-col gap-2">
+          {!locked && (
+            <Button
+              onPress={() => setSharing(true)}
+              className="min-h-11 rounded-full text-base font-medium outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"
+            >
+              Share room code
+            </Button>
+          )}
           {!locked && me && (
             <Button
               onPress={() => navigate(`/r/${code}/rate/${firstIncompleteIndex(me, room.entries, room.criteria)}`)}
@@ -153,6 +163,23 @@ export default function Results() {
         onCancel={() => setLocking(false)}
         onConfirm={confirmLock}
       />
+
+      <ModalOverlay
+        isOpen={sharing}
+        onOpenChange={setSharing}
+        isDismissable
+        className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
+      >
+        <Modal className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl">
+          <Dialog aria-label="Share room code" className="flex flex-col gap-4 outline-none">
+            <ShareCard />
+            <p className="text-center text-sm text-neutral-600">
+              The room is closed, so new people can see the results but cannot join.
+            </p>
+            <PillButton onPress={() => setSharing(false)}>Done</PillButton>
+          </Dialog>
+        </Modal>
+      </ModalOverlay>
 
       <ModalOverlay
         isOpen={people}
