@@ -27,6 +27,15 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - name: Check Firebase config
+        run: |
+          if [ -z "$API_KEY" ] || [ -z "$PROJECT_ID" ]; then
+            echo "::error::Repository variables VITE_FIREBASE_API_KEY and VITE_FIREBASE_PROJECT_ID must be set."
+            exit 1
+          fi
+        env:
+          API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+          PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
       - run: npm run build
         env:
           VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
