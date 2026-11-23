@@ -16,15 +16,15 @@ const mk = (uid: string, name: string, scores: Participant['scores']): Participa
 const alice = mk('a', 'Alice', full)
 const bob = mk('b', 'Bob', { e1: { c1: 10 } })
 
-function renderList(opts: { isCreator: boolean; status?: Room['status']; me?: Participant }) {
-  const me = opts.me ?? (opts.isCreator ? alice : bob)
+function renderList(opts: { isCreator: boolean; status?: Room['status']; me?: Participant | null }) {
+  const me = opts.me === undefined ? (opts.isCreator ? alice : bob) : opts.me
   const value: RoomContextValue = {
     room: { code: 'ABC234', name: 'R', creatorUid: 'a', status: opts.status ?? 'open', entries, criteria, results: null } as Room,
     participants: [alice, bob],
     me,
     isCreator: opts.isCreator,
     error: null,
-    uid: me.uid,
+    uid: me?.uid ?? 'x',
     code: 'ABC234',
   }
   const onLeave = vi.fn()
@@ -58,6 +58,11 @@ describe('ParticipantList', () => {
     expect(screen.getByRole('button', { name: 'Leave room' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Remove' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Close room and show results' })).toBeNull()
+  })
+
+  it('non-participant sees no Leave', () => {
+    renderList({ isCreator: false, me: null })
+    expect(screen.queryByRole('button', { name: 'Leave room' })).toBeNull()
   })
 
   it('leave confirms, calls onLeave and removes', () => {

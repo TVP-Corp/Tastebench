@@ -48,7 +48,7 @@ export function ParticipantList({ onLeave }: { onLeave: () => void }) {
         })}
       </ul>
 
-      {!isCreator && (
+      {!isCreator && me && (
         <Button onPress={() => setLeaving(true)} className={link}>Leave room</Button>
       )}
       {isCreator && room.status === 'open' && (
