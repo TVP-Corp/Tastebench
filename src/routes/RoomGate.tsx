@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Route, Routes, useLocation, useNavigate, useParams } from 'react-router'
-import { normalizeCode } from '../domain/code'
+import { isValidCode, normalizeCode } from '../domain/code'
 import { firstIncompleteIndex } from '../domain/progress'
 import type { Participant, Room } from '../domain/types'
 import { useAuth } from '../firebase/useAuth'
@@ -43,7 +43,8 @@ export default function RoomGate() {
   const params = useParams()
   const code = normalizeCode(params.code ?? '')
   const uid = useAuth()
-  const value = useRoom(code)
+  const validCode = isValidCode(code)
+  const value = useRoom(validCode ? code : '')
   const { room, me, isCreator, error } = value
   const navigate = useNavigate()
   const location = useLocation()
@@ -78,8 +79,14 @@ export default function RoomGate() {
     if (target) navigate(`/r/${code}/${target}`, { replace: true })
   }, [target, navigate, code])
 
-  if (error && room === undefined) {
-    return <Shell><p>Could not load this room</p></Shell>
+  if (!validCode) return <Shell><p>No room with this code</p></Shell>
+  if (error) {
+    return (
+      <Shell>
+        <p>Could not load this room</p>
+        <PillButton onPress={() => window.location.reload()}>Try again</PillButton>
+      </Shell>
+    )
   }
   if (view === 'loading' || uid === null) return <Shell><p>Loading...</p></Shell>
   if (view === 'not-found') return <Shell><p>No room with this code</p></Shell>

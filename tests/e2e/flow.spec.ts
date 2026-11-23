@@ -9,6 +9,11 @@ async function join(page: Page, name: string) {
   await page.getByRole('button', { name: 'Continue' }).click()
 }
 
+async function joinByLink(page: Page, code: string, name: string) {
+  await page.goto(`/#/r/${code}`)
+  await join(page, name)
+}
+
 async function joinWithCode(page: Page, code: string, name: string) {
   await page.goto('/')
   await page.getByRole('button', { name: 'Join a room' }).click()
@@ -43,7 +48,7 @@ test('three people rate, close, rename and lock a room', async ({ browser }) => 
 
   // 2. B and C join with the code in lowercase.
   await joinWithCode(b, code, 'Ben')
-  await joinWithCode(c, code, 'Cat')
+  await joinByLink(c, code, 'Cat')
   await expect(b.getByText('Entry 1 of 3')).toBeVisible()
   await expect(c.getByText('Entry 1 of 3')).toBeVisible()
   await expect(a.getByText('Ben')).toBeVisible()
@@ -108,6 +113,8 @@ test('three people rate, close, rename and lock a room', async ({ browser }) => 
   const rowOne = a.getByRole('button', { name: /^[\d-]+ 1 [\d.-]+$/ })
   const before = await rowOne.textContent()
   await b.getByRole('button', { name: 'Edit my ratings' }).click()
+  await expect(b.getByText('Entry 3 of 3')).toBeVisible()
+  await b.getByRole('button', { name: /^Entry 1, / }).click()
   await expect(b.getByText('Entry 1 of 3')).toBeVisible()
   await pick(b, 'Smell', 1)
   await expect(b.getByTestId('score-value').first()).toHaveText('1.0')

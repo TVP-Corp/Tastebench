@@ -18,10 +18,11 @@ export function useRoom(code: string): {
     setRoom(undefined)
     setParticipants([])
     setError(null)
+    if (!uid || !code) return
     const offRoom = subscribeRoom(code, setRoom, setError)
     const offParts = subscribeParticipants(code, setParticipants, setError)
     return () => { offRoom(); offParts() }
-  }, [code])
+  }, [code, uid])
   const me = participants.find((p) => p.uid === uid) ?? null
   return { room, participants, me, isCreator: !!room && room.creatorUid === uid, error }
 }

@@ -99,6 +99,18 @@ describe('RoomGate', () => {
     expect(screen.getByText('Could not load this room')).toBeInTheDocument()
   })
 
+  it('shows a retry button on load error', () => {
+    state.value = val({ error: new Error('x') })
+    renderGate('/r/ABC234')
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument()
+  })
+
+  it('shows not found for an invalid code', () => {
+    state.value = val({ room: undefined, me: null })
+    renderGate('/r/nope')
+    expect(screen.getByText('No room with this code')).toBeInTheDocument()
+  })
+
   it('locked redirects rate path to results', () => {
     state.value = val({ room: room('locked') })
     renderGate('/r/ABC234/rate/0')
