@@ -12,17 +12,18 @@ import Results from './Results'
 import { RoomContext } from './RoomContext'
 import Waiting from './Waiting'
 
-export type GateView = 'loading' | 'not-found' | 'removed' | 'join' | 'rate' | 'wait' | 'results'
+export type GateView = 'loading' | 'not-found' | 'discarded' | 'removed' | 'join' | 'rate' | 'wait' | 'results'
 
 export function decideView(args: {
   room: Room | null | undefined
   me: Participant | null
   wasMember: boolean
   isCreator: boolean
+  hadRoom?: boolean
 }): GateView {
-  const { room, me, wasMember, isCreator } = args
+  const { room, me, wasMember, isCreator, hadRoom } = args
   if (room === undefined) return 'loading'
-  if (room === null) return 'not-found'
+  if (room === null) return hadRoom ? 'discarded' : 'not-found'
   if (wasMember && !me) return 'removed'
   if (room.status === 'preview' || room.status === 'locked') return 'results'
   if (!me) return 'join'
@@ -49,10 +50,12 @@ export default function RoomGate() {
   const navigate = useNavigate()
   const location = useLocation()
   const wasMember = useRef(false)
+  const hadRoom = useRef(false)
   const prevStatus = useRef<string | undefined>(undefined)
   if (me) wasMember.current = true
+  if (room) hadRoom.current = true
 
-  const view = decideView({ room, me, wasMember: wasMember.current, isCreator })
+  const view = decideView({ room, me, wasMember: wasMember.current, isCreator, hadRoom: hadRoom.current })
   const sub = location.pathname.split('/').slice(3).join('/')
   const status = room?.status
 
@@ -90,6 +93,14 @@ export default function RoomGate() {
   }
   if (view === 'loading' || uid === null) return <Shell><p>Loading...</p></Shell>
   if (view === 'not-found') return <Shell><p>No room with this code</p></Shell>
+  if (view === 'discarded') {
+    return (
+      <Shell>
+        <p>The creator discarded this room</p>
+        <PillButton onPress={() => navigate('/')}>Back to start</PillButton>
+      </Shell>
+    )
+  }
   if (view === 'removed') {
     return (
       <Shell>

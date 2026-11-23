@@ -1,0 +1,52 @@
+name: Deploy Firestore rules
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - firestore.rules
+      - firebase.json
+      - .github/workflows/deploy-rules.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firestore-rules
+  cancel-in-progress: false
+
+jobs:
+  deploy-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+      - name: Check Firebase config
+        run: |
+          if [ -z "$PROJECT_ID" ] || [ -z "$SERVICE_ACCOUNT" ]; then
+            echo "::error::Variable VITE_FIREBASE_PROJECT_ID and secret FIREBASE_SERVICE_ACCOUNT must be set."
+            exit 1
+          fi
+        env:
+          PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - run: pnpm install --frozen-lockfile
+      - name: Write service account key
+        run: |
+          umask 077
+          printf '%s' "$SERVICE_ACCOUNT" > "$RUNNER_TEMP/service-account.json"
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: Deploy rules
+        run: pnpm exec firebase deploy --only firestore:rules --project "$PROJECT_ID" --non-interactive
+        env:
+          PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json
+      - name: Remove service account key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/service-account.json"

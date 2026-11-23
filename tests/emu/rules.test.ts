@@ -5,7 +5,7 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from '@firebase/rules-unit-testing'
-import { doc, getDoc, setDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, writeBatch, Timestamp } from 'firebase/firestore'
 import { afterAll, beforeAll, beforeEach, describe, test } from 'vitest'
 
 let env: RulesTestEnvironment
@@ -119,6 +119,36 @@ describe('participant delete', () => {
     await seed('locked')
     await assertFails(del('bob', 'bob'))
     await assertFails(del('alice', 'bob'))
+  })
+})
+
+describe('room discard', () => {
+  const discard = (uid: string) => {
+    const db = as(uid)
+    const batch = writeBatch(db)
+    batch.delete(doc(db, ROOM, 'participants', 'alice'))
+    batch.delete(doc(db, ROOM, 'participants', 'bob'))
+    batch.delete(doc(db, ROOM))
+    return batch.commit()
+  }
+  test('creator discards open room with all participants', async () => {
+    await assertSucceeds(discard('alice'))
+  })
+  test('creator discards preview room', async () => {
+    await seed('preview')
+    await assertSucceeds(discard('alice'))
+  })
+  test('creator cannot discard locked room', async () => {
+    await seed('locked')
+    await assertFails(discard('alice'))
+    await assertFails(deleteDoc(doc(as('alice'), ROOM)))
+  })
+  test('participant cannot discard', async () => {
+    await assertFails(discard('bob'))
+    await assertFails(deleteDoc(doc(as('bob'), ROOM)))
+  })
+  test('creator cannot delete own doc while room stays', async () => {
+    await assertFails(deleteDoc(doc(as('alice'), ROOM, 'participants', 'alice')))
   })
 })
 
