@@ -26,13 +26,14 @@ export function ScorePicker({ label, value, onChange }: Props) {
   const onWhole = (keys: Set<Key>) => {
     const [k] = [...keys];
     if (k === undefined) return; // ignore deselect
-    onChange(pickWhole(value, Number(k)));
+    const next = pickWhole(value, Number(k));
+    if (next !== value) onChange(next);
   };
   const onDecimal = (keys: Set<Key>) => {
     const [k] = [...keys];
     if (k === undefined) return;
     const next = pickDecimal(value, Number(k));
-    if (next !== null) onChange(next);
+    if (next !== null && next !== value) onChange(next);
   };
 
   return (
@@ -83,7 +84,7 @@ export function ScorePicker({ label, value, onChange }: Props) {
       <ToggleButton
         aria-label="Skip"
         isSelected={value === 'skip'}
-        onChange={() => onChange('skip')}
+        onChange={() => value !== 'skip' && onChange('skip')}
         className={cls + ' px-4'}
       >
         Skip

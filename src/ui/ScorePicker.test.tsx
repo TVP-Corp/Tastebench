@@ -36,6 +36,14 @@ describe('ScorePicker', () => {
     expect(btn('.9')).toBeDisabled();
     expect(btn('.0')).toBeEnabled();
   });
+  it('does not re-emit on same decimal or skip', async () => {
+    const onChange = vi.fn();
+    const { rerender } = render(<ScorePicker label="Taste" value={73} onChange={onChange} />);
+    await userEvent.click(btn('.3'));
+    rerender(<ScorePicker label="Taste" value="skip" onChange={onChange} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Skip' }));
+    expect(onChange).not.toHaveBeenCalled();
+  });
   it('skip', async () => {
     const onChange = vi.fn();
     const { rerender } = render(<ScorePicker label="Taste" value={undefined} onChange={onChange} />);
