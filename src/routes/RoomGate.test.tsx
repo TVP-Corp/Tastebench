@@ -12,6 +12,7 @@ vi.mock('./Rate', async () => {
   const { useParams } = await import('react-router')
   return { default: () => <h1>{`rate ${useParams().index}`}</h1> }
 })
+vi.mock('./Results', () => ({ default: () => <h1>results</h1> }))
 vi.mock('./Waiting', () => ({ default: () => <h1>wait</h1> }))
 
 import RoomGate, { decideView } from './RoomGate'
