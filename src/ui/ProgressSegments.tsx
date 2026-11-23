@@ -7,7 +7,7 @@ interface Props {
   label?: string
 }
 
-const fill = { complete: 'bg-neutral-900', started: 'bg-neutral-400', empty: 'bg-neutral-200' }
+const fill = { complete: 'bg-violet-600', started: 'bg-violet-300', empty: 'bg-violet-100' }
 
 export function ProgressSegments({ states, current, onSelect, label = 'Entry' }: Props) {
   return (

@@ -59,6 +59,11 @@ describe('ScorePicker', () => {
     expect(screen.getByTestId('score-value')).toHaveTextContent('Skipped')
     expect(screen.queryAllByRole('radio', { checked: true })).toHaveLength(0)
   })
+  it('selected score chips use the violet accent', () => {
+    render(<ScorePicker label="Taste" value={70} onChange={() => {}} />)
+    expect(btn('7')).toHaveClass('data-[selected]:bg-violet-600', 'data-[selected]:text-white')
+    expect(btn('7')).not.toHaveClass('data-[selected]:bg-neutral-900')
+  })
   it('skip is a white chip that fills dark when selected', () => {
     render(<ScorePicker label="Taste" value="skip" onChange={() => {}} />)
     expect(screen.getByRole('button', { name: 'Skip' })).toHaveClass(
