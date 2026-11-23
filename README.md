@@ -47,7 +47,7 @@ You need a Google account. Do these steps once.
    - `VITE_FIREBASE_STORAGE_BUCKET`
    - `VITE_FIREBASE_MESSAGING_SENDER_ID`
    - `VITE_FIREBASE_APP_ID`
-6. Deploy `firestore.rules`. Run the "Deploy Firestore rules" workflow, or run `pnpm exec firebase deploy --only firestore:rules --project <project-id>` from a laptop.
+6. Deploy `firestore.rules`. A merge to `main` that changes the rules deploys them. You can also run the "Deploy Firestore rules" workflow, or run `pnpm exec firebase deploy --only firestore:rules --project <project-id>` from a laptop.
 
 ## GitHub Actions
 
@@ -55,7 +55,7 @@ You need a Google account. Do these steps once.
 |---|---|---|---|
 | build | `build.yml` | pull request to `main`, push to `main` | Runs the unit tests. |
 | Emulator tests | `emulator-tests.yml` | manual | Runs `pnpm test:emu` with the Firebase emulators. |
-| Deploy Firestore rules | `deploy-rules.yml` | manual | Deploys `firestore.rules` to the project in `VITE_FIREBASE_PROJECT_ID`. |
+| Deploy Firestore rules | `deploy-rules.yml` | push to `main` that changes the rules, manual | Deploys `firestore.rules` to the project in `VITE_FIREBASE_PROJECT_ID`. |
 | Deploy to GitHub Pages | `deploy.yml` | push to `main` | Runs the unit tests, builds the site and deploys it. |
 
 To start a manual workflow, open the Actions tab, select the workflow and click "Run workflow". You can also run `gh workflow run deploy-rules.yml`.
