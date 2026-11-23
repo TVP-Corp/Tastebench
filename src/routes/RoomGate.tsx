@@ -8,6 +8,7 @@ import { useRoom } from '../firebase/useRoom'
 import { PillButton } from '../ui/PillButton'
 import JoinName from './JoinName'
 import Rate from './Rate'
+import Results from './Results'
 import { RoomContext } from './RoomContext'
 import Waiting from './Waiting'
 
@@ -64,7 +65,7 @@ export default function RoomGate() {
     } else if (view === 'wait') {
       target = sub === 'wait' || onRate ? null : 'wait'
     } else {
-      target = onRate ? null : `rate/${firstIncompleteIndex(me, room.entries, room.criteria)}`
+      target = onRate || sub === 'wait' ? null : `rate/${firstIncompleteIndex(me, room.entries, room.criteria)}`
     }
   } else if (room && view === 'results') {
     target = sub === 'results' ? null : 'results'
@@ -99,7 +100,7 @@ export default function RoomGate() {
       <Routes>
         <Route path="rate/:index" element={<Rate />} />
         <Route path="wait" element={<Waiting />} />
-        <Route path="results" element={<h1>results</h1>} />
+        <Route path="results" element={<Results />} />
         <Route path="*" element={null} />
       </Routes>
     </RoomContext.Provider>
