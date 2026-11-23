@@ -103,6 +103,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
         title="Leave room?"
         body={DELETE_NOTE}
         confirmLabel="Leave"
+        destructive
         onCancel={() => setLeaving(false)}
         onConfirm={() => {
           setLeaving(false)
@@ -115,6 +116,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
         title={`Remove ${removing?.name ?? ''}?`}
         body={DELETE_NOTE}
         confirmLabel="Remove participant"
+        destructive
         onCancel={() => setRemoving(null)}
         onConfirm={() => {
           const target = removing
@@ -140,6 +142,7 @@ export function ParticipantList({ onLeave, showHeading = true }: { onLeave: () =
         title="Discard room?"
         body="The room, all ratings and all notes will be deleted. Nothing is saved. You cannot undo this."
         confirmLabel="Discard room"
+        destructive
         onCancel={() => setDiscarding(false)}
         onConfirm={() => {
           setDiscarding(false)

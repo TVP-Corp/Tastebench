@@ -9,9 +9,10 @@ interface Props {
   confirmLabel: string
   onConfirm: () => void
   onCancel: () => void
+  destructive?: boolean
 }
 
-export function ConfirmDialog({ isOpen, title, body, confirmLabel, onConfirm, onCancel }: Props) {
+export function ConfirmDialog({ isOpen, title, body, confirmLabel, onConfirm, onCancel, destructive }: Props) {
   return (
     <ModalOverlay
       isOpen={isOpen}
@@ -25,7 +26,9 @@ export function ConfirmDialog({ isOpen, title, body, confirmLabel, onConfirm, on
             {title}
           </Heading>
           <div className="text-neutral-700">{body}</div>
-          <PillButton onPress={onConfirm}>{confirmLabel}</PillButton>
+          <PillButton variant={destructive ? 'destructive' : 'primary'} onPress={onConfirm}>
+            {confirmLabel}
+          </PillButton>
           <Button
             onPress={onCancel}
             className="min-h-11 rounded-full text-base font-medium text-neutral-700 outline-none transition-colors data-[hovered]:bg-neutral-900/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-black"

@@ -122,6 +122,12 @@ describe('ParticipantList', () => {
     expect(discardRoom).toHaveBeenCalledWith('ABC234', ['a', 'b'])
   })
 
+  it('destructive confirms use the solid red button', () => {
+    renderList({ isCreator: true })
+    fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
+    expect(screen.getByRole('button', { name: 'Remove participant' })).toHaveClass('bg-red-600')
+  })
+
   it('cancel keeps the room', () => {
     renderList({ isCreator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Discard room' }))

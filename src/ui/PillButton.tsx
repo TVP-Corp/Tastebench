@@ -1,11 +1,12 @@
 import { Button, type ButtonProps } from 'react-aria-components'
 
 const VARIANTS = {
-  primary: 'bg-black text-white not-data-[pressed]:data-[hovered]:bg-neutral-800 data-[pressed]:bg-neutral-700',
+  primary: 'bg-emerald-700 text-white not-data-[pressed]:data-[hovered]:bg-emerald-800 data-[pressed]:bg-emerald-900',
   secondary:
     'border border-neutral-300 bg-white text-neutral-900 not-data-[pressed]:data-[hovered]:bg-neutral-50 data-[pressed]:bg-neutral-100',
   danger:
     'border border-red-300 bg-white text-red-700 not-data-[pressed]:data-[hovered]:bg-red-50 data-[pressed]:bg-red-100',
+  destructive: 'bg-red-600 text-white not-data-[pressed]:data-[hovered]:bg-red-700 data-[pressed]:bg-red-800',
 }
 
 export function PillButton({
