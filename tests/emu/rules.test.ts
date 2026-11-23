@@ -54,6 +54,17 @@ describe('room read/create', () => {
   test('create with other creatorUid fails', async () => {
     await assertFails(setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'alice' })))
   })
+  test('create with 31 entries fails', async () => {
+    const many = Array.from({ length: 31 }, (_, i) => ({ id: `e${i}`, title: 'T' }))
+    await assertFails(setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'carol', entries: many })))
+  })
+  test('create with 30 entries succeeds', async () => {
+    const many = Array.from({ length: 30 }, (_, i) => ({ id: `e${i}`, title: 'T' }))
+    await assertSucceeds(setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'carol', entries: many })))
+  })
+  test('create with empty criteria fails', async () => {
+    await assertFails(setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('open', { creatorUid: 'carol', criteria: [] })))
+  })
   test('create with preview status fails', async () => {
     await assertFails(setDoc(doc(as('carol'), 'rooms/NEW001'), roomData('preview', { creatorUid: 'carol' })))
   })
@@ -132,6 +143,15 @@ describe('room update', () => {
     })
     test('entries of different size fails', async () => {
       await assertFails(upd('alice', { entries: [{ id: 'e1', title: 'One' }] }))
+    })
+    test('rename that changes an id fails', async () => {
+      await assertFails(upd('alice', { entries: [{ id: 'x1', title: 'One' }, { id: 'e2', title: 'Two' }] }))
+    })
+    test('rename that reorders entries fails', async () => {
+      await assertFails(upd('alice', { entries: [entries[1], entries[0]] }))
+    })
+    test('lock with only status fails', async () => {
+      await assertFails(upd('alice', { status: 'locked' }))
     })
     test('lock with results and lockedAt succeeds', async () => {
       await assertSucceeds(upd('alice', { status: 'locked', results: { e1: 1 }, lockedAt: now() }))

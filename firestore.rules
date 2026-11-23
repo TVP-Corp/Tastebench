@@ -16,12 +16,55 @@ service cloud.firestore {
         return signedIn() && resource.data.creatorUid == request.auth.uid;
       }
 
+      // Entry ids keep their order: rules cannot loop, so check indexes 0..29.
+      function sameId(i) {
+        return i >= resource.data.entries.size()
+          || request.resource.data.entries[i].id == resource.data.entries[i].id;
+      }
+      function sameIds() {
+        return sameId(0)
+          && sameId(1)
+          && sameId(2)
+          && sameId(3)
+          && sameId(4)
+          && sameId(5)
+          && sameId(6)
+          && sameId(7)
+          && sameId(8)
+          && sameId(9)
+          && sameId(10)
+          && sameId(11)
+          && sameId(12)
+          && sameId(13)
+          && sameId(14)
+          && sameId(15)
+          && sameId(16)
+          && sameId(17)
+          && sameId(18)
+          && sameId(19)
+          && sameId(20)
+          && sameId(21)
+          && sameId(22)
+          && sameId(23)
+          && sameId(24)
+          && sameId(25)
+          && sameId(26)
+          && sameId(27)
+          && sameId(28)
+          && sameId(29);
+      }
+
       allow read: if signedIn();
 
       allow create: if signedIn()
         && request.resource.data.creatorUid == request.auth.uid
         && request.resource.data.status == 'open'
-        && request.resource.data.results == null;
+        && request.resource.data.results == null
+        && request.resource.data.entries is list
+        && request.resource.data.entries.size() >= 1
+        && request.resource.data.entries.size() <= 30
+        && request.resource.data.criteria is list
+        && request.resource.data.criteria.size() >= 1;
 
       allow update: if isCreator() && (
         // close: open -> preview
@@ -31,11 +74,13 @@ service cloud.firestore {
         // rename entries, same size
         || (resource.data.status == 'preview'
           && changed().hasOnly(['entries'])
-          && request.resource.data.entries.size() == resource.data.entries.size())
+          && request.resource.data.entries.size() == resource.data.entries.size()
+          && sameIds())
         // lock: preview -> locked
         || (resource.data.status == 'preview'
           && request.resource.data.status == 'locked'
-          && changed().hasOnly(['status', 'results', 'lockedAt']))
+          && changed().hasAll(['status', 'results', 'lockedAt'])
+          && request.resource.data.results != null)
       );
 
       match /participants/{uid} {
