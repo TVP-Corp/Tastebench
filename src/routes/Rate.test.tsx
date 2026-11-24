@@ -11,6 +11,7 @@ vi.mock('../firebase/rooms', () => ({
   removeParticipant: vi.fn(),
 }))
 
+import { setNote } from '../firebase/rooms'
 import Rate from './Rate'
 import { RoomContext } from './RoomContext'
 
@@ -39,6 +40,7 @@ function renderRate(index: number, r: Room = room) {
       >
         <Routes>
           <Route path="/r/:code/rate/:index" element={<Rate />} />
+          <Route path="/r/:code/results" element={<p>Results page</p>} />
         </Routes>
       </RoomContext.Provider>
     </MemoryRouter>,
@@ -136,5 +138,30 @@ describe('Rate', () => {
     expect(card('Smell')).toHaveClass('motion-safe:animate-card-in-left')
     fireEvent.click(screen.getByRole('button', { name: 'Previous' }))
     expect(card('Taste')).toHaveClass('motion-safe:animate-card-in-right')
+  })
+
+  it('in preview, back on the first entry saves the note and goes to results', () => {
+    renderRate(0, { ...room, status: 'preview' } as Room)
+    fireEvent.change(screen.getByRole('textbox', { name: 'Notes' }), { target: { value: 'tasty' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Back to results' }))
+    expect(setNote).toHaveBeenCalledWith('ABC234', 'u1', 'e1', 'tasty')
+    expect(screen.getByText('Results page')).toBeInTheDocument()
+  })
+
+  it('in preview, back on a later entry also goes to results', () => {
+    renderRate(2, { ...room, status: 'preview' } as Room)
+    fireEvent.click(screen.getByRole('button', { name: 'Back to results' }))
+    expect(screen.getByText('Results page')).toBeInTheDocument()
+  })
+
+  it('while open, the first entry has no back', () => {
+    renderRate(0)
+    expect(screen.queryByRole('button', { name: /^Back/ })).toBeNull()
+  })
+
+  it('while open, back on a later entry goes to the previous entry', () => {
+    renderRate(2)
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }))
+    expect(screen.getByRole('heading', { name: 'Second' })).toBeInTheDocument()
   })
 })

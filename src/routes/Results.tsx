@@ -87,6 +87,7 @@ export default function Results() {
   return (
     <Screen
       title={room.name}
+      subtitle={locked ? 'Final results' : 'Preview results'}
       actions={
         !locked && (
           <Button
@@ -122,33 +123,35 @@ export default function Results() {
         </div>
       }
     >
-      <div className="flex flex-col gap-4">
-        <span className="self-center rounded-full bg-surface px-3 py-1 ring-1 ring-line-strong text-sm font-semibold">
-          {locked ? 'Final' : 'Preview'}
-        </span>
-        <Tabs>
-          <TabList aria-label="Rankings" className="mb-3 flex gap-1 overflow-x-auto">
-            <Tab id="overall" className={tabClass}>
-              Overall
-            </Tab>
-            {data.criteria.map((c) => (
-              <Tab key={c.id} id={c.id} className={tabClass}>
-                {c.title}
-              </Tab>
-            ))}
-          </TabList>
-          <TabPanel id="overall" className="outline-none">
-            <RankingList rows={data.overall} onOpen={setOpenId} renderAction={action} />
-          </TabPanel>
+      <Tabs>
+        <TabList aria-label="Rankings" className="mb-3 flex gap-1 overflow-x-auto">
+          <Tab id="overall" className={tabClass}>
+            Overall
+          </Tab>
           {data.criteria.map((c) => (
-            <TabPanel key={c.id} id={c.id} className="outline-none">
-              <RankingList rows={data.byCriterion[c.id] ?? []} onOpen={setOpenId} renderAction={action} />
-            </TabPanel>
+            <Tab key={c.id} id={c.id} className={tabClass}>
+              {c.title}
+            </Tab>
           ))}
-        </Tabs>
-      </div>
+        </TabList>
+        <TabPanel id="overall" className="outline-none">
+          <RankingList rows={data.overall} onOpen={setOpenId} renderAction={action} />
+        </TabPanel>
+        {data.criteria.map((c) => (
+          <TabPanel key={c.id} id={c.id} className="outline-none">
+            <RankingList rows={data.byCriterion[c.id] ?? []} onOpen={setOpenId} renderAction={action} />
+          </TabPanel>
+        ))}
+      </Tabs>
 
-      <EntryDetail data={data} entryId={openId} onClose={() => setOpenId(null)} />
+      <EntryDetail
+        data={data}
+        entryId={openId}
+        onClose={() => setOpenId(null)}
+        onEdit={
+          !locked && me ? (id) => navigate(`/r/${code}/rate/${room.entries.findIndex((e) => e.id === id)}`) : undefined
+        }
+      />
 
       <ModalOverlay
         isOpen={editId !== null}

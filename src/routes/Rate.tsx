@@ -65,19 +65,25 @@ function RateEntry({ index }: { index: number }) {
     saveNote.flush()
     navigate(`${base}/rate/${i}`, { state: { criterion } })
   }
+  const preview = room.status === 'preview'
+  const toResults = () => {
+    saveNote.flush()
+    navigate(`${base}/results`)
+  }
   const prev = () => (ci > 0 ? step(ci - 1) : go(index - 1, 'last'))
   const next = () => {
     if (ci < lastCriterion) return step(ci + 1)
     saveNote.flush()
     if (!last) navigate(`${base}/rate/${index + 1}`)
-    else navigate(`${base}/${room.status === 'preview' ? 'results' : 'wait'}`)
+    else navigate(`${base}/${preview ? 'results' : 'wait'}`)
   }
 
   return (
     <Screen
       title={entry.title}
       subtitle={`Entry ${index + 1} of ${room.entries.length}`}
-      onBack={index > 0 ? () => go(index - 1) : undefined}
+      onBack={preview ? toResults : index > 0 ? () => go(index - 1) : undefined}
+      backLabel={preview ? 'Back to results' : undefined}
       actions={
         <Button
           aria-label="Participants"

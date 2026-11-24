@@ -44,13 +44,18 @@ function renderResults(opts: { room: Room; participants?: Participant[]; creator
   )
 }
 const preview = { ...base, status: 'preview', results: null } as Room
+const expectSubtitle = (text: string) => {
+  const status = screen.getByText(text)
+  expect(status).toHaveClass('text-ink-muted')
+  expect(status.closest('.rounded-full, .ring-1')).toBeNull()
+}
 
 beforeEach(() => vi.clearAllMocks())
 
 describe('Results', () => {
-  it('preview shows badge and overall order', () => {
+  it('preview shows status text and overall order', () => {
     renderResults({ room: preview })
-    expect(screen.getByText('Preview')).toBeInTheDocument()
+    expectSubtitle('Preview results')
     const rows = screen.getAllByTestId('ranking-row')
     expect(rows[0]).toHaveTextContent('2')
     expect(rows[0]).toHaveTextContent('4.0')
@@ -75,6 +80,22 @@ describe('Results', () => {
     expect(d.getByText('d').closest('tr')).toHaveTextContent('skipped')
     expect(d.getByText('e').closest('tr')).toHaveTextContent('-')
     expect(d.getByRole('button', { name: 'Close' })).toHaveClass('bg-transparent')
+  })
+
+  it('detail lets a participant edit that entry', () => {
+    renderResults({ room: preview })
+    // Entry e1 ranks second but is first in room.entries.
+    fireEvent.click(screen.getAllByTestId('ranking-row')[1].querySelector('button')!)
+    const edit = within(screen.getByRole('dialog')).getByRole('button', { name: 'Edit my rating' })
+    expect(edit).toHaveClass('bg-accent')
+    fireEvent.click(edit)
+    expect(navigate).toHaveBeenCalledWith('/r/ABC234/rate/0')
+  })
+
+  it('detail has no edit for a non-participant', () => {
+    renderResults({ room: preview, me: null })
+    fireEvent.click(screen.getAllByTestId('ranking-row')[0].querySelector('button')!)
+    expect(within(screen.getByRole('dialog')).queryByRole('button', { name: 'Edit my rating' })).toBeNull()
   })
 
   it('creator renames; empty disables save', () => {
@@ -168,7 +189,7 @@ describe('Results', () => {
       [{ uid: 'z', name: 'z', scores: { e1: { c1: 100, c2: 100 } }, notes: {} }],
     )
     renderResults({ room: { ...base, status: 'locked', results: snap } as Room, creator: true })
-    expect(screen.getByText('Final')).toBeInTheDocument()
+    expectSubtitle('Final results')
     const rows = screen.getAllByTestId('ranking-row')
     expect(rows[0]).toHaveTextContent('Snap One')
     expect(rows[0]).toHaveTextContent('10.0')
@@ -177,5 +198,7 @@ describe('Results', () => {
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Edit my ratings' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
+    fireEvent.click(rows[0].querySelector('button')!)
+    expect(within(screen.getByRole('dialog')).queryByRole('button', { name: 'Edit my rating' })).toBeNull()
   })
 })
