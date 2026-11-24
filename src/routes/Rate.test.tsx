@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import type { Participant, Room } from '../domain/types'
 
@@ -11,6 +11,7 @@ vi.mock('../firebase/rooms', () => ({
   removeParticipant: vi.fn(),
 }))
 
+import { setNote } from '../firebase/rooms'
 import Rate from './Rate'
 import { RoomContext } from './RoomContext'
 
@@ -39,6 +40,7 @@ function renderRate(index: number, r: Room = room) {
       >
         <Routes>
           <Route path="/r/:code/rate/:index" element={<Rate />} />
+          <Route path="/r/:code/results" element={<p>Results page</p>} />
         </Routes>
       </RoomContext.Provider>
     </MemoryRouter>,
@@ -136,5 +138,22 @@ describe('Rate', () => {
     expect(card('Smell')).toHaveClass('motion-safe:animate-card-in-left')
     fireEvent.click(screen.getByRole('button', { name: 'Previous' }))
     expect(card('Taste')).toHaveClass('motion-safe:animate-card-in-right')
+  })
+
+  it('in preview, back on the first entry saves the note and goes to results', () => {
+    renderRate(0, { ...room, status: 'preview' } as Room)
+    fireEvent.change(screen.getByRole('textbox', { name: 'Notes' }), { target: { value: 'tasty' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Back to results' }))
+    expect(setNote).toHaveBeenCalledWith('ABC234', 'u1', 'e1', 'tasty')
+    expect(screen.getByText('Results page')).toBeInTheDocument()
+  })
+
+  it('while open, the first entry has no back and a later entry goes back one', () => {
+    renderRate(0)
+    expect(screen.queryByRole('button', { name: /^Back/ })).toBeNull()
+    cleanup()
+    renderRate(2)
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }))
+    expect(screen.getByRole('heading', { name: 'Second' })).toBeInTheDocument()
   })
 })

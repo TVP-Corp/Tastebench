@@ -6,19 +6,20 @@ interface Props {
   title?: string
   subtitle?: string
   onBack?: () => void
+  backLabel?: string
   actions?: ReactNode
   footer?: ReactNode
   children: ReactNode
 }
 
-export function Screen({ title, subtitle, onBack, actions, footer, children }: Props) {
+export function Screen({ title, subtitle, onBack, backLabel = 'Back', actions, footer, children }: Props) {
   return (
     <div className="min-h-dvh bg-page font-sans text-ink">
       <div className="mx-auto flex min-h-dvh max-w-[480px] flex-col px-4 pb-6 pt-4">
         <header className="flex min-h-11 items-center justify-between">
           {onBack ? (
             <Button
-              aria-label="Back"
+              aria-label={backLabel}
               onPress={onBack}
               className="flex size-11 items-center justify-center rounded-full text-2xl outline-none transition-colors data-[hovered]:bg-ink/5 data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink"
             >
