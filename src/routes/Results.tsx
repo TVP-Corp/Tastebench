@@ -87,6 +87,7 @@ export default function Results() {
   return (
     <Screen
       title={room.name}
+      subtitle={locked ? 'Final results' : 'Preview results'}
       actions={
         !locked && (
           <Button
@@ -123,9 +124,6 @@ export default function Results() {
       }
     >
       <div className="flex flex-col gap-4">
-        <span className="self-center rounded-full bg-surface px-3 py-1 ring-1 ring-line-strong text-sm font-semibold">
-          {locked ? 'Final' : 'Preview'}
-        </span>
         <Tabs>
           <TabList aria-label="Rankings" className="mb-3 flex gap-1 overflow-x-auto">
             <Tab id="overall" className={tabClass}>

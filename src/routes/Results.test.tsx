@@ -48,9 +48,10 @@ const preview = { ...base, status: 'preview', results: null } as Room
 beforeEach(() => vi.clearAllMocks())
 
 describe('Results', () => {
-  it('preview shows badge and overall order', () => {
+  it('preview shows status text and overall order', () => {
     renderResults({ room: preview })
-    expect(screen.getByText('Preview')).toBeInTheDocument()
+    expect(screen.getByText('Preview results')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Preview results' })).toBeNull()
     const rows = screen.getAllByTestId('ranking-row')
     expect(rows[0]).toHaveTextContent('2')
     expect(rows[0]).toHaveTextContent('4.0')
@@ -168,7 +169,8 @@ describe('Results', () => {
       [{ uid: 'z', name: 'z', scores: { e1: { c1: 100, c2: 100 } }, notes: {} }],
     )
     renderResults({ room: { ...base, status: 'locked', results: snap } as Room, creator: true })
-    expect(screen.getByText('Final')).toBeInTheDocument()
+    expect(screen.getByText('Final results')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Final results' })).toBeNull()
     const rows = screen.getAllByTestId('ranking-row')
     expect(rows[0]).toHaveTextContent('Snap One')
     expect(rows[0]).toHaveTextContent('10.0')
