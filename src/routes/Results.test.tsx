@@ -78,6 +78,21 @@ describe('Results', () => {
     expect(d.getByRole('button', { name: 'Close' })).toHaveClass('bg-transparent')
   })
 
+  it('detail lets a participant edit that entry', () => {
+    renderResults({ room: preview })
+    fireEvent.click(screen.getAllByTestId('ranking-row')[0].querySelector('button')!)
+    const edit = within(screen.getByRole('dialog')).getByRole('button', { name: 'Edit my rating' })
+    expect(edit).toHaveClass('bg-accent')
+    fireEvent.click(edit)
+    expect(navigate).toHaveBeenCalledWith('/r/ABC234/rate/1')
+  })
+
+  it('detail has no edit for a non-participant', () => {
+    renderResults({ room: preview, me: null })
+    fireEvent.click(screen.getAllByTestId('ranking-row')[0].querySelector('button')!)
+    expect(within(screen.getByRole('dialog')).queryByRole('button', { name: 'Edit my rating' })).toBeNull()
+  })
+
   it('creator renames; empty disables save', () => {
     renderResults({ room: preview, creator: true })
     fireEvent.click(screen.getByRole('button', { name: 'Edit title of 1' }))
@@ -179,5 +194,7 @@ describe('Results', () => {
     expect(screen.queryByRole('button', { name: 'Lock results' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Edit my ratings' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Discard room' })).toBeNull()
+    fireEvent.click(rows[0].querySelector('button')!)
+    expect(within(screen.getByRole('dialog')).queryByRole('button', { name: 'Edit my rating' })).toBeNull()
   })
 })

@@ -8,9 +8,10 @@ interface Props {
   data: ResultsSnapshot
   entryId: string | null
   onClose: () => void
+  onEdit?: (entryId: string) => void
 }
 
-export function EntryDetail({ data, entryId, onClose }: Props) {
+export function EntryDetail({ data, entryId, onClose, onEdit }: Props) {
   const entry = data.entries.find((e) => e.id === entryId)
   const cell = (uid: string, cid: string) => {
     const v = data.participants.find((p) => p.uid === uid)?.scores[entryId ?? '']?.[cid]
@@ -65,6 +66,7 @@ export function EntryDetail({ data, entryId, onClose }: Props) {
                 </p>
               ))}
           </div>
+          {onEdit && entryId && <PillButton onPress={() => onEdit(entryId)}>Edit my rating</PillButton>}
           <PillButton variant="tertiary" onPress={onClose}>
             Close
           </PillButton>

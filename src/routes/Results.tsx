@@ -146,7 +146,14 @@ export default function Results() {
         </Tabs>
       </div>
 
-      <EntryDetail data={data} entryId={openId} onClose={() => setOpenId(null)} />
+      <EntryDetail
+        data={data}
+        entryId={openId}
+        onClose={() => setOpenId(null)}
+        onEdit={
+          !locked && me ? (id) => navigate(`/r/${code}/rate/${room.entries.findIndex((e) => e.id === id)}`) : undefined
+        }
+      />
 
       <ModalOverlay
         isOpen={editId !== null}
