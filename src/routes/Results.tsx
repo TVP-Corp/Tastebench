@@ -123,28 +123,26 @@ export default function Results() {
         </div>
       }
     >
-      <div className="flex flex-col gap-4">
-        <Tabs>
-          <TabList aria-label="Rankings" className="mb-3 flex gap-1 overflow-x-auto">
-            <Tab id="overall" className={tabClass}>
-              Overall
-            </Tab>
-            {data.criteria.map((c) => (
-              <Tab key={c.id} id={c.id} className={tabClass}>
-                {c.title}
-              </Tab>
-            ))}
-          </TabList>
-          <TabPanel id="overall" className="outline-none">
-            <RankingList rows={data.overall} onOpen={setOpenId} renderAction={action} />
-          </TabPanel>
+      <Tabs>
+        <TabList aria-label="Rankings" className="mb-3 flex gap-1 overflow-x-auto">
+          <Tab id="overall" className={tabClass}>
+            Overall
+          </Tab>
           {data.criteria.map((c) => (
-            <TabPanel key={c.id} id={c.id} className="outline-none">
-              <RankingList rows={data.byCriterion[c.id] ?? []} onOpen={setOpenId} renderAction={action} />
-            </TabPanel>
+            <Tab key={c.id} id={c.id} className={tabClass}>
+              {c.title}
+            </Tab>
           ))}
-        </Tabs>
-      </div>
+        </TabList>
+        <TabPanel id="overall" className="outline-none">
+          <RankingList rows={data.overall} onOpen={setOpenId} renderAction={action} />
+        </TabPanel>
+        {data.criteria.map((c) => (
+          <TabPanel key={c.id} id={c.id} className="outline-none">
+            <RankingList rows={data.byCriterion[c.id] ?? []} onOpen={setOpenId} renderAction={action} />
+          </TabPanel>
+        ))}
+      </Tabs>
 
       <EntryDetail
         data={data}

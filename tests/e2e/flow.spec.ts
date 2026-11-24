@@ -111,7 +111,7 @@ test('three people rate, close, rename and lock a room', async ({ browser }) => 
   await a.getByRole('button', { name: 'Remove participant' }).click()
   await expect(c.getByText('You were removed from this room')).toBeVisible()
 
-  // 5. A closes the room. A and B show Preview. C opens the link again and sees it too.
+  // 5. A closes the room. A and B show Preview results. C opens the link again and sees it too.
   await a.getByRole('button', { name: 'Close room and show results' }).click()
   await a.getByRole('button', { name: 'Close room', exact: true }).click()
   await expect(a.getByText('Preview results', { exact: true })).toBeVisible()
@@ -139,7 +139,7 @@ test('three people rate, close, rename and lock a room', async ({ browser }) => 
   await expect(a.getByText('Gelato Uno')).toBeVisible()
   await expect(b.getByText('Gelato Uno')).toBeVisible()
 
-  // 7. A locks. Everyone shows Final. B has no edit controls.
+  // 7. A locks. Everyone shows Final results. B has no edit controls.
   await a.getByRole('button', { name: 'Lock results' }).click()
   await a.getByRole('alertdialog').getByRole('button', { name: 'Lock results' }).click()
   for (const p of [a, b, c]) await expect(p.getByText('Final results', { exact: true })).toBeVisible()

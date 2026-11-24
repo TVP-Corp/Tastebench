@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import type { Participant, Room } from '../domain/types'
 
@@ -148,10 +148,18 @@ describe('Rate', () => {
     expect(screen.getByText('Results page')).toBeInTheDocument()
   })
 
-  it('while open, the first entry has no back and a later entry goes back one', () => {
+  it('in preview, back on a later entry also goes to results', () => {
+    renderRate(2, { ...room, status: 'preview' } as Room)
+    fireEvent.click(screen.getByRole('button', { name: 'Back to results' }))
+    expect(screen.getByText('Results page')).toBeInTheDocument()
+  })
+
+  it('while open, the first entry has no back', () => {
     renderRate(0)
     expect(screen.queryByRole('button', { name: /^Back/ })).toBeNull()
-    cleanup()
+  })
+
+  it('while open, back on a later entry goes to the previous entry', () => {
     renderRate(2)
     fireEvent.click(screen.getByRole('button', { name: 'Back' }))
     expect(screen.getByRole('heading', { name: 'Second' })).toBeInTheDocument()
